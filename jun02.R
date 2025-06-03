@@ -156,3 +156,66 @@ table_grob <- tableGrob(formatted_df, rows = NULL)
 png("algorithm2_china_confidence_table.png", width = 800, height = 150, res = 120)
 grid.draw(table_grob)
 dev.off()
+
+
+# Function to generate predicted log-median curves from T to 35
+predict_log_median_curve <- function(T_val, l_hat, s_hat, a_hat) {
+  t_vals <- T_val:35
+  log_a <- log(a_hat)
+  pred_log_median <- log_a - ((t_vals - l_hat)^2) / s_hat^2
+  data.frame(T = T_val, t = t_vals, log_median = pred_log_median)
+}
+
+# Use the fitted results
+curves <- do.call(rbind, lapply(results, function(res) {
+  predict_log_median_curve(res$T, res$l_hat, res$s_hat, res$a_hat)
+}))
+
+
+# Split curves by T value
+curve_14 <- subset(curves, T == 14)
+curve_18 <- subset(curves, T == 18)
+curve_21 <- subset(curves, T == 21)
+
+
+# Split LaTeX row-wise table into two halves stacked vertically
+latex_rowwise_curve_table_split <- function(df) {
+  t_vals <- df$t
+  log_vals <- sprintf("%.2f", df$log_median)
+  
+  n <- length(t_vals)
+  split_idx <- ceiling(n / 2)
+  
+  # First block
+  t_row_1 <- paste0("$t$ & ", paste(t_vals[1:split_idx], collapse = " & "), " \\\\")
+  log_row_1 <- paste0("$\\log(\\hat{a}) - \\frac{(t - \\hat{\\ell})^2}{\\hat{s}^2}$ & ",
+                      paste(log_vals[1:split_idx], collapse = " & "), " \\\\")
+  
+  # Second block
+  t_row_2 <- paste0("$t$ & ", paste(t_vals[(split_idx + 1):n], collapse = " & "), " \\\\")
+  log_row_2 <- paste0("$\\log(\\hat{a}) - \\frac{(t - \\hat{\\ell})^2}{\\hat{s}^2}$ & ",
+                      paste(log_vals[(split_idx + 1):n], collapse = " & "), " \\\\")
+  
+  n_cols_1 <- split_idx + 1
+  n_cols_2 <- n - split_idx + 1
+  
+  paste0(
+    "\\begin{table}[H]\n\\centering\n",
+    "\\begin{tabular}{|", paste(rep("r", n_cols_1), collapse = ""), "|}\n\\hline\n",
+    t_row_1, "\n\\hline\n",
+    log_row_1, "\n\\hline\n",
+    "\\end{tabular}\n\n\\vspace{0.4cm}\n\n",
+    "\\begin{tabular}{|", paste(rep("r", n_cols_2), collapse = ""), "|}\n\\hline\n",
+    t_row_2, "\n\\hline\n",
+    log_row_2, "\n\\hline\n",
+    "\\end{tabular}\n\n",
+    sprintf("\\caption{Predicted log-median values from $t = %d$ to $35$ using Algorithm~\\ref{algo2}.}\n", df$T[1]),
+    sprintf("\\label{tab:log_median_T%d_rowwise}\n", df$T[1]),
+    "\\end{table}"
+  )
+}
+
+
+cat(latex_rowwise_curve_table_split(curve_14), "\n\n")
+cat(latex_rowwise_curve_table_split(curve_18), "\n\n")
+cat(latex_rowwise_curve_table_split(curve_21), "\n")
