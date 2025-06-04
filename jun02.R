@@ -183,3 +183,41 @@ table_grob <- tableGrob(preds_df, rows = NULL)
 png("table_logI22_prediction.png", width = 1000, height = 200, res = 120)
 grid.draw(table_grob)
 dev.off()
+
+# Function to compute log differences
+compute_log_diff <- function(df, Tmin) {
+  df <- subset(df, t >= Tmin & t <= 35)
+  diffs <- diff(df$log_median)
+  t_vals <- df$t[-1]
+  return(data.frame(t = t_vals, diff_log = diffs))
+}
+
+# Compute all three differences
+diff_14 <- compute_log_diff(subset(curves, T == 14), 14)
+diff_18 <- compute_log_diff(subset(curves, T == 18), 18)
+diff_21 <- compute_log_diff(subset(curves, T == 21), 21)
+
+# Determine the full t range for all curves
+t_min <- min(diff_14$t)
+t_max <- max(diff_14$t)
+y_min <- min(c(diff_14$diff_log, diff_18$diff_log, diff_21$diff_log))
+y_max <- max(c(diff_14$diff_log, diff_18$diff_log, diff_21$diff_log))
+
+
+
+
+png("log_diff_unified_plot.png", width = 900, height = 600, res = 120)
+# Base plot
+plot(diff_14$t, diff_14$diff_log, type = "b", pch = 16, col = "blue",
+     xlim = c(t_min, t_max), ylim = c(y_min, y_max),
+     xlab = "t", ylab = expression(log(hat(I)[t+1]) - log(hat(I)[t])),
+     main = expression(paste("Predicted differences of ", log(hat(I)(t)))))
+lines(diff_18$t, diff_18$diff_log, col = "red", pch = 16, type = "b")
+lines(diff_21$t, diff_21$diff_log, col = "grey60", pch = 16, type = "b")
+abline(h = 0, lty = 2, col = "gray")
+grid()
+# Add legend
+legend("topright", legend = c("T = 14", "T = 18", "T = 21"),
+       col = c("blue", "red", "grey60"),
+       pch = 16, lty = 1, bty = "n")
+dev.off()
