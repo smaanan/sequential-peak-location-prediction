@@ -39,13 +39,13 @@ estimate_peak_params <- function(log_I, T, h = 40) {
     log_a <- wmedian(z, weights)
     sum(abs(log_I[1:T] - log_a + ((1:T) - l)^2 / s^2))
   }
-
+  
   # Grid over l and optimize s
   best_val <- Inf
   best_l <- NA
   best_s <- NA
   best_log_a <- NA
-
+  
   for (l in 1:h) {
     opt <- optimize(f = function(s) objective(s, l), interval = c(1, 20))
     s_opt <- opt$minimum
@@ -53,7 +53,7 @@ estimate_peak_params <- function(log_I, T, h = 40) {
     weights <- exp(-((1:T) - l)^2 / s_opt^2)
     z <- log_I[1:T] + ((1:T) - l)^2 / s_opt^2
     log_a <- wmedian(z, weights)
-
+    
     if (val < best_val) {
       best_val <- val
       best_l <- l
@@ -61,7 +61,7 @@ estimate_peak_params <- function(log_I, T, h = 40) {
       best_log_a <- log_a
     }
   }
-
+  
   return(list(l_hat = best_l, s_hat = best_s, a_hat = exp(best_log_a)))
 }
 
@@ -71,24 +71,24 @@ ci_log_I_T <- function(log_I, T) {
   model <- rq(log_cases ~ t + t_sq, tau = 0.5, data = df)
   beta <- coef(model)
   names(beta) <- c("b0", "b1", "b2")
-
+  
   # Estimate f(0) from residuals
   residuals <- model$residuals
   f0 <- density(residuals, from = 0, to = 0, n = 1, kernel = "gaussian")$y
   omega2 <- (0.5 * 0.5) / (f0^2)
-
+  
   # Covariance estimation (Hilbert-based)
   t_vec <- 1:T
   scaling <- c(sqrt(T), sqrt(sum(t_vec^2)), sqrt(sum(t_vec^4)))
   H_inv <- solve(hilbert(3))
   Sigma_beta <- omega2 * diag(1 / scaling) %*% H_inv %*% diag(1 / scaling)
-
+  
   # Delta method for Var(log(I(T)))
   grad <- c(1, T, T^2)
   var_log_I_T <- as.numeric(t(grad) %*% Sigma_beta %*% grad)
   se_log_I_T <- sqrt(var_log_I_T)
   pred_log_I_T <- as.numeric(beta["b0"] + beta["b1"] * T + beta["b2"] * T^2)
-
+  
   CI <- pred_log_I_T + c(-1.96, 1.96) * se_log_I_T
   return(list(pred = pred_log_I_T, CI = CI, se = se_log_I_T))
 }
@@ -98,7 +98,7 @@ results <- lapply(c(14, 18, 21), function(T_val) {
   log_I <- china$log_cases
   params <- estimate_peak_params(log_I, T = T_val)
   ci <- ci_log_I_T(log_I, T = T_val)
-
+  
   list(
     T = T_val,
     l_hat = params$l_hat,
@@ -219,3 +219,64 @@ latex_rowwise_curve_table_split <- function(df) {
 cat(latex_rowwise_curve_table_split(curve_14), "\n\n")
 cat(latex_rowwise_curve_table_split(curve_18), "\n\n")
 cat(latex_rowwise_curve_table_split(curve_21), "\n")
+
+
+
+
+
+
+
+# 04 June 2025
+
+
+ci_log_I_at <- function(log_I, T_fit, t_eval) {
+  df <- data.frame(log_cases = log_I[1:T_fit], t = 1:T_fit, t_sq = (1:T_fit)^2)
+  model <- rq(log_cases ~ t + t_sq, tau = 0.5, data = df)
+  beta <- coef(model)
+  names(beta) <- c("b0", "b1", "b2")
+  
+  # Estimate f(0) from residuals
+  residuals <- model$residuals
+  f0 <- density(residuals, from = 0, to = 0, n = 1, kernel = "gaussian")$y
+  omega2 <- (0.5 * 0.5) / (f0^2)
+  
+  # Covariance estimation
+  t_vec <- 1:T_fit
+  scaling <- c(sqrt(T_fit), sqrt(sum(t_vec^2)), sqrt(sum(t_vec^4)))
+  H_inv <- solve(hilbert(3))
+  Sigma_beta <- omega2 * diag(1 / scaling) %*% H_inv %*% diag(1 / scaling)
+  
+  # Delta method at t_eval
+  grad <- c(1, t_eval, t_eval^2)
+  var_pred <- as.numeric(t(grad) %*% Sigma_beta %*% grad)
+  se_pred <- sqrt(var_pred)
+  pred_log_I <- as.numeric(beta["b0"] + beta["b1"] * t_eval + beta["b2"] * t_eval^2)
+  
+  CI <- pred_log_I + c(-1.96, 1.96) * se_pred
+  return(list(
+    T_fit = T_fit,
+    t_eval = t_eval,
+    pred = pred_log_I,
+    CI = CI,
+    se = se_pred
+  ))
+}
+
+log_I <- china$log_cases
+preds_at_22 <- lapply(c(14, 18, 21), function(T_fit) {
+  ci_log_I_at(log_I, T_fit = T_fit, t_eval = 22)
+})
+
+preds_df <- do.call(rbind, lapply(preds_at_22, function(res) {
+  data.frame(
+    T = res$T_fit,
+    t = res$t_eval,
+    pred_log_I = sprintf("%.3f", res$pred),
+    CI_lower = sprintf("%.3f", res$CI[1]),
+    CI_upper = sprintf("%.3f", res$CI[2]),
+    SE = sprintf("%.3f", res$se)
+  )
+}))
+
+print(preds_df)
+
