@@ -204,20 +204,28 @@ y_min <- min(c(diff_14$diff_log, diff_18$diff_log, diff_21$diff_log))
 y_max <- max(c(diff_14$diff_log, diff_18$diff_log, diff_21$diff_log))
 
 
-
-
 png("log_diff_unified_plot.png", width = 900, height = 600, res = 120)
-# Base plot
+
+# Base plot with updated expression
 plot(diff_14$t, diff_14$diff_log, type = "b", pch = 16, col = "blue",
      xlim = c(t_min, t_max), ylim = c(y_min, y_max),
-     xlab = "t", ylab = expression(log(hat(I)[t+1]) - log(hat(I)[t])),
-     main = expression(paste("Predicted differences of ", log(hat(I)(t)))))
+     xlab = "t",
+     ylab = expression(Delta(hat(med)(log(I)), T)(t)),
+     main = expression(paste("Predicted differences ", Delta(hat(med)(log(I)), T)(t))))
+
+# Add lines for other T values
 lines(diff_18$t, diff_18$diff_log, col = "red", pch = 16, type = "b")
 lines(diff_21$t, diff_21$diff_log, col = "grey60", pch = 16, type = "b")
+
+# Add horizontal reference line and grid
 abline(h = 0, lty = 2, col = "gray")
 grid()
-# Add legend
+
+# Legend with updated title
 legend("topright", legend = c("T = 14", "T = 18", "T = 21"),
        col = c("blue", "red", "grey60"),
-       pch = 16, lty = 1, bty = "n")
+       pch = 16, lty = 1,
+       title = expression("Fitted at T ="),
+       bty = "n")
+
 dev.off()
