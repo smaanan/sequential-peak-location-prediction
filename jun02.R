@@ -209,8 +209,8 @@ png("log_diff_unified_plot.png", width = 900, height = 600, res = 120)
 plot(diff_14$t, diff_14$diff_log, type = "b", pch = 16, col = "blue",
      xlim = c(t_min, t_max), ylim = c(y_min, y_max),
      xlab = "t",
-     ylab = expression(log(hat(I)[T, t+1]) - log(hat(I)[T, t])),
-     main = expression(paste("Predicted differences ", log(hat(I)[T, t+1]) - log(hat(I)[T, t]))))
+     ylab = expression(log(hat(I)[T~","~t+1]) - log(hat(I)[T~","~t])),
+     main = expression(paste("Predicted differences ", log(hat(I)[T~","~t+1]) - log(hat(I)[T~","~t]))))
 
 # Add lines for other T values
 lines(diff_18$t, diff_18$diff_log, col = "red", pch = 16, type = "b")
