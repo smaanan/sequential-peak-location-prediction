@@ -143,93 +143,73 @@ cat(latex_rowwise_curve_table_split(subset(curves, T == 14)), "\n\n")
 cat(latex_rowwise_curve_table_split(subset(curves, T == 18)), "\n\n")
 cat(latex_rowwise_curve_table_split(subset(curves, T == 21)), "\n\n")
 
-# --- Confidence intervals at t = 22 for models fitted at T = 14, 18, 21 ---
-ci_log_I_at <- function(log_I, T_fit, t_eval) {
+# --- Delta-method-based CI at arbitrary t with optional adjustment ---
+ci_log_I_at <- function(log_I, T_fit, t_eval, adjust = c("none", "max", "range")) {
+  adjust <- match.arg(adjust)
+  
   df <- data.frame(log_cases = log_I[1:T_fit], t = 1:T_fit, t_sq = (1:T_fit)^2)
   model <- rq(log_cases ~ t + t_sq, tau = 0.5, data = df)
   beta <- coef(model); names(beta) <- c("b0", "b1", "b2")
   residuals <- model$residuals
-  f0 <- density(residuals, from = 0, to = 0, n = 1, kernel = "gaussian")$y
-  omega2 <- (0.5 * 0.5) / (f0^2)
+  
+  f0 <- density(residuals, from = 0, to = 0, n = 1)$y
+  omega2 <- 0.25 / f0^2
   
   t_vec <- 1:T_fit
   scaling <- c(sqrt(T_fit), sqrt(sum(t_vec^2)), sqrt(sum(t_vec^4)))
   H_inv <- solve(hilbert(3))
-  Sigma_beta <- omega2 * diag(1 / scaling) %*% H_inv %*% diag(1 / scaling)
+  Sigma <- omega2 * diag(1 / scaling) %*% H_inv %*% diag(1 / scaling)
   
   grad <- c(1, t_eval, t_eval^2)
-  var_pred <- as.numeric(t(grad) %*% Sigma_beta %*% grad)
-  se <- sqrt(var_pred)
   pred <- sum(beta * grad)
-  list(T_fit = T_fit, t_eval = t_eval, pred = pred, CI = pred + c(-1.96, 1.96) * se, se = se)
-}
-
-
-ci_log_I_at <- function(log_I, T_fit, t_eval) {
-  df <- data.frame(log_cases = log_I[1:T_fit], t = 1:T_fit, t_sq = (1:T_fit)^2)
-  model <- rq(log_cases ~ t + t_sq, tau = 0.5, data = df)
-  beta <- coef(model); names(beta) <- c("b0", "b1", "b2")
-  residuals <- model$residuals
-  f0 <- density(residuals, from = 0, to = 0, n = 1, kernel = "gaussian")$y
-  omega2 <- (0.5 * 0.5) / (f0^2)
+  se <- sqrt(as.numeric(t(grad) %*% Sigma %*% grad))
+  CI <- pred + c(-1.96, 1.96) * se
   
-  t_vec <- 1:T_fit
-  scaling <- c(sqrt(T_fit), sqrt(sum(t_vec^2)), sqrt(sum(t_vec^4)))
-  H_inv <- solve(hilbert(3))
-  Sigma_beta <- omega2 * diag(1 / scaling) %*% H_inv %*% diag(1 / scaling)
+  if (adjust == "max") {
+    CI[2] <- CI[2] + max(residuals)
+  } else if (adjust == "range") {
+    CI[2] <- CI[2] + (max(residuals) - min(residuals))
+  }
   
-  grad <- c(1, t_eval, t_eval^2)
-  var_pred <- as.numeric(t(grad) %*% Sigma_beta %*% grad)
-  se <- sqrt(var_pred)
-  pred <- sum(beta * grad)
-  
-  r_max <- max(residuals)
-  CI_naive <- pred + c(-1.96, 1.96) * se
-  CI_adjusted <- c(CI_naive[1], CI_naive[2] + r_max)
-  
-  list(T_fit = T_fit, t_eval = t_eval, pred = pred,
-       CI_naive = CI_naive,
-       CI_adjusted = CI_adjusted,
-       r_max = r_max,
-       se = se)
-}
-
-
-# --- Evaluate prediction at t = 22 ---
-log_I_obs_22 <- log_I[22]
-preds_at_22 <- lapply(T_vals, function(T_fit) ci_log_I_at(log_I, T_fit, 22))
-preds_df <- do.call(rbind, lapply(preds_at_22, function(res) {
-  inside <- log_I_obs_22 >= res$CI[1] && log_I_obs_22 <= res$CI[2]
-  data.frame(
-    T = res$T_fit, t = res$t_eval,
-    pred_log_I = sprintf("%.3f", res$pred),
-    CI_lower = sprintf("%.3f", res$CI[1]),
-    CI_upper = sprintf("%.3f", res$CI[2]),
-    log_I_obs = sprintf("%.3f", log_I_obs_22),
-    inside_CI = ifelse(inside, "Yes", "No")
+  list(
+    T_fit = T_fit,
+    t_eval = t_eval,
+    pred = pred,
+    CI = CI,
+    inside = log_I[t_eval] >= CI[1] && log_I[t_eval] <= CI[2],
+    se = se
   )
-}))
+}
 
+# Evaluate prediction at t = 22 using chosen adjustment ("none", "max", or "range")
+adjust_method <- "none"  # or "max" or "range"
+log_I_obs_22 <- log_I[22]
 
+preds_at_22 <- lapply(T_vals, function(T_fit) {
+  ci_log_I_at(log_I, T_fit, 22, adjust = adjust_method)
+})
+
+# Assemble result table
 preds_df <- do.call(rbind, lapply(preds_at_22, function(res) {
-  inside_adj <- log_I_obs_22 >= res$CI_adjusted[1] && log_I_obs_22 <= res$CI_adjusted[2]
   data.frame(
     T = res$T_fit,
     t = res$t_eval,
     pred_log_I = sprintf("%.3f", res$pred),
-    CI_lower = sprintf("%.3f", res$CI_adjusted[1]),
-    CI_upper = sprintf("%.3f", res$CI_adjusted[2]),
+    CI_lower = sprintf("%.3f", res$CI[1]),
+    CI_upper = sprintf("%.3f", res$CI[2]),
     log_I_obs = sprintf("%.3f", log_I_obs_22),
-    inside_CI = ifelse(inside_adj, "Yes", "No"),
-    r_max = sprintf("%.3f", res$r_max)
+    inside_CI = ifelse(res$inside, "Yes", "No")
   )
 }))
 
 print(preds_df)
+
+# Optional: export as PNG
 table_grob <- tableGrob(preds_df, rows = NULL)
 png("table_logI22_prediction.png", width = 1000, height = 200, res = 120)
 grid.draw(table_grob)
 dev.off()
+
 
 # Function to compute log differences
 compute_log_diff <- function(df, Tmin) {
