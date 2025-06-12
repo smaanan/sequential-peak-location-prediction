@@ -216,3 +216,20 @@ plot_quantile_objectives_laplace <- function(results, tau, filename = "plot_lapl
 
 plot_quantile_objectives_noisefree(results_free, tau = tau_val)
 plot_quantile_objectives_laplace(results_laplace, tau = tau_val)
+
+
+
+# Tau=0.5 Case
+
+
+tau_val <- 0.5
+
+# Run the noise-free simulation at tau = 0.5
+results_free_median <- do.call(rbind, lapply(Ts_free, function(T) {
+  simulate_quantile_objective(
+    T, A = A_true, L = L_true, S = S_true, h = horizon, tau = tau_val, snr = Inf
+  )
+}))
+
+# Plot
+plot_quantile_objectives_noisefree(results_free_median, tau = tau_val, filename = "plot_noisefree_tau05.png")
