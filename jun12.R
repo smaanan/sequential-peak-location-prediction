@@ -217,10 +217,7 @@ plot_quantile_objectives_laplace <- function(results, tau, filename = "plot_lapl
 plot_quantile_objectives_noisefree(results_free, tau = tau_val)
 plot_quantile_objectives_laplace(results_laplace, tau = tau_val)
 
-
-
 # Tau=0.5 Case
-
 
 tau_val <- 0.5
 
