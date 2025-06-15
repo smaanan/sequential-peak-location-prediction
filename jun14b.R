@@ -1,14 +1,24 @@
-
+# ---------------------------------------------------------------------------
+# Quantile-Based Peak Estimation with Weighted Quantile Algorithm
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# Laplace Noise Generator
+# ---------------------------------------------------------------------------
 rlaplace <- function(n, location = 0, scale = 1) {
   u <- runif(n, -0.5, 0.5)
   location - scale * sign(u) * log(1 - 2 * abs(u))
 }
 
+# ---------------------------------------------------------------------------
+# Quantile Loss Function
+# ---------------------------------------------------------------------------
 quantile_loss <- function(u, tau) {
   u * ( tau - (u < 0) )
 }
 
-
+# ---------------------------------------------------------------------------
+# Weighted Quantile
+# ---------------------------------------------------------------------------
 med_weighted_tau <- function(I, l, s, tau) {
   T <- length(I)
   
@@ -28,12 +38,16 @@ med_weighted_tau <- function(I, l, s, tau) {
   return(x_sorted[k]) 
 }
 
-
+# ---------------------------------------------------------------------------
+# Quantile-Based Amplitude
+# ---------------------------------------------------------------------------
 compute_a <- function(I, l, s, tau) {
   med_weighted_tau(I, l, s, tau)
 }
 
-
+# ---------------------------------------------------------------------------
+# Quantile Loss objective
+# ---------------------------------------------------------------------------
 objective_function <- function(I, a, l, s, tau) {
   t <- seq_along(I)
   fitted <- a * exp(-((t - l)^2) / s^2)
@@ -41,7 +55,9 @@ objective_function <- function(I, a, l, s, tau) {
   mean(quantile_loss(u, tau))
 }
 
-
+# ---------------------------------------------------------------------------
+# Optimize s for a given l
+# ---------------------------------------------------------------------------
 search_best_s <- function(I, l, tau) {
   f_obj <- function(s) {
     a_hat <- compute_a(I, l, s, tau)
@@ -50,8 +66,10 @@ search_best_s <- function(I, l, tau) {
   optimize(f_obj, interval = c(1, 20), tol = 1e-4)$minimum
 }
 
-
-simulate_quantile_objective <- function(T, A, L, S, h, tau, snr = Inf, seed = NULL, l_range = NULL, force_l_gt_T = FALSE) {
+# ---------------------------------------------------------------------------
+# Main simulation
+# ---------------------------------------------------------------------------
+simulate_quantile_objective <- function(T, A, L, S, h, tau, snr = Inf, seed = NULL) {
   t <- 1:T
   signal <- A * exp(-((t - L)^2) / S^2)
   
@@ -65,12 +83,7 @@ simulate_quantile_objective <- function(T, A, L, S, h, tau, snr = Inf, seed = NU
     I <- signal
   }
   
-  if (is.null(l_range)) {
-    l_grid <- if (force_l_gt_T) seq(T + 1, h) else if (is.finite(snr)) seq(L - 4, L + 3) else seq(1, h)
-  } else {
-    l_grid <- l_range
-  }
-  
+  l_grid <- seq(1, h)  # start from 1 now
   losses <- sapply(l_grid, function(l) {
     s_hat <- search_best_s(I, l, tau)
     a_hat <- compute_a(I, l, s_hat, tau)
@@ -89,7 +102,7 @@ plot_quantile_objectives <- function(results, tau, A_true, L_true, S_true, h) {
   nrow <- ceiling(nT / 2)
   ncol <- if (nT == 1) 1 else 2
   
-  png(filename = paste0("plot_quantile_tau", tau, ".png"),
+  png(filename = paste0("original_plot_quantile_tau", tau, ".png"),
       width = 900, height = 600, res = 120)
   old_par <- par(mfrow = c(nrow, ncol), mar = c(4, 4, 3, 1))
   on.exit({ par(old_par); dev.off() })
@@ -105,18 +118,21 @@ plot_quantile_objectives <- function(results, tau, A_true, L_true, S_true, h) {
   }
 }
 
-
+# ---------------------------------------------------------------------------
+# Run simulation and plot
+# ---------------------------------------------------------------------------
 A_true <- 15000
 L_true <- 22
 S_true <- 10
 h <- 30
-Ts_free <- c(2, 3, 10, 20)
 
 for ( tau_val in c(0.5, 0.75, 0.95) ) {
   
+  Ts_free <- c(15, 20, 25, 30)  # Values of T to trial
+  
   results <- do.call(rbind, lapply(Ts_free, function(T) {
     simulate_quantile_objective(T, A = A_true, L = L_true, S = S_true, h = h,
-                                tau = tau_val, snr = Inf, force_l_gt_T = ( tau_val == 0.5 )) 
+                                tau = tau_val, snr = Inf) 
   }))
   
   plot_file <- paste0("plot_quantile_tau", tau_val, ".png")
@@ -124,4 +140,3 @@ for ( tau_val in c(0.5, 0.75, 0.95) ) {
   
   cat("Plot for tau =", tau_val, "generated and saved to", plot_file, "\n")
 }
-
