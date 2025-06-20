@@ -162,3 +162,63 @@ for ( tau_val in c(0.5, 0.75, 0.95) ) {
   
   cat("Plot for tau =", tau_val, "generated and saved to", plot_file, "\n")
 }
+
+
+
+
+
+
+
+
+plot_quantile_objectives_superposed <- function(results, tau, A_true, L_true, S_true, h) {
+  Ts <- sort(unique(results$T))
+  z_vals <- sort(unique(results$z))
+  colors <- c("blue", "red", "darkgreen", "orange", "purple") # match z_vals order
+  nrow <- 2
+  ncol <- 3
+  
+  png(filename = paste0("plot_quantile_tau", tau, "_zcompare.png"),
+      width = 900, height = 600, res = 120)
+  old_par <- par(mfrow = c(nrow, ncol), mar = c(4, 4, 3, 1))
+  on.exit({ par(old_par); dev.off() })
+  
+  for (T_val in Ts) {
+    df_T <- subset(results, T == T_val)
+    x_range <- range(df_T$l)
+    y_range <- range(df_T$loss)
+    
+    plot(NA, xlim = x_range, ylim = y_range,
+         xlab = "Peak Location Candidate l",
+         ylab = expression("Objective " * f[tau]),
+         main = paste0("T = ", T_val, ", tau = ", tau))
+    abline(v = L_true, col = "gray40", lty = 2)
+    grid()
+    
+    for (i in seq_along(z_vals)) {
+      df_z <- subset(df_T, z == z_vals[i])
+      lines(df_z$l, df_z$loss, col = colors[i], lwd = 2)
+    }
+    
+    legend("topright", legend = paste("z =", z_vals),
+           col = colors[1:length(z_vals)], lwd = 2, bty = "o", cex = 0.8)
+  }
+}
+
+
+z_vals <- c(-0.9, -0.5, 0, 0.5, 0.9)
+
+for (tau_val in c(0.5, 0.75, 0.95)) {
+  results_all <- do.call(rbind, lapply(z_vals, function(z) {
+    res_z <- do.call(rbind, lapply(Ts_free, function(T) {
+      simulate_quantile_objective(T, A = A_true, L = L_true, S = S_true, h = h,
+                                  tau = tau_val, snr = snr, z = z, 
+                                  force_l_gt_T = (tau_val == 0.5))
+    }))
+    res_z$z <- z
+    res_z
+  }))
+  
+  plot_file <- paste0("plot_quantile_tau", tau_val, "_zcompare.png")
+  plot_quantile_objectives_superposed(results_all, tau_val, A_true, L_true, S_true, h)
+  cat("Plot for tau =", tau_val, "generated and saved to", plot_file, "\n")
+}

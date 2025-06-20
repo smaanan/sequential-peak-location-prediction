@@ -158,3 +158,98 @@ for (tau_val in c(0.5, 0.75, 0.95)) {
   plot_quantile_objectives(results, tau_val, A_true, L_true, S_true)
   cat("Plot for tau =", tau_val, "generated and saved.\n")
 }
+
+
+
+
+
+
+# ------------------------------------------
+# (1) Updated simulate_quantile_objective
+# ------------------------------------------
+simulate_quantile_objective <- function(T, A, L, S, tau, z, snr = Inf, seed = NULL) {
+  t <- 1:T
+  signal <- A * exp(-((t - L)^2) / S^2)
+  
+  if (!is.null(seed)) set.seed(seed)
+  
+  if (is.finite(snr)) {
+    sigma2 <- asy_laplace_variance(tau, z)
+    b <- sqrt((A / snr)^2 / sigma2)
+    noise <- shifted_laplace(T, tau, scale = b)
+    I <- signal + noise
+  } else {
+    I <- signal
+  }
+  
+  l_grid <- 18:25
+  losses <- sapply(l_grid, function(l) {
+    s_hat <- search_best_s(I, l, tau)
+    a_hat <- compute_a(I, l, s_hat, tau)
+    objective_function(I, a_hat, l, s_hat, tau)
+  })
+  
+  data.frame(l = l_grid, loss = losses, T = T, z = z)
+}
+
+# ------------------------------------------
+# (2) Plotting utility with z overlay
+# ------------------------------------------
+plot_quantile_objectives_superposed <- function(results, tau, A_true, L_true, S_true) {
+  Ts <- sort(unique(results$T))
+  z_vals <- sort(unique(results$z))
+  colors <- c("black", "red", "blue", "darkgreen", "orange")
+  stopifnot(length(z_vals) <= length(colors))
+  
+  png(filename = paste0("shifted_obj_fun_tau_", tau, "_zcompare.png"),
+      width = 900, height = 600, res = 120)
+  old_par <- par(mfrow = c(2, 3), mar = c(4, 4, 3, 1))
+  on.exit({ par(old_par); dev.off() })
+  
+  for (T_val in Ts) {
+    df_T <- subset(results, T == T_val)
+    x_range <- range(df_T$l)
+    y_range <- range(df_T$loss)
+    
+    plot(NA, xlim = x_range, ylim = y_range,
+         xlab = "Peak Location Candidate l",
+         ylab = expression("Objective " * f),
+         main = paste0("T = ", T_val, ", tau = ", tau))
+    abline(v = L_true, col = "gray40", lty = 2)
+    grid()
+    
+    for (i in seq_along(z_vals)) {
+      df_z <- subset(df_T, z == z_vals[i])
+      lines(df_z$l, df_z$loss, col = colors[i], lwd = 2)
+    }
+    
+    legend("topright", legend = paste("z =", z_vals),
+           col = colors[1:length(z_vals)], lwd = 2, bty = "o", cex = 0.8)
+  }
+}
+
+
+# ------------------------------------------
+# (3) Main execution loop for superposed Figure 2
+# ------------------------------------------
+A_true <- 1
+L_true <- 22
+S_true <- 10
+snr <- 1000
+seed <- 280
+T_vals <- c(4, 6, 8, 9, 10)
+z_vals <- c(-0.9, -0.5, 0, 0.5, 0.9)
+
+for (tau_val in c(0.5, 0.75, 0.95)) {
+  results_all <- do.call(rbind, lapply(z_vals, function(z) {
+    res_z <- do.call(rbind, lapply(T_vals, function(T) {
+      simulate_quantile_objective(T, A = A_true, L = L_true, S = S_true,
+                                  tau = tau_val, z = z, snr = snr, seed = seed)
+    }))
+    res_z$z <- z
+    res_z
+  }))
+  
+  plot_quantile_objectives_superposed(results_all, tau_val, A_true, L_true, S_true)
+  cat("Figure 2 for tau =", tau_val, "generated and saved with all z values.\n")
+}
