@@ -261,3 +261,37 @@ gt_median <- wide_median_table %>%
 # Save table as PNG
 gtsave(gt_median, "T_star_median_table.png")
 cat("Saved table as T_star_median_table.png\n")
+
+
+
+
+
+
+
+
+snr <- 40  # instead of 1000
+
+tau <- 0.95
+z   <- 0.9
+seed <- 280
+
+
+T_vals <- 4:35
+h <- 35
+set.seed(seed)
+
+signal <- A_true * exp(-((1:h) - L_true)^2 / S_true^2)
+b <- compute_noise_scale(A_true, snr, tau, z)
+noise <- rgen_asy_laplace(h, tau, z, b)
+I <- signal + noise
+
+l_path <- sapply(T_vals, function(T) estimate_params(I[1:T], tau, h)$l_hat)
+
+
+cat("T:\n", paste(T_vals[1:16], collapse = " "), "\n")
+cat("l_hat:\n", paste(l_path[1:16], collapse = " "), "\n\n")
+
+cat("T:\n", paste(T_vals[17:32], collapse = " "), "\n")
+cat("l_hat:\n", paste(l_path[17:32], collapse = " "), "\n")
+
+
