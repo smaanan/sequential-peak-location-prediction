@@ -172,3 +172,92 @@ gt_table <- wide_table %>%
 # Save as PNG
 gtsave(gt_table, "T_star_table.png")
 cat("Saved table as T_star_table.png\n")
+
+
+
+
+# --- Additional Settings ---
+seeds <- c(100, 200, 300, 400, 500)
+
+# --- Core Loop: Compute T(tau, z) across multiple seeds ---------------------
+
+library(dplyr)
+
+results_all <- expand.grid(seed = seeds, tau = taus, z = z_vals)
+results_all$T_star <- NA
+
+for (i in seq_len(nrow(results_all))) {
+  seed <- results_all$seed[i]
+  tau  <- results_all$tau[i]
+  z    <- results_all$z[i]
+  
+  set.seed(seed)
+  signal <- A_true * exp(-((1:h) - L_true)^2 / S_true^2)
+  b <- compute_noise_scale(A_true, snr, tau, z)
+  noise <- rgen_asy_laplace(h, tau, z, b)
+  I <- signal + noise
+  
+  l_path <- sapply(T_vals, function(T) estimate_params(I[1:T], tau, h)$l_hat)
+  
+  for (j in seq_along(T_vals)) {
+    if (all(l_path[j:length(l_path)] == L_true)) {
+      results_all$T_star[i] <- T_vals[j]
+      break
+    }
+  }
+}
+
+
+# Aggregate by (tau, z) to get median T_star
+agg_table <- results_all %>%
+  group_by(tau, z) %>%
+  summarise(T_star_median = median(T_star, na.rm = TRUE),
+            T_star_min = min(T_star, na.rm = TRUE),
+            T_star_max = max(T_star, na.rm = TRUE),
+            .groups = "drop")
+
+
+
+
+library(gt)
+library(dplyr)
+library(tidyr)
+
+# Pivot table to wide format
+# wide_median_table <- agg_table %>%
+#   mutate(tau = paste0("tau = ", tau)) %>%
+#   pivot_wider(names_from = tau, values_from = T_star_median) %>%
+#   arrange(z)
+
+
+# Keep only necessary columns before pivoting
+wide_median_table <- agg_table %>%
+  select(tau, z, T_star_median) %>%
+  mutate(tau = paste0("tau = ", tau)) %>%
+  pivot_wider(names_from = tau, values_from = T_star_median) %>%
+  arrange(z)
+
+# Build gt table
+gt_median <- wide_median_table %>%
+  gt(rowname_col = "z") %>%
+  tab_header(
+    title = md("**Table: Median T(τ, z) such that l̂(T') = 22 ∀ T' ≥ T(τ,z)**"),
+    subtitle = "Averaged over 5 random seeds, with SNR = 1000"
+  ) %>%
+  cols_label(
+    `tau = 0.5` = md("**τ = 0.5**"),
+    `tau = 0.75` = md("**τ = 0.75**"),
+    `tau = 0.95` = md("**τ = 0.95**"),
+    `tau = 0.99` = md("**τ = 0.99**")
+  ) %>%
+  fmt_number(columns = everything(), decimals = 2) %>%
+  tab_options(
+    table.font.size = "small",
+    heading.title.font.size = 14,
+    heading.subtitle.font.size = 11,
+    data_row.padding = px(3)
+  )
+
+# Save table as PNG
+gtsave(gt_median, "T_star_median_table.png")
+cat("Saved table as T_star_median_table.png\n")
