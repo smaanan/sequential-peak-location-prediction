@@ -62,48 +62,51 @@ simulate_quantile_objective <- function(T, A, L, S, h, tau, snr, z, seed = NULL,
   )
 }
 
-plot_quantile_objectives <- function(results, tau, A_true, L_true, S_true, h, superposed = FALSE) {
-  Ts <- sort(unique(results$T))
-  z_vals <- sort(unique(results$z))
-  colors <- c("blue", "red", "darkgreen", "orange", "purple")
-  
-  fname <- paste0("plot_quantile_tau", tau, if (superposed) "_zcompare" else "", ".png")
-  png(filename = fname, width = 900, height = 600, res = 120)
-  par(mfrow = c(2, 3), mar = c(4, 4, 3, 1))
-  on.exit(dev.off())
-  
-  for (T_val in Ts) {
-    df_T <- subset(results, T == T_val)
-    plot(NA, xlim = range(df_T$l), ylim = range(df_T$loss),
-         xlab = "Peak Location Candidate l", ylab = expression("Objective " * f[tau]),
-         main = paste0("T = ", T_val, ", tau = ", tau))
-    abline(v = L_true, col = "gray40", lty = 2)
-    grid()
-    
-    for (i in seq_along(z_vals)) {
-      df_z <- subset(df_T, z == z_vals[i])
-      lines(df_z$l, df_z$loss, col = colors[i], lwd = 2)
-    }
-    legend("topright", legend = paste("z =", z_vals), col = colors, lwd = 2, cex = 0.8)
-  }
-}
-
 # --- Config ---
 A_true <- 15000; L_true <- 22; S_true <- 10; h <- 30
-Ts_free <- c(2, 3, 10, 15, 20, 21)
+Ts_free <- c(2, 3, 10, 20, 21)
 z_vals <- c(-0.9, -0.5, 0, 0.5, 0.9)
 snr <- 1000; seed <- 280; tau_vals <- c(0.5, 0.75, 0.95)
 
-# --- Main Loop ---
-for (tau in tau_vals) {
-  results_all <- do.call(rbind, lapply(z_vals, function(z) {
-    res_z <- do.call(rbind, lapply(Ts_free, function(T) {
+# Combined superposed panel plot for all T and tau values
+plot_quantile_all_tau_T <- function(results_all, L_true) {
+  Ts <- sort(unique(results_all$T))
+  taus <- sort(unique(results_all$tau))
+  z_vals <- sort(unique(results_all$z))
+  colors <- c("blue", "red", "darkgreen", "black", "grey")
+  
+  png("figure1_new_asy_laplace_all_tau_T.png", width = 900, height = 1200, res = 120)
+  old_par <- par(mfrow = c(length(Ts), length(taus)), mar = c(4, 4, 3, 1))
+  on.exit({ par(old_par); dev.off() })
+  
+  for (T_val in Ts) {
+    for (tau_val in taus) {
+      df_sub <- subset(results_all, T == T_val & tau == tau_val)
+      plot(NA, xlim = range(df_sub$l), ylim = range(df_sub$loss),
+           xlab = "Peak Location Candidate l", ylab = expression("Objective " * f),
+           main = bquote("T = " * .(T_val) * ",  " * tau * " = " * .(tau_val)))
+      abline(v = L_true, col = "gray40", lty = 2)
+      grid()
+      for (i in seq_along(z_vals)) {
+        df_z <- subset(df_sub, z == z_vals[i])
+        lines(df_z$l, df_z$loss, col = colors[i], lwd = 2)
+      }
+      legend("topright", legend = paste("z =", z_vals), col = colors, lwd = 2, cex = 0.8)
+    }
+  }
+}
+
+results_all <- do.call(rbind, lapply(tau_vals, function(tau) {
+  do.call(rbind, lapply(z_vals, function(z) {
+    do.call(rbind, lapply(Ts_free, function(T) {
       simulate_quantile_objective(T, A_true, L_true, S_true, h,
                                   tau, snr, z, seed, force_l_gt_T = (tau == 0.5))
-    }))
+    })) -> res_z
     res_z$z <- z
+    res_z$tau <- tau
     res_z
   }))
-  plot_quantile_objectives(results_all, tau, A_true, L_true, S_true, h, superposed = TRUE)
-  cat("Plot for tau =", tau, "generated.\n")
-}
+}))
+
+plot_quantile_all_tau_T(results_all, L_true)
+cat("Figure 1 saved to figure1_new_asy_laplace_all_tau_T.png\n")

@@ -72,7 +72,7 @@ colors <- c("orange", "red", "black", "blue", "darkgreen")
 
 # --- Plotting --------------------------------------------------------------
 
-png("fig3_4_superposed_3x3.png", width = 1200, height = 900, res = 120)
+png("fig3_4_superposed_3x3_2.png", width = 1200, height = 900, res = 120)
 par(mfrow = c(3, 3), mar = c(4, 4, 3, 1))
 
 for (tau in taus) {

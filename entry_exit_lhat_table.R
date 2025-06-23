@@ -112,3 +112,91 @@ cat(sprintf("T_entry (|Δl̂| ≤ %d): %d
 ", threshold, T_entry))
 cat(sprintf("T_exit  (|Δl̂| ≤ %d): %d
 ", threshold_prime, T_exit))
+
+
+
+
+# --- Required Libraries ---
+library(dplyr)
+library(gt)
+library(tibble)
+
+# --- Prepare Table Data ---
+table_data <- tibble(
+  T_1 = T_vals[1:16],
+  lhat_1 = l_path[1:16],
+  T_2 = T_vals[17:32],
+  lhat_2 = l_path[17:32]
+)
+
+# --- Create gt Table ---
+gt_table <- table_data %>%
+  gt() %>%
+  tab_header(
+    title = md("**Table: Sequence T →  l̂(T)**"),
+    subtitle = md("Simulated under SNR = 40, with τ = 0.5, z = 0")
+  ) %>%
+  cols_label(
+    T_1 = md("**T**"), lhat_1 = md("**l̂(T)**"),
+    T_2 = md("**T**"), lhat_2 = md("**l̂(T)**")
+  ) %>%
+  fmt_number(columns = everything(), decimals = 0) %>%
+  tab_options(
+    table.font.size = "small",
+    heading.title.font.size = 14,
+    heading.subtitle.font.size = 11,
+    data_row.padding = px(3)
+  )
+
+# --- Export Table as PNG ---
+gtsave(gt_table, "table8_like_lhat_path.png")
+cat("Saved as table8_like_lhat_path.png\n")
+
+# --- Required Libraries ---
+library(dplyr)
+library(gt)
+library(tibble)
+library(glue)  # for cleaner string interpolation
+
+# --- Transpose and Prepare Table ---
+transposed_matrix <- t(table_data)
+
+# Dummy column names just to avoid tibble error
+colnames(transposed_matrix) <- paste0("V", seq_len(ncol(transposed_matrix)))
+
+# Convert to tibble with row names
+transposed_data <- as.data.frame(transposed_matrix) %>%
+  rownames_to_column(var = "Label") %>%
+  as_tibble()
+
+# --- Rename Labels T_1/T_2 → "T", lhat_1/lhat_2 → "l̂(T)" ---
+transposed_data$Label <- recode(transposed_data$Label,
+                                "T_1" = "T", "T_2" = "T",
+                                "lhat_1" = "l̂(T)", "lhat_2" = "l̂(T)")
+
+# --- Format subtitle with dynamic entry/exit info ---
+subtitle_text <- glue(
+  "Simulated under SNR = {snr}, with τ = {tau}, z = {z}. ",
+  "Entry at **T_entry = {T_entry}** (ε = {threshold}), ",
+  "exit at **T_exit = {T_exit}** (ε' = {threshold_prime})."
+)
+
+# --- Create gt Table ---
+gt_table <- transposed_data %>%
+  gt() %>%
+  tab_header(
+    title = md("**Table: Sequence T →  l̂(T)**"),
+    subtitle = md(subtitle_text)
+  ) %>%
+  cols_label(.list = setNames(rep("", ncol(transposed_data)), names(transposed_data))) %>%
+  tab_options(
+    column_labels.hidden = TRUE,
+    table.font.size = "small",
+    heading.title.font.size = 14,
+    heading.subtitle.font.size = 11,
+    data_row.padding = px(3)
+  )
+
+# --- Save Table as PNG ---
+gtsave(gt_table, "table8_transposed_lhat_path_with_entry_exit.png")
+cat("Saved as table8_transposed_lhat_path_with_entry_exit.png\n")

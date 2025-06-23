@@ -111,71 +111,50 @@ simulate_quantile_objective <- function(T, A, L, S, tau, snr = Inf, seed = NULL)
 }
 
 # ---------------------------------------------------------------------------
-# Plotting utility
+# Combined Plotting Utility for All Tau and T Values (Shifted Laplace Case)
 # ---------------------------------------------------------------------------
-plot_quantile_objectives <- function(results, tau, A_true, L_true, S_true) {
-  Ts <- unique(results$T)
-  nT <- length(Ts)
-  nrow <- ceiling(nT / 2)
-  ncol <- if (nT == 1) 1 else 2
+plot_all_shifted_objectives <- function(results_all, L_true) {
+  Ts <- sort(unique(results_all$T))
+  taus <- sort(unique(results_all$tau))
   
-  png(filename = paste0("shifted_obj_fun_tau_", tau, ".png"),
-      width = 900, height = 600, res = 120)
-  old_par <- par(mfrow = c(nrow, ncol), mar = c(4, 4, 3, 1))
+  png(filename = "plot_shifted_all.png", width = 900, height = 1200, res = 120)
+  old_par <- par(mfrow = c(length(Ts), length(taus)), mar = c(4, 4, 3, 1))
   on.exit({ par(old_par); dev.off() })
   
   for (T_val in Ts) {
-    subset_data <- subset(results, T == T_val)
-    plot(subset_data$l, subset_data$loss, type = "l", lwd = 2, col = "blue",
-         xlab = "Peak Location Candidate l",
-         ylab = expression("Objective " * f),
-         main = paste0("T = ", T_val, ", tau = ", tau))
-    abline(v = L_true, col = "red", lty = 2)
-    grid()
-  }
-}
-
-plot_quantile_objectives <- function(results, tau, A_true, L_true, S_true) {
-  Ts <- unique(results$T)
-  
-  nrow <- 2
-  ncol <- 3
-  
-  png(filename = paste0("shifted_obj_fun_tau_", tau, ".png"),
-      width = 900, height = 600, res = 120)
-  old_par <- par(mfrow = c(nrow, ncol), mar = c(4, 4, 3, 1))
-  on.exit({ par(old_par); dev.off() })
-  
-  for (T_val in Ts) {
-    subset_data <- subset(results, T == T_val)
-    plot(subset_data$l, subset_data$loss, type = "l", lwd = 2, col = "blue",
-         xlab = "Peak Location Candidate l",
-         ylab = expression("Objective " * f),
-         main = paste0("T = ", T_val, ", tau = ", tau))
-    abline(v = L_true, col = "red", lty = 2)
-    grid()
+    for (tau_val in taus) {
+      subset_data <- subset(results_all, T == T_val & tau == tau_val)
+      plot(subset_data$l, subset_data$loss, type = "l", lwd = 2, col = "blue",
+           xlab = "Peak Location Candidate l",
+           ylab = expression("Objective " * f),
+           main = bquote("T = " * .(T_val) * ",  " * tau * " = " * .(tau_val)))
+      abline(v = L_true, col = "red", lty = 2)
+      grid()
+    }
   }
 }
 
 # ---------------------------------------------------------------------------
-# Run simulation and plot
+# Run simulation and produce combined plot
 # ---------------------------------------------------------------------------
 A_true <- 1
 L_true <- 22
 S_true <- 10
 snr <- 1000
 seed <- 280
-T_vals <- c(4,6,8,9,10)
+T_vals <- c(4, 6, 8, 9, 10)
+tau_values <- c(0.5, 0.75, 0.95)
 
-for ( tau_val in c(0.5, 0.75, 0.95) ) {
-  
-  results <- do.call(rbind, lapply(T_vals, function(T) {
-    simulate_quantile_objective(T, A = A_true, L = L_true, S = S_true,
-                                tau = tau_val, snr = snr, seed = seed) 
+results_all <- do.call(rbind, lapply(tau_values, function(tau_val) {
+  do.call(rbind, lapply(T_vals, function(T) {
+    df <- simulate_quantile_objective(
+      T, A = A_true, L = L_true, S = S_true,
+      tau = tau_val, snr = snr, seed = seed
+    )
+    df$tau <- tau_val
+    df
   }))
-  
-  plot_file <- paste0("shifted_obj_fun_tau_", tau_val, ".png")
-  plot_quantile_objectives(results, tau_val, A_true, L_true, S_true)
-  
-  cat("Plot for tau =", tau_val, "generated and saved to", plot_file, "\n")
-}
+}))
+
+plot_all_shifted_objectives(results_all, L_true)
+cat("Combined plot saved to plot_shifted_all.png\n")

@@ -156,3 +156,11 @@ gt_table <- table_out %>%
 
 gtsave(gt_table, "T_entry_exit_table.png")
 cat("Saved table as 'T_entry_exit_table.png'\n")
+
+
+
+
+latex_code <- as_latex(gt_table)
+cat(as.character(latex_code), file = "T_entry_exit_table.tex")
+
+cat(as.character(as_latex(gt_table)))

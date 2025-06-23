@@ -103,52 +103,51 @@ simulate_quantile_objective_asy <- function(T, A, L, S, tau, z, snr = Inf, seed 
 }
 
 # ---------------------------------------------------------------------------
-# Plotting utility
+# Combined Plotting Utility for All Tau and T Values (Asymmetric Laplace)
 # ---------------------------------------------------------------------------
-plot_quantile_objectives <- function(results, tau, A_true, L_true, S_true) {
-  Ts <- unique(results$T)
+plot_all_asymmetric_objectives <- function(results_all, L_true) {
+  Ts <- sort(unique(results_all$T))
+  taus <- sort(unique(results_all$tau))
   
-  nrow <- 2
-  ncol <- 3
-  
-  png(filename = paste0("asy_laplace_obj_fun_tau_", tau, ".png"),
-      width = 900, height = 600, res = 120)
-  old_par <- par(mfrow = c(nrow, ncol), mar = c(4, 4, 3, 1))
+  png(filename = "plot_asymmetric_all.png", width = 900, height = 1200, res = 120)
+  old_par <- par(mfrow = c(length(Ts), length(taus)), mar = c(4, 4, 3, 1))
   on.exit({ par(old_par); dev.off() })
   
   for (T_val in Ts) {
-    subset_data <- subset(results, T == T_val)
-    plot(subset_data$l, subset_data$loss, type = "l", lwd = 2, col = "blue",
-         xlab = "Peak Location Candidate l",
-         ylab = expression("Objective " * f),
-         main = paste0("T = ", T_val, ", tau = ", tau))
-    abline(v = L_true, col = "red", lty = 2)
-    grid()
+    for (tau_val in taus) {
+      subset_data <- subset(results_all, T == T_val & tau == tau_val)
+      plot(subset_data$l, subset_data$loss, type = "l", lwd = 2, col = "blue",
+           xlab = "Peak Location Candidate l",
+           ylab = expression("Objective " * f),
+           main = bquote("T = " * .(T_val) * ",  " * tau * " = " * .(tau_val)))
+      abline(v = L_true, col = "red", lty = 2)
+      grid()
+    }
   }
 }
 
 # ---------------------------------------------------------------------------
-# Run simulation and plot
+# Run simulation and generate merged plot
 # ---------------------------------------------------------------------------
 A_true <- 1
 L_true <- 22
 S_true <- 10
 snr <- 1000
 seed <- 280
-T_vals <- c(4,6,8,9,10)
+T_vals <- c(4, 6, 8, 9, 10)
+tau_values <- c(0.5, 0.75, 0.95)
+z <- 0  # Controls asymmetry; z = 0 gives symmetric Laplace
 
-# z controls asymmetry; typically z = 0 reduces to symmetric Laplace
-z <- 0
-
-for ( tau_val in c(0.5, 0.75, 0.95) ) {
-  
-  results <- do.call(rbind, lapply(T_vals, function(T) {
-    simulate_quantile_objective_asy(T, A = A_true, L = L_true, S = S_true,
-                                    tau = tau_val, z = z, snr = snr, seed = seed) 
+results_all <- do.call(rbind, lapply(tau_values, function(tau_val) {
+  do.call(rbind, lapply(T_vals, function(T) {
+    df <- simulate_quantile_objective_asy(
+      T, A = A_true, L = L_true, S = S_true,
+      tau = tau_val, z = z, snr = snr, seed = seed
+    )
+    df$tau <- tau_val
+    df
   }))
-  
-  plot_file <- paste0("asy_laplace_obj_fun_tau_", tau_val, ".png")
-  plot_quantile_objectives(results, tau_val, A_true, L_true, S_true)
-  
-  cat("Plot for tau =", tau_val, "generated and saved to", plot_file, "\n")
-}
+}))
+
+plot_all_asymmetric_objectives(results_all, L_true)
+cat("Combined plot saved to plot_asymmetric_all.png\n")

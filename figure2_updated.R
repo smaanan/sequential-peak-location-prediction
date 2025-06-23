@@ -61,32 +61,6 @@ simulate_objective <- function(T, A, L, S, tau, z, snr, seed = NULL) {
   )
 }
 
-plot_shifted_obj_superposed <- function(results, tau, L_true) {
-  Ts <- sort(unique(results$T))
-  z_vals <- sort(unique(results$z))
-  colors <- c("black", "red", "blue", "darkgreen", "orange")
-  
-  png(paste0("shifted_obj_fun_tau_", tau, "_zcompare.png"), width = 900, height = 600, res = 120)
-  par(mfrow = c(2, 3), mar = c(4, 4, 3, 1))
-  on.exit(dev.off())
-  
-  for (T_val in Ts) {
-    df_T <- subset(results, T == T_val)
-    plot(NA, xlim = range(df_T$l), ylim = range(df_T$loss),
-         xlab = "Peak Location Candidate l", ylab = expression("Objective " * f),
-         main = paste0("T = ", T_val, ", tau = ", tau))
-    abline(v = L_true, col = "gray40", lty = 2)
-    grid()
-    
-    for (i in seq_along(z_vals)) {
-      lines(subset(df_T, z == z_vals[i])[, c("l", "loss")], col = colors[i], lwd = 2)
-    }
-    
-    legend("topright", legend = paste("z =", z_vals),
-           col = colors[1:length(z_vals)], lwd = 2, cex = 0.8)
-  }
-}
-
 # --- Main Parameters ---
 A_true <- 1
 L_true <- 22
@@ -96,13 +70,43 @@ seed <- 280
 T_vals <- c(4, 6, 8, 9, 10)
 z_vals <- c(-0.9, -0.5, 0, 0.5, 0.9)
 
-for (tau_val in c(0.5, 0.75, 0.95)) {
-  results_all <- do.call(rbind, lapply(z_vals, function(z) {
+# Combined Figure 2 with all T and tau in one PNG
+plot_combined_shifted_figure2 <- function(results_all, L_true) {
+  Ts <- sort(unique(results_all$T))
+  taus <- sort(unique(results_all$tau))
+  z_vals <- sort(unique(results_all$z))
+  colors <- c("black", "red", "blue", "darkgreen", "grey")
+  
+  png("figure2_shifted_laplace_all_tau_T.png", width = 900, height = 1200, res = 120)
+  par(mfrow = c(length(Ts), length(taus)), mar = c(4, 4, 3, 1))
+  on.exit(dev.off())
+  
+  for (T_val in Ts) {
+    for (tau_val in taus) {
+      df_sub <- subset(results_all, T == T_val & tau == tau_val)
+      plot(NA, xlim = range(df_sub$l), ylim = range(df_sub$loss),
+           xlab = "Peak Location Candidate l", ylab = expression("Objective " * f),
+           main = bquote("T = " * .(T_val) * ",  " * tau * " = " * .(tau_val)))
+      abline(v = L_true, col = "gray40", lty = 2)
+      grid()
+      for (i in seq_along(z_vals)) {
+        lines(subset(df_sub, z == z_vals[i])[, c("l", "loss")], col = colors[i], lwd = 2)
+      }
+      legend("topright", legend = paste("z =", z_vals), col = colors, lwd = 2, cex = 0.8)
+    }
+  }
+}
+
+
+results_all <- do.call(rbind, lapply(c(0.5, 0.75, 0.95), function(tau_val) {
+  do.call(rbind, lapply(z_vals, function(z) {
     do.call(rbind, lapply(T_vals, function(T) {
       simulate_objective(T, A_true, L_true, S_true, tau_val, z, snr, seed)
     }))
-  }))
-  
-  plot_shifted_obj_superposed(results_all, tau_val, L_true)
-  cat("Figure 2 for tau =", tau_val, "saved.\n")
-}
+  })) -> res_tau
+  res_tau$tau <- tau_val
+  res_tau
+}))
+
+plot_combined_shifted_figure2(results_all, L_true)
+cat("Combined Figure 2 saved to figure2_shifted_laplace_all_tau_T.png\n")

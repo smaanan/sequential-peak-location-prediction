@@ -71,59 +71,6 @@ h <- 30
 T_vals <- 4:h
 taus <- c(0.5, 0.75, 0.95)
 
-# ---------------------------------------------------------------------------
-# Loop over tau values
-# ---------------------------------------------------------------------------
-# for (tau in taus) {
-#   set.seed(seed)
-#   signal_full <- A_true * exp(-((1:h) - L_true)^2 / S_true^2)
-#   b <- A_true / (sqrt(2) * snr)
-#   noise_full <- rlaplace(h, scale = b)
-#   I_full <- signal_full + noise_full
-#   
-#   l_hats <- numeric(length(T_vals))
-#   a_hats <- numeric(length(T_vals))
-#   s_hats <- numeric(length(T_vals))
-#   
-#   for (i in seq_along(T_vals)) {
-#     T <- T_vals[i]
-#     I_T <- I_full[1:T]
-#     est <- estimate_params(I_T, tau, h)
-#     l_hats[i] <- est$l_hat
-#     a_hats[i] <- est$a_hat
-#     s_hats[i] <- est$s_hat
-#   }
-#   
-#   # ----------------- Plot Figure 3 (l_hat) -----------------
-#   png(sprintf("fig3_lhat_vs_T_tau_%.2f.png", tau), width = 800, height = 500)
-#   plot(T_vals, l_hats, type = "b", col = "blue", pch = 19,
-#        xlab = "T", ylab = expression(hat(l)),
-#        main = bquote("Figure 3: " ~ T %->% hat(l)(T) ~ " for " ~ tau == .(tau)))
-#   abline(h = L_true, col = "red", lty = 2)
-#   grid()
-#   dev.off()
-#   
-#   # ----------------- Plot Figure 4a (a_hat) -----------------
-#   png(sprintf("fig4a_ahat_vs_T_tau_%.2f.png", tau), width = 800, height = 500)
-#   plot(T_vals, a_hats, type = "b", col = "darkgreen", pch = 19,
-#        xlab = "T", ylab = expression(hat(a)),
-#        main = bquote("Figure 4(a): " ~ T %->% hat(a)(T) ~ " for " ~ tau == .(tau)))
-#   abline(h = A_true, col = "red", lty = 2)
-#   grid()
-#   dev.off()
-#   
-#   # ----------------- Plot Figure 4b (s_hat) -----------------
-#   png(sprintf("fig4b_shat_vs_T_tau_%.2f.png", tau), width = 800, height = 500)
-#   plot(T_vals, s_hats, type = "b", col = "purple", pch = 19,
-#        xlab = "T", ylab = expression(hat(s)),
-#        main = bquote("Figure 4(b): " ~ T %->% hat(s)(T) ~ " for " ~ tau == .(tau)))
-#   abline(h = S_true, col = "red", lty = 2)
-#   grid()
-#   dev.off()
-#   
-#   cat(sprintf("Plots for tau = %.2f generated.\n", tau))
-# }
-
 # ----------------------------------------
 # Combined 3x3 Plot for tau = 0.5, 0.75, 0.95
 # ----------------------------------------
