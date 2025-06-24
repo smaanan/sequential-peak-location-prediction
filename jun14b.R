@@ -107,8 +107,8 @@ simulate_quantile_objective <- function(T, A, L, S, h, tau, snr = Inf, seed = NU
 plot_all_quantile_objectives <- function(results_all, A_true, L_true) {
   Ts <- sort(unique(results_all$T))
   taus <- sort(unique(results_all$tau))
-  
-  png(filename = "plot_quantile_all.png", width = 900, height = 1200, res = 120)
+  pdf(file = "plot_quantile_all.pdf", width = 7.5, height = 10)
+  # png(filename = "plot_quantile_all.png", width = 900, height = 1200, res = 120)
   old_par <- par(mfrow = c(length(Ts), length(taus)), mar = c(4, 4, 3, 1))
   on.exit({ par(old_par); dev.off() })
   

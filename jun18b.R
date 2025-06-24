@@ -75,7 +75,8 @@ taus <- c(0.5, 0.75, 0.95)
 # Combined 3x3 Plot for tau = 0.5, 0.75, 0.95
 # ----------------------------------------
 
-png("fig3_4a_4b_combined.png", width = 1200, height = 800, res = 120)
+# png("fig3_4a_4b_combined.png", width = 1200, height = 800, res = 120)
+pdf(file = "fig3_4a_4b_combined.pdf", width = 8, height = 6)
 par(mfrow = c(3, 3), mar = c(4, 4, 3, 1))  # 3 rows (tau), 3 columns (l, a, s)
 
 for (tau in taus) {

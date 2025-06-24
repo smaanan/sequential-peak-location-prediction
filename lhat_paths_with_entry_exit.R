@@ -92,8 +92,9 @@ threshold_prime <- 0
 results <- data.frame()
 
 # --- Plotting Setup --------------------------------------------------------
-png("fig_lhat_paths_snr40_tau_z_overlay.png", width = 1200, height = 400, res = 120)
-par(mfrow = c(1, 3), mar = c(4, 4, 3, 1))
+# png("fig_lhat_paths_snr40_tau_z_overlay.png", width = 1200, height = 400, res = 120)
+pdf(file = "fig_lhat_paths_snr40_tau_z_overlay.pdf", width = 9, height = 3)
+par(mfrow = c(1, 3), mar = c(4, 4, 3, 1), bg = "white")
 
 for (tau in taus) {
   lhat_matrix <- matrix(NA, nrow = length(T_vals), ncol = length(z_vals))

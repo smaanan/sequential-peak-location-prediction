@@ -77,8 +77,9 @@ colors <- c("orange", "red", "black", "blue", "darkgreen")
 
 # --- 3×3 Combined Plot for All Tau × Parameters -----------------------------
 
-png("fig3_4_superposed_3x3.png", width = 1200, height = 900, res = 120)
-par(mfrow = c(3, 3), mar = c(4, 4, 3, 1))
+# png("fig3_4_superposed_3x3.png", width = 1200, height = 900, res = 120)
+pdf(file = "fig3_4_superposed_3x3.pdf", width = 8, height = 7)
+par(mfrow = c(3, 3), mar = c(4, 4, 3, 1), bg = "white")
 
 for (tau in taus) {
   for (est_name in c("l_hat", "a_hat", "s_hat")) {

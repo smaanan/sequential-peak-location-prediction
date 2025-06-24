@@ -88,9 +88,9 @@ plot_all_quantile_objectives_zcompare <- function(results_all, L_true) {
   taus <- sort(unique(results_all$tau))
   z_vals <- sort(unique(results_all$z))
   colors <- c("blue", "red", "darkgreen", "black", "grey60")
-  
-  png(filename = "plot_all_tau_zcompare.png", width = 900, height = 1200, res = 120)
-  old_par <- par(mfrow = c(length(Ts), length(taus)), mar = c(4, 4, 3, 1))
+  pdf(file = "plot_all_tau_zcompare.pdf", width = 7.5, height = 10)
+  # png(filename = "plot_all_tau_zcompare.png", width = 900, height = 1200, res = 120)
+  old_par <- par(mfrow = c(length(Ts), length(taus)), mar = c(4, 4, 3, 1), bg = "white")
   on.exit({ par(old_par); dev.off() })
   
   for (T_val in Ts) {

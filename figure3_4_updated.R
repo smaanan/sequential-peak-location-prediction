@@ -72,8 +72,9 @@ colors <- c("orange", "red", "black", "blue", "darkgreen")
 
 # --- Plotting --------------------------------------------------------------
 
-png("fig3_4_superposed_3x3_2.png", width = 1200, height = 900, res = 120)
-par(mfrow = c(3, 3), mar = c(4, 4, 3, 1))
+# png("fig3_4_superposed_3x3_2.png", width = 1200, height = 900, res = 120)
+pdf(file = "fig3_4_superposed_3x3_2.pdf", width = 8, height = 7)
+par(mfrow = c(3, 3), mar = c(4, 4, 3, 1), bg = "white")
 
 for (tau in taus) {
   for (est_name in c("l_hat", "a_hat", "s_hat")) {

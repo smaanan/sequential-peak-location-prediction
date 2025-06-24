@@ -108,8 +108,8 @@ simulate_quantile_objective_asy <- function(T, A, L, S, tau, z, snr = Inf, seed 
 plot_all_asymmetric_objectives <- function(results_all, L_true) {
   Ts <- sort(unique(results_all$T))
   taus <- sort(unique(results_all$tau))
-  
-  png(filename = "plot_asymmetric_all.png", width = 900, height = 1200, res = 120)
+  pdf(file = "plot_asymmetric_all.pdf", width = 7.5, height = 10)
+  # png(filename = "plot_asymmetric_all.png", width = 900, height = 1200, res = 120)
   old_par <- par(mfrow = c(length(Ts), length(taus)), mar = c(4, 4, 3, 1))
   on.exit({ par(old_par); dev.off() })
   
