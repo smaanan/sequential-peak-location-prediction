@@ -101,3 +101,52 @@ run_sim_grid <- function(A = 1, L = 22, S = 10, snr = 40,
   
   return(results)
 }
+
+
+
+# ---- Prepare Data for Plotting ----
+entry_exit_long <- run_sim_grid() %>%
+  unnest_wider(data) %>%
+  mutate(b = as.factor(b)) %>%
+  pivot_longer(cols = c(T_entry, T_exit),
+               names_to = "type", values_to = "T_val")
+
+# ---- Heatmap Plot ----
+ggplot(entry_exit_long, aes(x = factor(z), y = b, fill = T_val)) +
+  geom_tile(color = "white") +
+  facet_grid(type ~ tau, labeller = label_both) +
+  scale_fill_viridis_c(option = "B", direction = -1, na.value = "grey90") +
+  labs(
+    title = "Entry and Exit Times under General Asymmetric Laplace Noise",
+    x = "Asymmetry (z)", y = "Scale (b)", fill = "T",
+    caption = "Each facet shows Entry (T_entry) or Exit (T_exit) for a given τ"
+  ) +
+  theme_minimal(base_size = 12)
+
+
+# ---- Table Summary ----
+summary_table <- run_sim_grid() %>%
+  unnest_wider(data) %>%
+  select(tau, z, b, T_entry, T_exit) %>%
+  arrange(tau, z, b)
+
+# ---- Generate gt Table ----
+gt_table <- summary_table %>%
+  gt() %>%
+  tab_header(
+    title = md("**Entry and Exit Times (T_entry, T_exit)**"),
+    subtitle = "Across all combinations of τ, z, and b (SNR = 40)"
+  ) %>%
+  fmt_number(columns = c(T_entry, T_exit), decimals = 1) %>%
+  cols_label(
+    tau = md("**τ**"),
+    z = md("**z**"),
+    b = md("**b**"),
+    T_entry = md("**T<sub>entry</sub>**"),
+    T_exit = md("**T<sub>exit</sub>**")
+  ) %>%
+  tab_options(table.font.size = "small")
+
+# ---- Save and Export ----
+gtsave(gt_table, "table_entry_exit_tau_z_b.png")
+cat("Saved 'table_entry_exit_tau_z_b.png'\n")
