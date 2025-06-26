@@ -1,7 +1,3 @@
-# ---------------------------------------------------------------------
-# Table 8-style Output Using Real COVID-19 Data from Germany (ECDC)
-# ---------------------------------------------------------------------
-
 # --- Libraries ---
 library(dplyr)
 library(tidyr)
@@ -12,17 +8,17 @@ library(readr)
 library(zoo)
 
 # --- Parameters ---
-taus <- c(0.5, 0.75, 0.95)
+taus <- c(0.25, 0.5, 0.75, 0.95)
 threshold <- 15
 threshold_prime <- 2
 h <- 160
 T_vals <- 40:75  # From Table 11 in the paper
 
-# --- Load ECDC Germany COVID-19 Data ---
+# --- Load ECDC Germany COVID-19 Data (to get t in [1,160]) ---
 get_de_cases_ecdc <- function(start_date = "2020-01-28", end_date = "2020-07-05") {
   url <- "https://opendata.ecdc.europa.eu/covid19/casedistribution/csv"
   
-  data <- read_csv(url, col_types = cols()) %>%
+  read_csv(url, col_types = cols()) %>%
     filter(countriesAndTerritories == "Germany") %>%
     mutate(date = as.Date(sprintf("%04d-%02d-%02d", year, month, day))) %>%
     filter(date >= as.Date(start_date) & date <= as.Date(end_date)) %>%
@@ -30,10 +26,9 @@ get_de_cases_ecdc <- function(start_date = "2020-01-28", end_date = "2020-07-05"
     select(date, daily_cases = cases) %>%
     mutate(daily_cases = ifelse(daily_cases < 0, NA, daily_cases),
            daily_cases = zoo::na.locf(daily_cases, na.rm = FALSE))
-  
-  return(data)
 }
 
+# --- Load Data ---
 de <- get_de_cases_ecdc()
 I_full <- de$daily_cases
 
@@ -82,6 +77,9 @@ find_stable_time <- function(l_path, T_vals, tol) {
   return(NA)
 }
 
+# --- Store objective function values ---
+min_objectives <- list()
+
 # --- Main Loop Over τ Values ---
 for (tau in taus) {
   l_path <- sapply(T_vals, function(T) {
@@ -89,10 +87,17 @@ for (tau in taus) {
     estimate_params(I, tau, h)$l_hat
   })
   
-  T_entry <- find_stable_time(l_path, T_vals, threshold)
-  T_exit <- find_stable_time(l_path[T_vals >= T_entry], T_vals[T_vals >= T_entry], threshold_prime)
+  T_max <- max(T_vals)
+  I_Tmax <- I_full[1:T_max]
+  res <- estimate_params(I_Tmax, tau, h)
+  s_opt <- search_best_s(I_Tmax, res$l_hat, tau)
+  a_opt <- compute_a(I_Tmax, res$l_hat, s_opt, tau)
+  obj_val <- objective_function(I_Tmax, a_opt, res$l_hat, s_opt, tau)
+  min_objectives[[as.character(tau)]] <- obj_val
   
-  # Table structure
+  T_entry <- find_stable_time(l_path, T_vals, threshold)
+  T_exit  <- find_stable_time(l_path[T_vals >= T_entry], T_vals[T_vals >= T_entry], threshold_prime)
+  
   table_data <- tibble(
     T_1 = T_vals[1:18],
     lhat_1 = l_path[1:18],
@@ -131,15 +136,15 @@ for (tau in taus) {
       data_row.padding = px(3)
     )
   
-  filename <- glue("germany_table8_lhat_path_tau{tau}.png")
-  gtsave(gt_table, filename)
-  cat(glue("Saved: {filename}\n"))
+  # Save outputs
+  png_file <- glue("germany_table8_lhat_path_tau{tau}.png")
+  tex_file <- glue("germany_table8_lhat_path_tau{tau}.tex")
+  gtsave(gt_table, png_file)
+  cat(glue("Saved: {png_file}\n"))
+  cat(as.character(as_latex(gt_table)), file = tex_file)
+  cat(glue("Saved: {tex_file}\n"))
 }
 
-# png(filename = "france.png", width = 900, height = 600, res = 120)
-# plot(france$date, france$daily_cases, type = "l", xlab = "Date", ylab = "Cases", main = "France")
-# dev.off()
-# 
-# png(filename = "germany.png", width = 900, height = 600, res = 120)
-# plot(de$date, de$daily_cases, type = "l", xlab = "Date", ylab = "Cases", main = "Germany")
-# dev.off()
+# --- Report the tau that minimizes the objective function ---
+best_tau <- names(which.min(unlist(min_objectives)))
+cat(glue("The τ that minimizes the objective function at T = {max(T_vals)} is τ = {best_tau}\n"))

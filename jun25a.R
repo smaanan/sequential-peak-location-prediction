@@ -1,7 +1,3 @@
-# ---------------------------------------------------------------------
-# Table 8-style Output Using Real COVID-19 Data from France (ECDC)
-# ---------------------------------------------------------------------
-
 # --- Libraries ---
 library(dplyr)
 library(tidyr)
@@ -9,9 +5,10 @@ library(gt)
 library(tibble)
 library(glue)
 library(readr)
+library(zoo)
 
 # --- Parameters ---
-taus <- c(0.5, 0.75, 0.95)
+taus <- c(0.25, 0.5, 0.75, 0.95)
 threshold <- 5
 threshold_prime <- 1
 h <- 120
@@ -20,25 +17,20 @@ T_vals <- 50:89  # From Table 10 in the paper
 # --- Load ECDC France COVID-19 Data (Jan 15 to May 31) ---
 get_france_cases_ecdc <- function(start_date = "2020-01-15", end_date = "2020-05-31") {
   url <- "https://opendata.ecdc.europa.eu/covid19/casedistribution/csv"
-  
-  data <- read_csv(url, col_types = cols()) %>%
+  read_csv(url, col_types = cols()) %>%
     filter(countriesAndTerritories == "France") %>%
     mutate(date = as.Date(sprintf("%04d-%02d-%02d", year, month, day))) %>%
     filter(date >= as.Date(start_date) & date <= as.Date(end_date)) %>%
     arrange(date) %>%
     select(date, daily_cases = cases) %>%
     mutate(daily_cases = ifelse(daily_cases < 0, NA, daily_cases),
-           daily_cases = zoo::na.locf(daily_cases, na.rm = FALSE),
-           log_cases = log(pmax(daily_cases, 1)))
-  
-  return(data)
+           daily_cases = zoo::na.locf(daily_cases, na.rm = FALSE))
 }
 
 france <- get_france_cases_ecdc()
-# I_full <- france$log_cases  # Log-transformed daily new cases
-I_full <- france$daily_cases
+I_full <- france$daily_cases  # Use raw daily cases
 
-# --- Estimation Functions ---
+# --- Quantile Regression Core Functions ---
 quantile_loss <- function(u, tau) u * (tau - (u < 0))
 
 med_weighted_tau <- function(I, l, s, tau) {
@@ -83,6 +75,9 @@ find_stable_time <- function(l_path, T_vals, tol) {
   return(NA)
 }
 
+# --- Track Best τ by Objective at T_max ---
+min_objectives <- list()
+
 # --- Main Loop Over τ Values ---
 for (tau in taus) {
   l_path <- sapply(T_vals, function(T) {
@@ -90,10 +85,21 @@ for (tau in taus) {
     estimate_params(I, tau, h)$l_hat
   })
   
-  T_entry <- find_stable_time(l_path, T_vals, threshold)
-  T_exit <- find_stable_time(l_path[T_vals >= T_entry], T_vals[T_vals >= T_entry], threshold_prime)
+  # Objective value at T_max
+  T_max <- max(T_vals)
+  I_Tmax <- I_full[1:T_max]
+  res <- estimate_params(I_Tmax, tau, h)
+  l_hat_Tmax <- res$l_hat
+  s_hat <- search_best_s(I_Tmax, l_hat_Tmax, tau)
+  a_hat <- compute_a(I_Tmax, l_hat_Tmax, s_hat, tau)
+  obj_val <- objective_function(I_Tmax, a_hat, l_hat_Tmax, s_hat, tau)
+  min_objectives[[as.character(tau)]] <- obj_val
   
-  # Table structure
+  # Entry/exit
+  T_entry <- find_stable_time(l_path, T_vals, threshold)
+  T_exit  <- find_stable_time(l_path[T_vals >= T_entry], T_vals[T_vals >= T_entry], threshold_prime)
+  
+  # Format table
   table_data <- tibble(
     T_1 = T_vals[1:20],
     lhat_1 = l_path[1:20],
@@ -132,7 +138,14 @@ for (tau in taus) {
       data_row.padding = px(3)
     )
   
-  filename <- glue("france_table8_lhat_path_tau{tau}.png")
-  gtsave(gt_table, filename)
-  cat(glue("Saved: {filename}\n"))
+  # Save outputs
+  png_file <- glue("france_table8_lhat_path_tau{tau}.png")
+  tex_file <- glue("france_table8_lhat_path_tau{tau}.tex")
+  gtsave(gt_table, png_file)
+  writeLines(as.character(as_latex(gt_table)), tex_file)
+  cat(glue("Saved: {png_file}, {tex_file}\n"))
 }
+
+# --- Summary: Best τ Minimizing Objective ---
+best_tau <- names(which.min(unlist(min_objectives)))
+cat(glue("\n>>> Best τ for France (minimizing objective at T = {max(T_vals)}): τ = {best_tau}\n"))
