@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------
-# Table 8-style Output Using Real COVID-19 Data from France (ECDC)
+# Table 8-style Output Using Real COVID-19 Data from Germany (ECDC)
 # ---------------------------------------------------------------------
 
 # --- Libraries ---
@@ -9,34 +9,33 @@ library(gt)
 library(tibble)
 library(glue)
 library(readr)
+library(zoo)
 
 # --- Parameters ---
 taus <- c(0.5, 0.75, 0.95)
-threshold <- 5
-threshold_prime <- 1
-h <- 120
-T_vals <- 50:89  # From Table 10 in the paper
+threshold <- 15
+threshold_prime <- 2
+h <- 160
+T_vals <- 40:75  # From Table 11 in the paper
 
-# --- Load ECDC France COVID-19 Data (Jan 15 to May 31) ---
-get_france_cases_ecdc <- function(start_date = "2020-01-15", end_date = "2020-05-31") {
+# --- Load ECDC Germany COVID-19 Data ---
+get_de_cases_ecdc <- function(start_date = "2020-01-28", end_date = "2020-07-05") {
   url <- "https://opendata.ecdc.europa.eu/covid19/casedistribution/csv"
   
   data <- read_csv(url, col_types = cols()) %>%
-    filter(countriesAndTerritories == "France") %>%
+    filter(countriesAndTerritories == "Germany") %>%
     mutate(date = as.Date(sprintf("%04d-%02d-%02d", year, month, day))) %>%
     filter(date >= as.Date(start_date) & date <= as.Date(end_date)) %>%
     arrange(date) %>%
     select(date, daily_cases = cases) %>%
     mutate(daily_cases = ifelse(daily_cases < 0, NA, daily_cases),
-           daily_cases = zoo::na.locf(daily_cases, na.rm = FALSE),
-           log_cases = log(pmax(daily_cases, 1)))
+           daily_cases = zoo::na.locf(daily_cases, na.rm = FALSE))
   
   return(data)
 }
 
-france <- get_france_cases_ecdc()
-I_full <- france$log_cases  # Log-transformed daily new cases
-# I_full <- france$daily_cases
+de <- get_de_cases_ecdc()
+I_full <- de$daily_cases
 
 # --- Estimation Functions ---
 quantile_loss <- function(u, tau) u * (tau - (u < 0))
@@ -95,10 +94,10 @@ for (tau in taus) {
   
   # Table structure
   table_data <- tibble(
-    T_1 = T_vals[1:20],
-    lhat_1 = l_path[1:20],
-    T_2 = T_vals[21:40],
-    lhat_2 = l_path[21:40]
+    T_1 = T_vals[1:18],
+    lhat_1 = l_path[1:18],
+    T_2 = T_vals[19:36],
+    lhat_2 = l_path[19:36]
   )
   
   transposed_matrix <- t(table_data)
@@ -112,7 +111,7 @@ for (tau in taus) {
                                   "lhat_1" = "l̂(T)", "lhat_2" = "l̂(T)")
   
   subtitle_text <- glue(
-    "COVID-19 in France, τ = {tau}. ",
+    "COVID-19 in Germany, τ = {tau}. ",
     "Entry at **T_entry = {T_entry}** (ε = {threshold}), ",
     "exit at **T_exit = {T_exit}** (ε' = {threshold_prime})."
   )
@@ -132,7 +131,15 @@ for (tau in taus) {
       data_row.padding = px(3)
     )
   
-  filename <- glue("france_table8_lhat_path_tau{tau}.png")
+  filename <- glue("germany_table8_lhat_path_tau{tau}.png")
   gtsave(gt_table, filename)
   cat(glue("Saved: {filename}\n"))
 }
+
+# png(filename = "france.png", width = 900, height = 600, res = 120)
+# plot(france$date, france$daily_cases, type = "l", xlab = "Date", ylab = "Cases", main = "France")
+# dev.off()
+# 
+# png(filename = "germany.png", width = 900, height = 600, res = 120)
+# plot(de$date, de$daily_cases, type = "l", xlab = "Date", ylab = "Cases", main = "Germany")
+# dev.off()
