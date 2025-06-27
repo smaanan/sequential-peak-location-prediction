@@ -1,7 +1,6 @@
-
 # ---------------------------------------------------------------------------
-# Estimation Paths + Entry/Exit Times under Low SNR = 40
-# Author: Said Maanan | Date: 2025-06-21
+# Estimation Paths + Entry/Exit Times under Low SNR = 40 (with tau = 0.25)
+# Author: Said Maanan | Date: 2025-06-21 (updated)
 # ---------------------------------------------------------------------------
 
 # --- Required Libraries ----------------------------------------------------
@@ -83,7 +82,7 @@ snr <- 40
 seed <- 280
 h <- 35
 T_vals <- 4:h
-taus <- c(0.5, 0.75, 0.95)
+taus <- c(0.25, 0.5, 0.75, 0.95)
 z_vals <- c(-0.9, -0.5, 0, 0.5, 0.9)
 colors <- c("orange", "red", "black", "blue", "darkgreen")
 threshold <- 4
@@ -92,13 +91,12 @@ threshold_prime <- 0
 results <- data.frame()
 
 # --- Plotting Setup --------------------------------------------------------
-# png("fig_lhat_paths_snr40_tau_z_overlay.png", width = 1200, height = 400, res = 120)
-pdf(file = "fig_lhat_paths_snr40_tau_z_overlay.pdf", width = 9, height = 3)
-par(mfrow = c(1, 3), mar = c(4, 4, 3, 1), bg = "white")
+pdf(file = "fig_lhat_paths_snr40_tau_z_overlay.pdf", width = 8.5, height = 6.5)
+par(mfrow = c(2, 2), mar = c(4, 4, 3, 1), bg = "white")
 
 for (tau in taus) {
   lhat_matrix <- matrix(NA, nrow = length(T_vals), ncol = length(z_vals))
-
+  
   for (i in seq_along(z_vals)) {
     z <- z_vals[i]
     set.seed(seed)
@@ -106,36 +104,37 @@ for (tau in taus) {
     b <- compute_noise_scale(A_true, snr, tau, z)
     noise <- rgen_asy_laplace(h, tau, z, b)
     I <- signal + noise
-
+    
     l_path <- sapply(T_vals, function(T) estimate_params(I[1:T], tau, h)$l_hat)
     lhat_matrix[, i] <- l_path
-
+    
     T_entry <- find_stable_time(l_path, T_vals, threshold)
     T_exit <- find_stable_time(l_path[T_vals >= T_entry], T_vals[T_vals >= T_entry], threshold_prime)
-
+    
     results <- rbind(results, data.frame(tau = tau, z = z, T_entry = T_entry, T_exit = T_exit))
   }
-
+  
   ylim_range <- range(lhat_matrix, na.rm = TRUE)
-
+  
   plot(NA, xlim = range(T_vals), ylim = ylim_range,
        xlab = "T", ylab = expression(hat(l)(T)),
-       main = bquote(hat(l)(T) ~ "for" ~ tau == .(tau)))
+       main = bquote(tau == .(tau)))
   abline(h = L_true, col = "gray40", lty = 2)
   grid()
-
+  
   for (i in seq_along(z_vals)) {
     lines(T_vals, lhat_matrix[, i], type = "b", col = colors[i], pch = 19)
   }
-
+  
   legend("bottomright", legend = paste("z =", z_vals),
          col = colors, lwd = 2, pch = 19, cex = 0.8, bty = "o")
 }
 
 dev.off()
-cat("Saved plot as 'fig_lhat_paths_snr40_tau_z_overlay.png'\n")
+cat("Saved plot as 'fig_lhat_paths_snr40_tau_z_overlay.pdf'\n")
 
 # --- Create Table of Entry/Exit Times --------------------------------------
+
 table_out <- results %>%
   mutate(tau = paste0("tau = ", tau)) %>%
   arrange(z, tau) %>%
@@ -158,10 +157,7 @@ gt_table <- table_out %>%
 gtsave(gt_table, "T_entry_exit_table.png")
 cat("Saved table as 'T_entry_exit_table.png'\n")
 
-
-
-
 latex_code <- as_latex(gt_table)
 cat(as.character(latex_code), file = "T_entry_exit_table.tex")
 
-cat(as.character(as_latex(gt_table)))
+cat(as.character(latex_code))
