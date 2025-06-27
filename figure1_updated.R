@@ -66,35 +66,61 @@ simulate_quantile_objective <- function(T, A, L, S, h, tau, snr, z, seed = NULL,
 A_true <- 15000; L_true <- 22; S_true <- 10; h <- 30
 Ts_free <- c(2, 3, 10, 20, 21)
 z_vals <- c(-0.9, -0.5, 0, 0.5, 0.9)
-snr <- 1000; seed <- 280; tau_vals <- c(0.5, 0.75, 0.95)
+snr <- 1000; seed <- 280; tau_vals <- c(0.25, 0.5, 0.75, 0.95)
 
-# Combined superposed panel plot for all T and tau values
+# --- Updated Combined Panel Plot for Figure 1 ---
 plot_quantile_all_tau_T <- function(results_all, L_true) {
   Ts <- sort(unique(results_all$T))
   taus <- sort(unique(results_all$tau))
   z_vals <- sort(unique(results_all$z))
-  colors <- c("blue", "red", "darkgreen", "black", "grey")
-  pdf(file = "figure1_new_asy_laplace_all_tau_T.pdf", width = 7.5, height = 10)
-  # png("figure1_new_asy_laplace_all_tau_T.png", width = 900, height = 1200, res = 120)
-  old_par <- par(mfrow = c(length(Ts), length(taus)), mar = c(4, 4, 3, 1), bg = "white")
+  colors <- c("blue", "red", "darkgreen", "black", "grey40")
+  
+  nrow <- length(Ts)
+  ncol <- length(taus)
+  
+  pdf(file = "figure1_new_asy_laplace_all_tau_T.pdf", width = 2.5 * ncol, height = 2.5 * nrow)
+  old_par <- par(mfrow = c(nrow, ncol), mar = c(2, 2, 1.5, 1), oma = c(4, 4, 3, 1), bg = "white")
   on.exit({ par(old_par); dev.off() })
   
-  for (T_val in Ts) {
-    for (tau_val in taus) {
+  for (i in seq_along(Ts)) {
+    for (j in seq_along(taus)) {
+      T_val <- Ts[i]
+      tau_val <- taus[j]
       df_sub <- subset(results_all, T == T_val & tau == tau_val)
+      
       plot(NA, xlim = range(df_sub$l), ylim = range(df_sub$loss),
-           xlab = "Peak Location Candidate l", ylab = expression("Objective " * f),
-           main = bquote("T = " * .(T_val) * ",  " * tau * " = " * .(tau_val)))
+           xlab = "", ylab = "", main = "", axes = FALSE)
+      axis(1); axis(2)
+      box()
+      
+      for (k in seq_along(z_vals)) {
+        df_z <- subset(df_sub, z == z_vals[k])
+        lines(df_z$l, df_z$loss, col = colors[k], lwd = 2)
+      }
+      
       abline(v = L_true, col = "gray40", lty = 2)
       grid()
-      for (i in seq_along(z_vals)) {
-        df_z <- subset(df_sub, z == z_vals[i])
-        lines(df_z$l, df_z$loss, col = colors[i], lwd = 2)
+      
+      # Row label (T)
+      if (j == 1) mtext(bquote(T == .(T_val)), side = 2, line = 3, cex = 1.1)
+      # Column label (tau)
+      if (i == 1) mtext(bquote(tau == .(tau_val)), side = 3, line = 1, cex = 1.1)
+      
+      # Add legend only in first row
+      if (i == 1) {
+        legend("topright", legend = paste("z =", z_vals),
+               col = colors, lwd = 2, cex = 0.8)
       }
-      legend("topright", legend = paste("z =", z_vals), col = colors, lwd = 2, cex = 0.8)
     }
   }
+  
+  # Common labels and title
+  # mtext("Peak Location Candidate l", side = 1, outer = TRUE, line = 2.5, cex = 1.2)
+  # mtext(expression("Objective Function " * f[tau]), side = 2, outer = TRUE, line = 2.5, cex = 1.2)
+  # mtext("Quantile-Based Peak Estimation — Asymmetric Laplace Noise", side = 3, outer = TRUE, line = 1.5, cex = 1.4)
 }
+
+# --- Rerun simulation including tau = 0.25 ---
 
 results_all <- do.call(rbind, lapply(tau_vals, function(tau) {
   do.call(rbind, lapply(z_vals, function(z) {
@@ -109,4 +135,5 @@ results_all <- do.call(rbind, lapply(tau_vals, function(tau) {
 }))
 
 plot_quantile_all_tau_T(results_all, L_true)
-cat("Figure 1 saved to figure1_new_asy_laplace_all_tau_T.png\n")
+cat("Figure 1 saved to figure1_new_asy_laplace_all_tau_T.pdf\n")
+

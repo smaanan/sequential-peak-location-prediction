@@ -77,41 +77,7 @@ seed <- 280
 T_vals <- c(4, 6, 8, 9, 10)
 z_vals <- c(-0.9, -0.5, 0, 0.5, 0.9)
 
-# ----------------- Combined Plotting for All Tau and T --------------------------
-plot_shifted_all_tau_T <- function(results_all, L_true) {
-  Ts <- sort(unique(results_all$T))
-  taus <- sort(unique(results_all$tau))
-  z_vals <- sort(unique(results_all$z))
-  colors <- c("black", "red", "blue", "darkgreen", "grey")
-  pdf(file = "figure2_shifted_laplace_all_tau_T.pdf", width = 7.5, height = 10)
-  # png("figure2_shifted_laplace_all_tau_T.png", width = 900, height = 1200, res = 120)
-  old_par <- par(mfrow = c(length(Ts), length(taus)), mar = c(4, 4, 3, 1), bg = "white")
-  on.exit({ par(old_par); dev.off() })
-  
-  for (T_val in Ts) {
-    for (tau_val in taus) {
-      df_sub <- subset(results_all, T == T_val & tau == tau_val)
-      x_range <- range(df_sub$l)
-      y_range <- range(df_sub$loss)
-      
-      plot(NA, xlim = x_range, ylim = y_range,
-           xlab = "Peak Location Candidate l", ylab = expression("Objective " * f),
-           main = bquote("T = " * .(T_val) * ",  " * tau * " = " * .(tau_val)))
-      abline(v = L_true, col = "gray40", lty = 2)
-      grid()
-      
-      for (i in seq_along(z_vals)) {
-        df_z <- subset(df_sub, z == z_vals[i])
-        lines(df_z$l, df_z$loss, col = colors[i], lwd = 2)
-      }
-      
-      legend("topright", legend = paste("z =", z_vals),
-             col = colors[1:length(z_vals)], lwd = 2, cex = 0.8)
-    }
-  }
-}
-
-results_all <- do.call(rbind, lapply(c(0.5, 0.75, 0.95), function(tau_val) {
+results_all <- do.call(rbind, lapply(c(0.25, 0.5, 0.75, 0.95), function(tau_val) {
   do.call(rbind, lapply(z_vals, function(z) {
     do.call(rbind, lapply(T_vals, function(T) {
       simulate_shifted_laplace_objective(T, A_true, L_true, S_true, tau_val, z, snr, seed)
@@ -121,6 +87,46 @@ results_all <- do.call(rbind, lapply(c(0.5, 0.75, 0.95), function(tau_val) {
     res_z
   }))
 }))
+
+
+# ----------------- Combined Plotting for All Tau and T --------------------------
+plot_shifted_all_tau_T <- function(results_all, L_true) {
+  Ts <- sort(unique(results_all$T))
+  taus <- sort(unique(results_all$tau))
+  z_vals <- sort(unique(results_all$z))
+  colors <- c("black", "red", "blue", "darkgreen", "grey")
+  nrow <- length(Ts)
+  ncol <- length(taus)
+  
+  pdf(file = "figure2_shifted_laplace_all_tau_T.pdf", width = 2.5 * ncol, height = 2.5 * nrow)
+  old_par <- par(mfrow = c(nrow, ncol), mar = c(2, 2, 1.5, 1), oma = c(4, 4, 3, 0))
+  on.exit({ par(old_par); dev.off() })
+  
+  for (i in seq_along(Ts)) {
+    for (j in seq_along(taus)) {
+      T_val <- Ts[i]
+      tau_val <- taus[j]
+      df_sub <- subset(results_all, T == T_val & tau == tau_val)
+      
+      x_range <- range(df_sub$l)
+      y_range <- range(df_sub$loss)
+      
+      plot(NA, xlim = x_range, ylim = y_range,
+           xlab = "", ylab = "", main = "")
+      abline(v = L_true, col = "gray40", lty = 2)
+      grid()
+      
+      for (k in seq_along(z_vals)) {
+        df_z <- subset(df_sub, z == z_vals[k])
+        lines(df_z$l, df_z$loss, col = colors[k], lwd = 2)
+      }
+      
+      if (j == 1) mtext(bquote(T == .(T_val)), side = 2, line = 3, cex = 1.1)
+      if (i == 1) mtext(bquote(tau == .(tau_val)), side = 3, line = 0.5, cex = 1.1)
+    }
+  }
+}
+
 
 plot_shifted_all_tau_T(results_all, L_true)
 cat("Figure 2 saved to figure2_shifted_laplace_all_tau_T.png\n")

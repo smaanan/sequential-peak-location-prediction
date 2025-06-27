@@ -102,30 +102,6 @@ simulate_quantile_objective <- function(T, A, L, S, h, tau, snr = Inf, seed = NU
 }
 
 # ---------------------------------------------------------------------------
-# Combined Plotting Utility for All Tau and T Values
-# ---------------------------------------------------------------------------
-plot_all_quantile_objectives <- function(results_all, A_true, L_true) {
-  Ts <- sort(unique(results_all$T))
-  taus <- sort(unique(results_all$tau))
-  pdf(file = "plot_quantile_all.pdf", width = 7.5, height = 10)
-  # png(filename = "plot_quantile_all.png", width = 900, height = 1200, res = 120)
-  old_par <- par(mfrow = c(length(Ts), length(taus)), mar = c(4, 4, 3, 1))
-  on.exit({ par(old_par); dev.off() })
-  
-  for (T_val in Ts) {
-    for (tau_val in taus) {
-      subset_data <- subset(results_all, T == T_val & tau == tau_val)
-      plot(subset_data$l, subset_data$loss, type = "l", lwd = 2, col = "blue",
-           xlab = "Peak Location Candidate l",
-           ylab = expression("Objective " * f[tau]),
-           main = bquote("T = " * .(T_val) * ",  " * tau * " = " * .(tau_val)))
-      abline(v = L_true, col = "red", lty = 2)
-      grid()
-    }
-  }
-}
-
-# ---------------------------------------------------------------------------
 # Run simulation for all tau values and combine plots into a single figure
 # ---------------------------------------------------------------------------
 A_true <- 15000
@@ -133,8 +109,9 @@ L_true <- 22
 S_true <- 10
 h <- 30
 Ts_free <- c(2, 3, 10, 20, 21)
-tau_values <- c(0.5, 0.75, 0.95)
+tau_values <- c(0.25, 0.5, 0.75, 0.95)
 
+# Simulate objective losses
 results_all <- do.call(rbind, lapply(tau_values, function(tau_val) {
   do.call(rbind, lapply(Ts_free, function(T) {
     df <- simulate_quantile_objective(
@@ -146,5 +123,41 @@ results_all <- do.call(rbind, lapply(tau_values, function(tau_val) {
   }))
 }))
 
+plot_all_quantile_objectives <- function(results_all, A_true, L_true) {
+  Ts <- sort(unique(results_all$T))
+  taus <- sort(unique(results_all$tau))
+  nrow <- length(Ts)
+  ncol <- length(taus)
+  
+  pdf(file = "plot_quantile_all.pdf", width = 2.5 * ncol, height = 2.5 * nrow)
+  old_par <- par(mfrow = c(nrow, ncol), mar = c(2, 2, 1.5, 1), oma = c(4, 4, 3, 0))
+  on.exit({ par(old_par); dev.off() })
+  
+  for (i in seq_along(Ts)) {
+    for (j in seq_along(taus)) {
+      T_val <- Ts[i]
+      tau_val <- taus[j]
+      subset_data <- subset(results_all, T == T_val & tau == tau_val)
+      
+      plot(subset_data$l, subset_data$loss, type = "l", lwd = 2, col = "blue",
+           xlab = "", ylab = "", main = "")  # <- only these are blank, ticks still show
+      
+      abline(v = L_true, col = "red", lty = 2)
+      grid()
+      
+      # Add T label on the left (row titles)
+      if (j == 1) mtext(bquote(T == .(T_val)), side = 2, line = 3, cex = 1.1)
+      # Add tau label on top (column titles)
+      if (i == 1) mtext(bquote(tau == .(tau_val)), side = 3, line = 0.5, cex = 1.1)
+    }
+  }
+  
+  # Common axis labels and main title
+  # mtext("Candidate Peak Location l", side = 1, outer = TRUE, line = 2.5, cex = 1.2)
+  # mtext(expression("Objective Function " * f[tau]), side = 2, outer = TRUE, line = 2.5, cex = 1.2)
+  # mtext("Quantile-Based Peak Estimation — Laplace Noise", side = 3, outer = TRUE, line = 1.5, cex = 1.4)
+}
+
+# Run the new plotting function
 plot_all_quantile_objectives(results_all, A_true, L_true)
-cat("Combined plot saved to plot_quantile_all.png\n")
+cat("Saved: plot_quantile_all.pdf\n")

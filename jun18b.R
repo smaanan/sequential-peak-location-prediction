@@ -69,15 +69,10 @@ snr <- 1000
 seed <- 280
 h <- 30
 T_vals <- 4:h
-taus <- c(0.5, 0.75, 0.95)
+taus <- c(0.25, 0.5, 0.75, 0.95)
 
-# ----------------------------------------
-# Combined 3x3 Plot for tau = 0.5, 0.75, 0.95
-# ----------------------------------------
-
-# png("fig3_4a_4b_combined.png", width = 1200, height = 800, res = 120)
-pdf(file = "fig3_4a_4b_combined.pdf", width = 8, height = 6)
-par(mfrow = c(3, 3), mar = c(4, 4, 3, 1))  # 3 rows (tau), 3 columns (l, a, s)
+pdf(file = "fig3_4a_4b_combined.pdf", width = 8, height = 8)
+par(mfrow = c(4, 3), mar = c(2, 2, 1, 1), oma = c(3, 3, 2.5, 1))  # reduce inner margins, use outer margins
 
 for (tau in taus) {
   set.seed(seed)
@@ -99,27 +94,35 @@ for (tau in taus) {
     s_hats[i] <- est$s_hat
   }
   
-  # Row = tau, Column 1 = l_hat(T)
+  # Column 1: l_hat(T)
   plot(T_vals, l_hats, type = "b", col = "blue", pch = 19,
-       xlab = "T", ylab = expression(hat(l)),
-       main = bquote(hat(l)(T) ~ "for" ~ tau == .(tau)))
+       xlab = "", ylab = "", main = "", axes = FALSE)
   abline(h = L_true, col = "red", lty = 2)
   grid()
+  box()
+  axis(1); axis(2)
+  if (tau == taus[1]) mtext(expression(hat(l)), side = 3, line = 1)
+  mtext(bquote(tau == .(tau)), side = 2, line = 3)
   
-  # Column 2 = a_hat(T)
+  # Column 2: a_hat(T)
   plot(T_vals, a_hats, type = "b", col = "darkgreen", pch = 19,
-       xlab = "T", ylab = expression(hat(a)),
-       main = bquote(hat(a)(T) ~ "for" ~ tau == .(tau)))
+       xlab = "", ylab = "", main = "", axes = FALSE)
   abline(h = A_true, col = "red", lty = 2)
   grid()
+  box()
+  axis(1); axis(2)
+  if (tau == taus[1]) mtext(expression(hat(a)), side = 3, line = 1)
   
-  # Column 3 = s_hat(T)
+  # Column 3: s_hat(T)
   plot(T_vals, s_hats, type = "b", col = "purple", pch = 19,
-       xlab = "T", ylab = expression(hat(s)),
-       main = bquote(hat(s)(T) ~ "for" ~ tau == .(tau)))
+       xlab = "", ylab = "", main = "", axes = FALSE)
   abline(h = S_true, col = "red", lty = 2)
   grid()
+  box()
+  axis(1); axis(2)
+  if (tau == taus[1]) mtext(expression(hat(s)), side = 3, line = 1)
 }
 
 dev.off()
-cat("Combined 3x3 plot saved as 'fig3_4a_4b_combined.png'\n")
+cat("Cleaned combined plot saved as 'fig3_4a_4b_combined.pdf'\n")
+

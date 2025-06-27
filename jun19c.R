@@ -112,3 +112,65 @@ for (tau in taus) {
 
 dev.off()
 cat("Superposed 3x3 estimation path plot saved as 'fig3_4_superposed_3x3.png'\n")
+
+
+
+
+taus <- c(0.25, 0.5, 0.75, 0.95)
+
+pdf(file = "fig3_4_superposed_3x3_cleaned.pdf", width = 8, height = 9)
+par(mfrow = c(4, 3), mar = c(2, 2, 1, 1), oma = c(3, 3, 2.5, 1), bg = "white")
+
+for (tau in taus) {
+  for (j in seq_along(c("l_hat", "a_hat", "s_hat"))) {
+    est_name <- c("l_hat", "a_hat", "s_hat")[j]
+    
+    plot(NA, xlim = range(T_vals), ylim = c(0, 30),
+         xlab = "", ylab = "", axes = FALSE)
+    
+    abline(h = switch(est_name, l_hat = L_true, a_hat = A_true, s_hat = S_true),
+           col = "gray40", lty = 2)
+    grid()
+    box()
+    axis(1); axis(2)
+    
+    for (i in seq_along(z_vals)) {
+      z <- z_vals[i]
+      set.seed(seed)
+      signal <- A_true * exp(-((1:h) - L_true)^2 / S_true^2)
+      noise <- r_asy_laplace(h, tau, scale = compute_noise_scale(A_true, snr, tau, z))
+      I <- signal + noise
+      
+      est_path <- sapply(T_vals, function(T) {
+        p <- estimate_params(I[1:T], tau, h)
+        p[[est_name]]
+      })
+      
+      lines(T_vals, est_path, type = "b", col = colors[i], pch = 19)
+    }
+    
+    legend("topright", legend = paste("z =", z_vals),
+           col = colors, lwd = 2, pch = 19, cex = 0.75, bty = "o")
+    
+    # Add top labels for each column (once, at first row)
+    if (tau == taus[1]) {
+      mtext(switch(est_name,
+                   l_hat = expression(hat(l)),
+                   a_hat = expression(hat(a)),
+                   s_hat = expression(hat(s))),
+            side = 3, line = 1.2)
+    }
+    
+    # Add tau label on the left of each row
+    if (j == 1) {
+      mtext(bquote(tau == .(tau)), side = 2, line = 3)
+    }
+  }
+}
+
+# Shared outer axis labels
+mtext("T", side = 1, outer = TRUE, line = 1.5)
+mtext("Estimated Parameter", side = 2, outer = TRUE, line = 2)
+
+dev.off()
+cat("Cleaned superposed 3x3 plot saved as 'fig3_4_superposed_3x3_cleaned.pdf'\n")
