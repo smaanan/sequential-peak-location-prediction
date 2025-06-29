@@ -69,75 +69,187 @@ find_stable_time <- function(l_path, T_vals, tol) {
   return(NA)
 }
 
-# --- Main Loop Over τ Values ---
+# # --- Main Loop Over τ Values ---
+# for (tau in taus) {
+#   l_path <- sapply(T_vals, function(T) {
+#     I <- I_full[1:T]
+#     estimate_params(I, tau, h)$l_hat
+#   })
+#   
+#   # Objective function at final horizon
+#   T_max <- max(T_vals)
+#   I_Tmax <- I_full[1:T_max]
+#   res <- estimate_params(I_Tmax, tau, h)
+#   s_opt <- search_best_s(I_Tmax, res$l_hat, tau)
+#   a_opt <- compute_a(I_Tmax, res$l_hat, s_opt, tau)
+#   min_obj_val <- objective_function(I_Tmax, a_opt, res$l_hat, s_opt, tau)
+#   min_objectives[[as.character(tau)]] <- min_obj_val
+#   
+#   T_entry <- find_stable_time(l_path, T_vals, threshold)
+#   T_exit  <- find_stable_time(l_path[T_vals >= T_entry], T_vals[T_vals >= T_entry], threshold_prime)
+#   
+#   # Format table
+#   table_data <- tibble(
+#     T_1 = T_vals[1:16],
+#     lhat_1 = l_path[1:16],
+#     T_2 = T_vals[17:32],
+#     lhat_2 = l_path[17:32]
+#   )
+#   
+#   transposed_matrix <- t(table_data)
+#   colnames(transposed_matrix) <- paste0("V", seq_len(ncol(transposed_matrix)))
+#   transposed_data <- as.data.frame(transposed_matrix) %>%
+#     rownames_to_column(var = "Label") %>%
+#     as_tibble()
+#   
+#   transposed_data$Label <- recode(transposed_data$Label,
+#                                   "T_1" = "T", "T_2" = "T",
+#                                   "lhat_1" = "l̂(T)", "lhat_2" = "l̂(T)")
+#   
+#   subtitle_text <- glue(
+#     "COVID-19 in China, τ = {tau}. ",
+#     "Entry at **T_entry = {T_entry}** (ε = {threshold}), ",
+#     "exit at **T_exit = {T_exit}** (ε' = {threshold_prime})."
+#   )
+#   
+#   gt_table <- transposed_data %>%
+#     gt() %>%
+#     tab_header(
+#       title = md("**Table: Sequence T → l̂(T)**"),
+#       subtitle = md(subtitle_text)
+#     ) %>%
+#     cols_label(.list = setNames(rep("", ncol(transposed_data)), names(transposed_data))) %>%
+#     tab_options(
+#       column_labels.hidden = TRUE,
+#       table.font.size = "small",
+#       heading.title.font.size = 14,
+#       heading.subtitle.font.size = 11,
+#       data_row.padding = px(3)
+#     )
+#   
+#   # Save outputs
+#   filename_png <- glue("china_table8_lhat_path_tau{tau}.png")
+#   filename_tex <- glue("china_table8_lhat_path_tau{tau}.tex")
+#   gtsave(gt_table, filename_png)
+#   cat(glue("Saved PNG: {filename_png}\n"))
+#   
+#   latex_code <- as.character(as_latex(gt_table))
+#   writeLines(latex_code, filename_tex)
+#   cat(glue("Saved LaTeX: {filename_tex}\n"))
+# }
+# 
+# # --- Identify τ with minimum objective ---
+# tau_best <- names(min_objectives)[which.min(unlist(min_objectives))]
+# cat(glue("The τ that minimizes the objective at T = {T_max} is τ = {tau_best}\n"))
+
+
+
+
+# --- Create Combined Table Output --------------------------------------------------
+
+# Storage for rows
+all_blocks <- list()
+
 for (tau in taus) {
   l_path <- sapply(T_vals, function(T) {
     I <- I_full[1:T]
     estimate_params(I, tau, h)$l_hat
   })
   
-  # Objective function at final horizon
+  # Objective value at T_max
   T_max <- max(T_vals)
   I_Tmax <- I_full[1:T_max]
   res <- estimate_params(I_Tmax, tau, h)
-  s_opt <- search_best_s(I_Tmax, res$l_hat, tau)
-  a_opt <- compute_a(I_Tmax, res$l_hat, s_opt, tau)
-  min_obj_val <- objective_function(I_Tmax, a_opt, res$l_hat, s_opt, tau)
-  min_objectives[[as.character(tau)]] <- min_obj_val
+  l_hat_Tmax <- res$l_hat
+  s_hat <- search_best_s(I_Tmax, l_hat_Tmax, tau)
+  a_hat <- compute_a(I_Tmax, l_hat_Tmax, s_hat, tau)
+  obj_val <- objective_function(I_Tmax, a_hat, l_hat_Tmax, s_hat, tau)
+  min_objectives[[as.character(tau)]] <- obj_val
   
+  # Entry and exit detection
   T_entry <- find_stable_time(l_path, T_vals, threshold)
-  T_exit  <- find_stable_time(l_path[T_vals >= T_entry], T_vals[T_vals >= T_entry], threshold_prime)
+  T_exit <- find_stable_time(l_path[T_vals >= T_entry], T_vals[T_vals >= T_entry], threshold_prime)
   
-  # Format table
-  table_data <- tibble(
-    T_1 = T_vals[1:16],
-    lhat_1 = l_path[1:16],
-    T_2 = T_vals[17:32],
-    lhat_2 = l_path[17:32]
-  )
+  # Split into chunks of 16 (China: 32 values = 2 chunks)
+  T_chunks <- split(T_vals, ceiling(seq_along(T_vals)/16))
+  l_chunks <- split(l_path, ceiling(seq_along(l_path)/16))
   
-  transposed_matrix <- t(table_data)
-  colnames(transposed_matrix) <- paste0("V", seq_len(ncol(transposed_matrix)))
-  transposed_data <- as.data.frame(transposed_matrix) %>%
-    rownames_to_column(var = "Label") %>%
-    as_tibble()
-  
-  transposed_data$Label <- recode(transposed_data$Label,
-                                  "T_1" = "T", "T_2" = "T",
-                                  "lhat_1" = "l̂(T)", "lhat_2" = "l̂(T)")
-  
-  subtitle_text <- glue(
-    "COVID-19 in China, τ = {tau}. ",
-    "Entry at **T_entry = {T_entry}** (ε = {threshold}), ",
-    "exit at **T_exit = {T_exit}** (ε' = {threshold_prime})."
-  )
-  
-  gt_table <- transposed_data %>%
-    gt() %>%
-    tab_header(
-      title = md("**Table: Sequence T → l̂(T)**"),
-      subtitle = md(subtitle_text)
-    ) %>%
-    cols_label(.list = setNames(rep("", ncol(transposed_data)), names(transposed_data))) %>%
-    tab_options(
-      column_labels.hidden = TRUE,
-      table.font.size = "small",
-      heading.title.font.size = 14,
-      heading.subtitle.font.size = 11,
-      data_row.padding = px(3)
-    )
-  
-  # Save outputs
-  filename_png <- glue("china_table8_lhat_path_tau{tau}.png")
-  filename_tex <- glue("china_table8_lhat_path_tau{tau}.tex")
-  gtsave(gt_table, filename_png)
-  cat(glue("Saved PNG: {filename_png}\n"))
-  
-  latex_code <- as.character(as_latex(gt_table))
-  writeLines(latex_code, filename_tex)
-  cat(glue("Saved LaTeX: {filename_tex}\n"))
+  for (i in seq_along(T_chunks)) {
+    if (i == 1) {
+      title <- glue("$\\tau = {tau}$ | T_{{entry}} = {T_entry}, T_{{exit}} = {T_exit}, \\varepsilon = {threshold}, \\varepsilon' = {threshold_prime}")
+      all_blocks[[length(all_blocks) + 1]] <- list(Label = title, is_title = TRUE)
+    }
+    all_blocks[[length(all_blocks) + 1]] <- list(Label = "T", is_title = FALSE, values = T_chunks[[i]])
+    all_blocks[[length(all_blocks) + 1]] <- list(Label = "\\hat{l}(T)", is_title = FALSE, values = l_chunks[[i]])
+  }
 }
 
-# --- Identify τ with minimum objective ---
-tau_best <- names(min_objectives)[which.min(unlist(min_objectives))]
+# Format as tibble for gt preview (PNG only)
+max_cols <- max(sapply(all_blocks, function(row) if (!row$is_title) length(row$values) else 0))
+table_df <- tibble(Label = sapply(all_blocks, function(x) x$Label))
+for (i in 1:max_cols) {
+  table_df[[paste0("V", i)]] <- sapply(all_blocks, function(row) {
+    if (!row$is_title && length(row$values) >= i) row$values[i] else ""
+  })
+}
+
+# Save PNG using gt (visual preview only)
+gt_table <- table_df %>%
+  gt() %>%
+  tab_header(
+    title = md("**Combined Table: Sequence T → \\u0302l(T)**"),
+    subtitle = md("China, with \\( \\tau \\in \\{0.25, 0.5, 0.75, 0.95\\} \\)")
+  ) %>%
+  tab_style(
+    style = list(cell_text(weight = "bold", align = "center")),
+    locations = cells_body(rows = grepl("^\\$", Label))
+  ) %>%
+  cols_label(.list = setNames(rep("", ncol(table_df)), names(table_df))) %>%
+  tab_options(
+    column_labels.hidden = TRUE,
+    table.font.size = "small",
+    heading.title.font.size = 14,
+    heading.subtitle.font.size = 11,
+    data_row.padding = px(3)
+  )
+
+gtsave(gt_table, "china_table8_lhat_paths_combined.png")
+
+# --- Custom LaTeX Export with Centered Subheaders -------------------------
+
+tabular_line <- glue("\\begin{{tabular*}}{{\\linewidth}}{{@{{\\extracolsep{{\\fill}}}}l{paste(rep('r', max_cols), collapse = '')}}}")
+
+latex_lines <- c(
+  "\\begin{table}[t]",
+  "\\caption*{",
+  "{\\large \\textbf{Combined Table: Sequence T → \\( \\hat{l}(T) \\)}} \\\\",
+  "{\\small China, with \\( \\tau \\in \\{0.25, 0.5, 0.75, 0.95\\} \\)}",
+  "}",
+  tabular_line,
+  "\\toprule"
+)
+
+for (row in all_blocks) {
+  if (row$is_title) {
+    latex_lines <- c(
+      latex_lines,
+      "\\midrule\\addlinespace[2.5pt]",
+      glue("\\multicolumn{{{1 + max_cols}}}{{c}}{{\\textbf{{{row$Label}}}}} \\\\"),
+      "\\addlinespace[2.5pt]",
+      "\\midrule"
+    )
+  } else {
+    latex_row <- c(row$Label, row$values)
+    latex_row_fmt <- paste(latex_row, collapse = " & ")
+    latex_lines <- c(latex_lines, paste0(latex_row_fmt, " \\\\"))
+  }
+}
+
+latex_lines <- c(latex_lines, "\\bottomrule", "\\end{tabular*}", "\\end{table}")
+
+writeLines(latex_lines, "china_table8_lhat_paths_combined.tex")
+cat("✓ Saved PNG and custom LaTeX table with centered subheaders.\n")
+
+# --- Best τ Summary ---
+tau_best <- names(which.min(unlist(min_objectives)))
 cat(glue("The τ that minimizes the objective at T = {T_max} is τ = {tau_best}\n"))
