@@ -161,3 +161,17 @@ plot_all_quantile_objectives <- function(results_all, A_true, L_true) {
 # Run the new plotting function
 plot_all_quantile_objectives(results_all, A_true, L_true)
 cat("Saved: plot_quantile_all.pdf\n")
+
+
+# --- Identify tau with lowest objective value at each T ---
+# library(dplyr)
+
+# For each T, find the minimal loss and corresponding tau
+# summary_by_tau <- results_all %>%
+#   group_by(T, tau) %>%
+#   summarise(min_loss = min(loss), .groups = "drop") %>%
+#   group_by(T) %>%
+#   slice_min(min_loss, with_ties = FALSE) %>%
+#   arrange(T)
+# 
+# print(summary_by_tau)
