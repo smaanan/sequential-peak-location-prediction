@@ -147,19 +147,34 @@ S_true <- 10
 snr <- 1000
 seed <- 280
 T_vals <- c(4, 6, 8, 9, 10)
-tau_values <- c(0.25, 0.5, 0.75, 0.95)
-z <- 0  
+# tau_values <- c(0.25, 0.5, 0.75, 0.95)
+# z <- 0  
 
+# results_all <- do.call(rbind, lapply(tau_values, function(tau_val) {
+#   do.call(rbind, lapply(T_vals, function(T) {
+#     df <- simulate_quantile_objective_asy(
+#       T, A = A_true, L = L_true, S = S_true,
+#       tau = tau_val, z = z, snr = snr, seed = seed
+#     )
+#     df$tau <- tau_val
+#     df
+#   }))
+# }))
+
+tau_values <- c(0.25, 0.5, 0.75, 0.95)
 results_all <- do.call(rbind, lapply(tau_values, function(tau_val) {
+  z_val <- 1 - 2 * tau_val  # Enforce proposition 2
   do.call(rbind, lapply(T_vals, function(T) {
     df <- simulate_quantile_objective_asy(
       T, A = A_true, L = L_true, S = S_true,
-      tau = tau_val, z = z, snr = snr, seed = seed
+      tau = tau_val, z = z_val, snr = snr, seed = seed
     )
     df$tau <- tau_val
     df
   }))
 }))
+
+
 
 plot_all_asymmetric_objectives(results_all, L_true)
 cat("Combined plot saved to plot_asymmetric_all.png\n")
