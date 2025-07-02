@@ -37,8 +37,12 @@ I_full <- france$daily_cases
 
 
 # --- GAL loss function ---
+# gal_loss <- function(u, z, lambda, b = 1) {
+#   ((z - lambda * u / b)^2) / (2 * lambda) + abs(u) / lambda
+# }
+
 gal_loss <- function(u, z, lambda, b = 1) {
-  ((z - lambda * u / b)^2) / (2 * lambda) + abs(u) / lambda
+  ((z - (lambda * u / b))^2) / (2 * lambda) + abs(u) / b
 }
 
 # --- Weighted quantile ---

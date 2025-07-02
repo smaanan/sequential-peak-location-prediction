@@ -28,8 +28,12 @@ china <- covid19("China", level = 1, start = "2020-01-22", end = "2020-03-22", v
 I_full <- china$new_cases
 
 # --- GAL loss function ---
+# gal_loss <- function(u, z, lambda, b = 1) {
+#   ((z - lambda * u / b)^2) / (2 * lambda) + abs(u) / lambda
+# }
+
 gal_loss <- function(u, z, lambda, b = 1) {
-  ((z - lambda * u / b)^2) / (2 * lambda) + abs(u) / lambda
+  ((z - (lambda * u / b))^2) / (2 * lambda) + abs(u) / b
 }
 
 # --- Weighted quantile ---
