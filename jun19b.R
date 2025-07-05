@@ -88,18 +88,17 @@ results_all <- do.call(rbind, lapply(c(0.25, 0.5, 0.75, 0.95), function(tau_val)
   }))
 }))
 
-# ----------------- Combined Plotting for All Tau and T --------------------------
 
-plot_quantile_all_tau_T <- function(results_all, L_true) {
+# ----------------- Combined Plotting for All Tau and T --------------------------
+plot_shifted_all_tau_T <- function(results_all, L_true) {
   Ts <- sort(unique(results_all$T))
   taus <- sort(unique(results_all$tau))
   z_vals <- sort(unique(results_all$z))
   colors <- c("black", "red", "blue", "darkgreen", "grey")
-  
   nrow <- length(Ts)
   ncol <- length(taus)
   
-  pdf(file = "figure1_new_asy_laplace_all_tau_T.pdf", width = 2.5 * ncol, height = 2.5 * nrow)
+  pdf(file = "figure2_shifted_laplace_all_tau_T.pdf", width = 2.5 * ncol, height = 2.5 * nrow)
   old_par <- par(mfrow = c(nrow, ncol), mar = c(2, 2, 1.5, 1), oma = c(4, 4, 3, 0))
   on.exit({ par(old_par); dev.off() })
   
@@ -116,9 +115,6 @@ plot_quantile_all_tau_T <- function(results_all, L_true) {
            xlab = "", ylab = "", main = "")
       abline(v = L_true, col = "gray40", lty = 2)
       grid()
-      box()
-      axis(1)
-      axis(2)
       
       for (k in seq_along(z_vals)) {
         df_z <- subset(df_sub, z == z_vals[k])
@@ -127,20 +123,10 @@ plot_quantile_all_tau_T <- function(results_all, L_true) {
       
       if (j == 1) mtext(bquote(T == .(T_val)), side = 2, line = 3, cex = 1.1)
       if (i == 1) mtext(bquote(tau == .(tau_val)), side = 3, line = 0.5, cex = 1.1)
-      
-      if (i == 1 && j == 1) {
-        legend("topright", legend = paste("z =", z_vals),
-               col = colors, lwd = 2, cex = 0.8, bty = "o")
-      }
     }
   }
-  
-  # Uncomment for common labels
-  # mtext("Peak Location Candidate l", side = 1, outer = TRUE, line = 2.5, cex = 1.2)
-  # mtext(expression("Objective Function " * f[tau]), side = 2, outer = TRUE, line = 2.5, cex = 1.2)
-  # mtext("Quantile-Based Peak Estimation — Asymmetric Laplace Noise", side = 3, outer = TRUE, line = 1.5, cex = 1.4)
 }
+
 
 plot_shifted_all_tau_T(results_all, L_true)
 cat("Figure 2 saved to figure2_shifted_laplace_all_tau_T.png\n")
-
