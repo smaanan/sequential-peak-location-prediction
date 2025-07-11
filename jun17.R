@@ -143,13 +143,7 @@ plot_all_asymmetric_objectives <- function(results_all, L_true) {
       if (i == 1) mtext(bquote(tau == .(tau_val)), side = 3, line = 0.5, cex = 1.1)
     }
   }
-  
-  # Optional common axis labels or title
-  # mtext("Candidate Peak Location l", side = 1, outer = TRUE, line = 2.5, cex = 1.2)
-  # mtext(expression("Objective Function " * f[tau]), side = 2, outer = TRUE, line = 2.5, cex = 1.2)
-  # mtext("Quantile-Based Peak Estimation — Asymmetric Laplace (z = 0)", side = 3, outer = TRUE, line = 1.5, cex = 1.4)
 }
-
 
 # ---------------------------------------------------------------------------
 # Run simulation and generate merged plot
@@ -160,19 +154,6 @@ S_true <- 10
 snr <- 1000
 seed <- 280
 T_vals <- c(4, 6, 8, 9, 10)
-# tau_values <- c(0.25, 0.5, 0.75, 0.95)
-# z <- 0  
-
-# results_all <- do.call(rbind, lapply(tau_values, function(tau_val) {
-#   do.call(rbind, lapply(T_vals, function(T) {
-#     df <- simulate_quantile_objective_asy(
-#       T, A = A_true, L = L_true, S = S_true,
-#       tau = tau_val, z = z, snr = snr, seed = seed
-#     )
-#     df$tau <- tau_val
-#     df
-#   }))
-# }))
 
 tau_values <- c(0.25, 0.5, 0.75, 0.95)
 results_all <- do.call(rbind, lapply(tau_values, function(tau_val) {

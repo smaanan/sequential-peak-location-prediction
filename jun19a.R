@@ -11,13 +11,6 @@ rlaplace <- function(n, location = 0, scale = 1) {
   location - scale * sign(u) * log(1 - 2 * abs(u))
 }
 
-# asy_laplace_variance <- function(tau, z) {
-#   stopifnot(tau > 0, tau < 1, abs(z) < 1)
-#   mu <- tau / (1 + z) - (1 - tau) / (1 - z)
-#   ex2 <- 2 * tau / (1 + z)^2 + 2 * (1 - tau) / (1 - z)^2
-#   ex2 - mu^2
-# }
-
 asy_laplace_variance <- function(tau, z) {
   t1 <- tau / (1 + z)^2
   t2 <- (1 - tau) / (1 - z)^2
@@ -144,10 +137,6 @@ plot_all_quantile_objectives_zcompare <- function(results_all, L_true) {
       }
     }
   }
-  
-  # mtext("Peak Location Candidate l", side = 1, outer = TRUE, line = 2.5, cex = 1.2)
-  # mtext(expression("Objective Function " * f[tau]), side = 2, outer = TRUE, line = 2.5, cex = 1.2)
-  # mtext("Quantile-Based Peak Estimation — Laplace Noise", side = 3, outer = TRUE, line = 1.5, cex = 1.4)
 }
 
 plot_all_quantile_objectives_zcompare(results_all, L_true)

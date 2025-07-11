@@ -4,15 +4,8 @@
 # ---------------------------------------------------------------------------
 
 # ----------------- Asymmetric Laplace Sampler --------------------------
-# rasymmetric_laplace <- function(n, tau, scale = 1) {
-#   u <- runif(n)
-#   q <- 1 - tau
-#   signs <- ifelse(u < q, -1, 1)
-#   rates <- ifelse(u < q, 1 / ((1 - tau) * scale), 1 / (tau * scale))
-#   signs * rexp(n, rate = rates)
-# }
 
-rasymmetric_laplace_correct <- function(n, tau, b) {
+rasymmetric_laplace <- function(n, tau, b) {
   u <- runif(n)
   q <- tau
   sgn <- ifelse(u < q, -1, 1)
@@ -53,11 +46,6 @@ simulate_asymmetric_laplace_objective <- function(T, A, L, S, tau, z, snr, seed 
   if (!is.null(seed)) set.seed(seed)
   signal <- A * exp(-((1:T) - L)^2 / S^2)
   
-  # Compute scale b so that Var(noise) = (A / snr)^2
-  # From asymmetric Laplace, Var = (1 - 2 * tau + 2 * tau^2) * b^2
-  # vtarget <- (A / snr)^2
-  # b <- sqrt(vtarget / (1 - 2 * tau + 2 * tau^2))
-  
   # Correct variance of generalized Laplace (verified)
   gl_variance <- function(tau, z) {
     t1 <- tau / (1 + z)^2
@@ -69,8 +57,7 @@ simulate_asymmetric_laplace_objective <- function(T, A, L, S, tau, z, snr, seed 
   vtarget <- (A / snr)^2
   b <- sqrt(vtarget / gl_variance(tau, z))
   
-  # noise <- rasymmetric_laplace(T, tau, scale = b)
-  noise <- rasymmetric_laplace_correct(T, tau, b)
+  noise <- rasymmetric_laplace(T, tau, b)
   
   I <- signal + noise
   
@@ -125,7 +112,7 @@ plot_asymmetric_all_tau_T <- function(results_all, L_true) {
       if (j == 1) mtext(bquote(T == .(T_val)), side = 2, line = 3, cex = 1.1)
       if (i == 1) mtext(bquote(tau == .(tau_val)), side = 3, line = 0.5, cex = 1.1)
       
-      if (i == 1 && j == 1) {
+      if (i == 1) {
         legend("topright", legend = paste("z =", z_vals),
                col = colors, lwd = 2, cex = 0.8, bty = "o", bg = "white")
       }
