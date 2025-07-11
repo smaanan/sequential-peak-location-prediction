@@ -4,13 +4,24 @@
 # ---------------------------------------------------------------------------
 
 # ----------------- Asymmetric Laplace Sampler --------------------------
-rasymmetric_laplace <- function(n, tau, scale = 1) {
+# rasymmetric_laplace <- function(n, tau, scale = 1) {
+#   u <- runif(n)
+#   q <- 1 - tau
+#   signs <- ifelse(u < q, -1, 1)
+#   rates <- ifelse(u < q, 1 / ((1 - tau) * scale), 1 / (tau * scale))
+#   signs * rexp(n, rate = rates)
+# }
+
+rasymmetric_laplace_correct <- function(n, tau, b) {
   u <- runif(n)
-  q <- 1 - tau
-  signs <- ifelse(u < q, -1, 1)
-  rates <- ifelse(u < q, 1 / ((1 - tau) * scale), 1 / (tau * scale))
-  signs * rexp(n, rate = rates)
+  q <- tau
+  sgn <- ifelse(u < q, -1, 1)
+  abs_x <- ifelse(sgn == -1,
+                  rexp(n, rate = (1 - tau) / b),
+                  rexp(n, rate = tau / b))
+  sgn * abs_x
 }
+
 
 # ----------------- Quantile Loss and Estimation --------------------------
 quantile_loss <- function(u, tau) u * (tau - (u < 0))
@@ -44,10 +55,23 @@ simulate_asymmetric_laplace_objective <- function(T, A, L, S, tau, z, snr, seed 
   
   # Compute scale b so that Var(noise) = (A / snr)^2
   # From asymmetric Laplace, Var = (1 - 2 * tau + 2 * tau^2) * b^2
-  vtarget <- (A / snr)^2
-  b <- sqrt(vtarget / (1 - 2 * tau + 2 * tau^2))
+  # vtarget <- (A / snr)^2
+  # b <- sqrt(vtarget / (1 - 2 * tau + 2 * tau^2))
   
-  noise <- rasymmetric_laplace(T, tau, scale = b)
+  # Correct variance of generalized Laplace (verified)
+  gl_variance <- function(tau, z) {
+    t1 <- tau / (1 + z)^2
+    t2 <- (1 - tau) / (1 - z)^2
+    mu <- (1 - tau) / (1 - z) - tau / (1 + z)
+    t1 + t2 - 0.25 * mu^2
+  }
+  
+  vtarget <- (A / snr)^2
+  b <- sqrt(vtarget / gl_variance(tau, z))
+  
+  # noise <- rasymmetric_laplace(T, tau, scale = b)
+  noise <- rasymmetric_laplace_correct(T, tau, b)
+  
   I <- signal + noise
   
   l_grid <- 18:25
@@ -103,7 +127,7 @@ plot_asymmetric_all_tau_T <- function(results_all, L_true) {
       
       if (i == 1 && j == 1) {
         legend("topright", legend = paste("z =", z_vals),
-               col = colors, lwd = 2, cex = 0.8, bty = "o")
+               col = colors, lwd = 2, cex = 0.8, bty = "o", bg = "white")
       }
     }
   }

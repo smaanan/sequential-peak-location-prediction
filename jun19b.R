@@ -17,11 +17,18 @@ shifted_laplace <- function(n, tau, scale = 1) {
   rlaplace(n, scale = scale) - qlaplace(tau, scale)
 }
 
+# asy_laplace_variance <- function(tau, z) {
+#   mu <- tau / (1 + z) - (1 - tau) / (1 - z)
+#   ex2 <- 2 * tau / (1 + z)^2 + 2 * (1 - tau) / (1 - z)^2
+#   ex2 - mu^2
+# }
+
 asy_laplace_variance <- function(tau, z) {
-  mu <- tau / (1 + z) - (1 - tau) / (1 - z)
-  ex2 <- 2 * tau / (1 + z)^2 + 2 * (1 - tau) / (1 - z)^2
-  ex2 - mu^2
+  mean_U <- (1 - tau) / (1 - z) - tau / (1 + z)
+  ex2 <- (tau / (1 + z)^2) + ((1 - tau) / (1 - z)^2)
+  ex2 - 0.25 * mean_U^2
 }
+
 
 # ----------------- Model Estimation Core --------------------------
 quantile_loss <- function(u, tau) u * (tau - (u < 0))
@@ -123,6 +130,12 @@ plot_shifted_all_tau_T <- function(results_all, L_true) {
       
       if (j == 1) mtext(bquote(T == .(T_val)), side = 2, line = 3, cex = 1.1)
       if (i == 1) mtext(bquote(tau == .(tau_val)), side = 3, line = 0.5, cex = 1.1)
+      
+      if (i == 1 && j == 1) {
+        legend("topright", legend = paste("z =", z_vals),
+               col = colors, lwd = 2, cex = 0.8, bty = "o", bg = "white")
+      }
+      
     }
   }
 }
