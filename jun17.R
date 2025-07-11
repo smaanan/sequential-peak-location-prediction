@@ -85,8 +85,21 @@ simulate_quantile_objective_asy <- function(T, A, L, S, tau, z, snr = Inf, seed 
   if (!is.null(seed)) set.seed(seed)
   
   if (is.finite(snr)) {
-    b <- A / (sqrt(2) * snr)
+    
+    # Correct generalized Laplace variance
+    gl_variance <- function(tau, z) {
+      t1 <- tau / (1 + z)^2
+      t2 <- (1 - tau) / (1 - z)^2
+      mu <- (1 - tau) / (1 - z) - tau / (1 + z)
+      t1 + t2 - 0.25 * mu^2
+    }
+    
+    vtarget <- (A / snr)^2
+    b <- sqrt(vtarget / gl_variance(tau, z))
     noise <- rasy_laplace(T, tau, z) * b
+    
+    # b <- A / (sqrt(2) * snr)
+    # noise <- rasy_laplace(T, tau, z) * b
     I <- signal + noise
   } else {
     I <- signal

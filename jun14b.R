@@ -151,11 +151,6 @@ plot_all_quantile_objectives <- function(results_all, A_true, L_true) {
       if (i == 1) mtext(bquote(tau == .(tau_val)), side = 3, line = 0.5, cex = 1.1)
     }
   }
-  
-  # Common axis labels and main title
-  # mtext("Candidate Peak Location l", side = 1, outer = TRUE, line = 2.5, cex = 1.2)
-  # mtext(expression("Objective Function " * f[tau]), side = 2, outer = TRUE, line = 2.5, cex = 1.2)
-  # mtext("Quantile-Based Peak Estimation — Laplace Noise", side = 3, outer = TRUE, line = 1.5, cex = 1.4)
 }
 
 # Run the new plotting function

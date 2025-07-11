@@ -131,7 +131,7 @@ plot_shifted_all_tau_T <- function(results_all, L_true) {
       if (j == 1) mtext(bquote(T == .(T_val)), side = 2, line = 3, cex = 1.1)
       if (i == 1) mtext(bquote(tau == .(tau_val)), side = 3, line = 0.5, cex = 1.1)
       
-      if (i == 1 && j == 1) {
+      if (i == 1) {
         legend("topright", legend = paste("z =", z_vals),
                col = colors, lwd = 2, cex = 0.8, bty = "o", bg = "white")
       }

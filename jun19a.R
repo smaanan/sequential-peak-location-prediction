@@ -11,11 +11,18 @@ rlaplace <- function(n, location = 0, scale = 1) {
   location - scale * sign(u) * log(1 - 2 * abs(u))
 }
 
+# asy_laplace_variance <- function(tau, z) {
+#   stopifnot(tau > 0, tau < 1, abs(z) < 1)
+#   mu <- tau / (1 + z) - (1 - tau) / (1 - z)
+#   ex2 <- 2 * tau / (1 + z)^2 + 2 * (1 - tau) / (1 - z)^2
+#   ex2 - mu^2
+# }
+
 asy_laplace_variance <- function(tau, z) {
-  stopifnot(tau > 0, tau < 1, abs(z) < 1)
-  mu <- tau / (1 + z) - (1 - tau) / (1 - z)
-  ex2 <- 2 * tau / (1 + z)^2 + 2 * (1 - tau) / (1 - z)^2
-  ex2 - mu^2
+  t1 <- tau / (1 + z)^2
+  t2 <- (1 - tau) / (1 - z)^2
+  mu <- (1 - tau) / (1 - z) - tau / (1 + z)
+  t1 + t2 - 0.25 * mu^2
 }
 
 compute_noise_scale <- function(A, snr, tau, z) {
