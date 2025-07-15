@@ -152,7 +152,8 @@ A_true <- 1
 L_true <- 22
 S_true <- 10
 snr <- 1000
-seed <- 280
+# seed <- 280
+seed <- 281
 T_vals <- c(4, 6, 8, 9, 10)
 
 tau_values <- c(0.25, 0.5, 0.75, 0.95)
