@@ -75,23 +75,39 @@ L_true <- 22
 S_true <- 10
 h <- 30
 Ts_free <- c(2, 3, 10, 20, 21)
-z_vals <- c(-0.9, -0.5, 0, 0.5, 0.9)
+# z_vals <- c(-0.9, -0.5, 0, 0.5, 0.9)
 snr <- 1000
 seed <- 280
-tau_vals <- c(0.25, 0.5, 0.75, 0.95)
+# tau_vals <- c(0.25, 0.5, 0.75, 0.95)
+
+z_vals <- c(-0.9, -0.5, 0, 0.5, 0.9)
+tau_vals <- (1 - z_vals) / 2
 
 # --- Combined Simulation and Plotting ---
-results_all <- do.call(rbind, lapply(tau_vals, function(tau) {
-  do.call(rbind, lapply(z_vals, function(z) {
-    res_z <- do.call(rbind, lapply(Ts_free, function(T) {
-      simulate_quantile_objective(T, A_true, L_true, S_true, h,
-                                  tau, snr, z, seed, force_l_gt_T = (tau == 0.5))
-    }))
-    res_z$z <- z
-    res_z$tau <- tau
-    res_z
+# results_all <- do.call(rbind, lapply(tau_vals, function(tau) {
+#   do.call(rbind, lapply(z_vals, function(z) {
+#     res_z <- do.call(rbind, lapply(Ts_free, function(T) {
+#       simulate_quantile_objective(T, A_true, L_true, S_true, h,
+#                                   tau, snr, z, seed, force_l_gt_T = (tau == 0.5))
+#     }))
+#     res_z$z <- z
+#     res_z$tau <- tau
+#     res_z
+#   }))
+# }))
+
+results_all <- do.call(rbind, lapply(seq_along(z_vals), function(i) {
+  z <- z_vals[i]
+  tau <- tau_vals[i]
+  res_z <- do.call(rbind, lapply(Ts_free, function(T) {
+    simulate_quantile_objective(T, A_true, L_true, S_true, h,
+                                tau, snr, z, seed, force_l_gt_T = (tau == 0.5))
   }))
+  res_z$z <- z
+  res_z$tau <- tau
+  res_z
 }))
+
 
 plot_all_quantile_objectives_zcompare <- function(results_all, L_true) {
   Ts <- sort(unique(results_all$T))
@@ -102,7 +118,8 @@ plot_all_quantile_objectives_zcompare <- function(results_all, L_true) {
   nrow <- length(Ts)
   ncol <- length(taus)
   
-  pdf(file = "plot_all_tau_zcompare.pdf", width = 2.5 * ncol, height = 2.5 * nrow)
+  # pdf(file = "plot_all_tau_zcompare.pdf", width = 2.5 * ncol, height = 2.5 * nrow)
+  pdf(file = "plot_all_tau_zcompare.pdf", width = 2.0 * ncol, height = 2.5 * nrow)
   old_par <- par(mfrow = c(nrow, ncol), mar = c(2, 2, 1.5, 1), oma = c(4, 4, 3, 0), bg = "white")
   on.exit({ par(old_par); dev.off() })
   
