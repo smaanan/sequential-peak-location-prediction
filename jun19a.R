@@ -75,26 +75,11 @@ L_true <- 22
 S_true <- 10
 h <- 30
 Ts_free <- c(2, 3, 10, 20, 21)
-# z_vals <- c(-0.9, -0.5, 0, 0.5, 0.9)
 snr <- 1000
 seed <- 280
-# tau_vals <- c(0.25, 0.5, 0.75, 0.95)
 
 z_vals <- c(-0.9, -0.5, 0, 0.5, 0.9)
 tau_vals <- (1 - z_vals) / 2
-
-# --- Combined Simulation and Plotting ---
-# results_all <- do.call(rbind, lapply(tau_vals, function(tau) {
-#   do.call(rbind, lapply(z_vals, function(z) {
-#     res_z <- do.call(rbind, lapply(Ts_free, function(T) {
-#       simulate_quantile_objective(T, A_true, L_true, S_true, h,
-#                                   tau, snr, z, seed, force_l_gt_T = (tau == 0.5))
-#     }))
-#     res_z$z <- z
-#     res_z$tau <- tau
-#     res_z
-#   }))
-# }))
 
 results_all <- do.call(rbind, lapply(seq_along(z_vals), function(i) {
   z <- z_vals[i]
@@ -108,19 +93,15 @@ results_all <- do.call(rbind, lapply(seq_along(z_vals), function(i) {
   res_z
 }))
 
-
 plot_all_quantile_objectives_zcompare <- function(results_all, L_true) {
   Ts <- sort(unique(results_all$T))
   taus <- sort(unique(results_all$tau))
-  z_vals <- sort(unique(results_all$z))
-  colors <- c("blue", "red", "darkgreen", "black", "grey60")
   
   nrow <- length(Ts)
   ncol <- length(taus)
   
-  # pdf(file = "plot_all_tau_zcompare.pdf", width = 2.5 * ncol, height = 2.5 * nrow)
   pdf(file = "plot_all_tau_zcompare.pdf", width = 2.0 * ncol, height = 2.5 * nrow)
-  old_par <- par(mfrow = c(nrow, ncol), mar = c(2, 2, 1.5, 1), oma = c(4, 4, 3, 0), bg = "white")
+  old_par <- par(mfrow = c(nrow, ncol), mar = c(2, 2, 1.5, 1), oma = c(4, 4, 3, 1), bg = "white")
   on.exit({ par(old_par); dev.off() })
   
   for (i in seq_along(Ts)) {
@@ -129,32 +110,21 @@ plot_all_quantile_objectives_zcompare <- function(results_all, L_true) {
       tau_val <- taus[j]
       df_sub <- subset(results_all, T == T_val & tau == tau_val)
       
-      x_range <- range(df_sub$l)
-      y_range <- range(df_sub$loss)
+      plot(NA, xlim = range(df_sub$l), ylim = range(df_sub$loss),
+           xlab = "", ylab = "", main = "", axes = FALSE)
+      axis(1); axis(2)
+      box()
       
-      plot(NA, xlim = x_range, ylim = y_range,
-           xlab = "", ylab = "", main = "")
-      abline(v = L_true, col = "gray40", lty = 2)
+      lines(df_sub$l, df_sub$loss, col = "blue", lwd = 2)
+      abline(v = L_true, col = "red", lty = 2)
       grid()
       
-      for (k in seq_along(z_vals)) {
-        df_z <- subset(df_sub, z == z_vals[k])
-        lines(df_z$l, df_z$loss, col = colors[k], lwd = 2)
-      }
-      
-      # Add tau label on top
-      if (i == 1) mtext(bquote(tau == .(tau_val)), side = 3, line = 0.5, cex = 1.1)
-      # Add T label on the left
       if (j == 1) mtext(bquote(T == .(T_val)), side = 2, line = 3, cex = 1.1)
-      
-      # Legend only in top row
-      if (i == 1) {
-        legend("topright", legend = paste("z =", z_vals),
-               col = colors, lwd = 2, cex = 0.8)
-      }
+      if (i == 1) mtext(bquote(tau == .(tau_val)), side = 3, line = 1, cex = 1.1)
     }
   }
 }
+
 
 plot_all_quantile_objectives_zcompare(results_all, L_true)
 cat("Merged plot saved to plot_all_tau_zcompare.png\n")
