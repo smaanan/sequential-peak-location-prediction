@@ -449,6 +449,113 @@ The resulting profiles are displayed in Figure~\ref{fig:asymmetric_laplace_loss_
 %    \label{fig:plot_all_tau_zcompare}
 %\end{figure}
 
+{\color{blue}
+\section{Parameter Estimation Trajectories}
+\label{sec:parameter_estimation_paths}
+
+We now analyze how the estimated model parameters, location $\hat{l}(T)$, amplitude $\hat{a}(T)$, and scale $\hat{s}(T)$, evolve as the sample size $T$ increases. Our goal is to assess the stability and convergence of these estimators under the $\tau$-aligned asymmetric Laplace noise introduced in Section~\ref{sec:general_AL_intro}, including its symmetric special case. All experiments use a fixed signal-to-noise ratio of $\mathrm{SNR}=1000$ and consider quantile levels
+\[
+\tau\in\{0.25,0.5,0.75,0.95\}.
+\]
+
+\subsection{$\tau$-Aligned Asymmetric Laplace Noise}
+\label{subsec:asymmetric_laplace_trajectories}
+
+We consider the signal-plus-noise model
+\[
+I(t)
+=
+A\exp\left(-\frac{(t-L)^2}{S^2}\right)+e(t),
+\qquad t=1,\ldots,30,
+\]
+with
+\[
+A=1,\qquad L=22,\qquad S=10.
+\]
+The noise $e(t)$ follows the $\tau$-aligned asymmetric Laplace distribution introduced in Section~\ref{sec:general_AL_intro}, with density
+\[
+f_{\tau,b}(x)
+=
+\frac{\tau(1-\tau)}{b}
+\exp\left(-\frac{1}{b}\rho_\tau(x)\right),
+\]
+where
+\[
+\rho_\tau(x)
+=
+x\left(\tau-\mathbf{1}_{\{x<0\}}\right).
+\]
+The asymmetry parameter is determined by the quantile level according to
+\[
+k=\sqrt{\frac{\tau}{1-\tau}},
+\]
+so that
+\[
+\mathbb{P}(e(t)<0)=\tau.
+\]
+In particular, $\tau=1/2$ corresponds to the symmetric Laplace distribution, whereas the other values of $\tau$ considered here produce asymmetric noise.
+
+The scale parameter $b$ is calibrated separately for each $\tau$ so that the variance of the noise satisfies the fixed signal-to-noise ratio condition
+\[
+\operatorname{Var}(e(t))
+=
+\left(\frac{A}{\mathrm{SNR}}\right)^2.
+\]
+For the $\tau$-aligned asymmetric Laplace distribution,
+\[
+\operatorname{Var}(e(t))
+=
+b^2
+\frac{\tau^2+(1-\tau)^2}
+{\tau^2(1-\tau)^2},
+\]
+and therefore
+\[
+b
+=
+\frac{A}{\mathrm{SNR}}
+\frac{\tau(1-\tau)}
+{\sqrt{\tau^2+(1-\tau)^2}}.
+\]
+
+At each time horizon $T\in\{4,\ldots,30\}$, we estimate the parameters
+$(\hat{l}(T),\hat{a}(T),\hat{s}(T))$ by minimizing the quantile loss
+\[
+\min_{l\in[1,30],\,s>0}
+\frac{1}{T}
+\sum_{t=1}^{T}
+\rho_\tau
+\left(
+I(t)
+-
+a\exp\left(-\frac{(t-l)^2}{s^2}\right)
+\right),
+\]
+where
+\[
+\rho_\tau(u)
+=
+u\left(\tau-\mathbf{1}_{\{u<0\}}\right),
+\]
+and $a$ is re-estimated for each pair $(l,s)$ as the weighted $\tau$-quantile described in Section~\ref{sec:weighted_median_method}. The scale parameter $s$ is optimized over the prescribed interval, and the location parameter $l$ is selected by minimizing the resulting objective over the candidate locations.
+
+Figure~\ref{fig:combined_estimation_paths} shows the resulting estimation trajectories
+\[
+T\mapsto\hat{l}(T),\qquad
+T\mapsto\hat{a}(T),\qquad
+T\mapsto\hat{s}(T),
+\]
+for each quantile level $\tau$. The true parameter values
+$(L,A,S)=(22,1,10)$ are indicated by dashed horizontal lines.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.95\textwidth]{fig3_4a_4b_combined.pdf}
+	\caption{Estimation paths $T\mapsto\hat{l}(T)$ (left), $\hat{a}(T)$ (middle), and $\hat{s}(T)$ (right) under $\tau$-aligned asymmetric Laplace noise with signal-to-noise ratio (SNR) 1000. Each row corresponds to a quantile level $\tau\in\{0.25,0.5,0.75,0.95\}$. The true values $(L,A,S)=(22,1,10)$ are indicated by dashed horizontal lines.}
+	\label{fig:combined_estimation_paths}
+\end{figure}
+}
+
 \section{Parameter Estimation Trajectories}
 \label{sec:parameter_estimation_paths}
 
