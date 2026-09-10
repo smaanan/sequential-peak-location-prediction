@@ -522,64 +522,64 @@ The resulting profiles of the objective function are displayed in Figure~\ref{fi
 %    \label{fig:asy_laplace_objectives}
 %\end{figure}
 
-\section{General Asymmetric Laplace Noise Model}
-\label{sec:general_asy_laplace}
-
-Building on the general density \( f_{\tau,z,b}(x) \) introduced in Section~\ref{sec:general_AL_intro}, we now examine the case where \( z \neq 0 \). Varying the asymmetry parameter \( z \) allows us to simulate skewed noise distributions while preserving the property that the $\tau$-quantile lies at zero. This setup enables us to assess how skewness influences the estimation of the peak parameters \( (a, l, s) \) under quantile loss.
-
-\subsection{\texorpdfstring{Objective Profiles Across Varying \( z \)}{Objective Profiles Across Varying z}}
-\label{subsec:objective_varying_z}
-
-We simulate observations according to the model
-\[
-I(t) = A \exp\left( -\frac{(t - L)^2}{S^2} \right) + e(t),
-\]
-where the noise $e(t)$ is drawn from the generalized Laplace distribution $GL_{\tau, z, b}(x)$, whose density is given by:
-$$
-f_{\tau,z,b}(x) =
-\begin{cases}
-\dfrac{\tau (1 + z)}{b} \exp\left( \dfrac{(1 + z)x}{b} \right), & x < 0, \\[6pt]
-\dfrac{(1 - \tau)(1 - z)}{b} \exp\left( -\dfrac{(1 - z)x}{b} \right), & x \geq 0,
-\end{cases}
-$$
-where $\tau = \frac{1 - z}{2}$, ensuring that $\mathbb{P}(e(t) < 0) = \tau$. The scale parameter $b$ is adjusted to ensure constant signal-to-noise ratio using the theoretical variance:
-$$
-\operatorname{Var}(e) = b^2 \left[
-\frac{\tau}{(1 + z)^2} + \frac{1 - \tau}{(1 - z)^2}
-- \frac{1}{4} \left( \frac{1 - \tau}{1 - z} - \frac{\tau}{1 + z} \right)^2
-\right].
-$$
-The signal component is fixed with parameters \( A = 15000 \), \( L = 22 \), and \( S = 10 \), while the scale \( b \) is dynamically adjusted to maintain a constant signal-to-noise ratio \( \mathrm{SNR} = 1000 \) across all configurations.
-For each combination of quantile level \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \) and sample size \( T \in \{2, 3, 10, 15, 20, 21\} \), we evaluate the quantile loss objective function
-\[
-f_\tau(l; T) = \min_{a,s>0} \frac{1}{T} \sum_{t=1}^T \rho_\tau\left( I(t) - a \exp\left(-\frac{(t - l)^2}{s^2} \right) \right),
-\]
-over a grid \( l \in \{18, \dots, 25\} \).
-
-Figure~\ref{fig:figure1} presents the resulting objective profiles \( f_\tau(l; T) \). Each row corresponds to a sample size \( T \), and each column to a quantile level \( \tau \). Within each panel, the curves for different values of \( z \) are superposed for visual comparison.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{figure1_new_asy_laplace_all_tau_T.pdf}
-    \caption{
-    Quantile loss objective \( l \mapsto f_\tau(l; T) \) under asymmetric Laplace noise with skewness parameters \( z \in \{-0.9, -0.5, 0, 0.5, 0.9\} \), derived from the limiting form \( x \mapsto \exp\left( -\frac{|x|}{b}(1 - \mathrm{sgn}(x) z) \right) \).
-    Rows correspond to sample sizes \( T \in \{2, 3, 10, 20, 21\} \), and columns correspond to quantile levels \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \). The vertical dashed line marks the true peak location \( L = 22 \). Colors indicate the value of \( z \).
-    }
-    \label{fig:figure1}
-\end{figure}
-
-\vspace{1ex}
-
-To better isolate the effect of skewness for each quantile level, we generate composite plots that fix \( \tau \) and overlay all \( z \)-dependent curves, shown in Figure~\ref{fig:plot_all_tau_zcompare}.
-
-These overlays allow direct comparison of how different noise asymmetries influence the curvature, location, and convexity of the objective function for a given estimation target.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{plot_all_tau_zcompare.pdf}
-    \caption{Superposed objective functions \( l \mapsto f_\tau(l; T) \) under asymmetric Laplace noise with varying skewness parameters \( z \in \{-0.9, -0.5, 0, 0.5, 0.9\} \). Each row corresponds to sample sizes \( T \in \{2, 3, 10, 20, 21\} \), and each column to quantile levels \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \). The vertical dashed line indicates the true peak location \( L = 22 \); colors denote different values of \( z \).}
-    \label{fig:plot_all_tau_zcompare}
-\end{figure}
+%\section{General Asymmetric Laplace Noise Model}
+%\label{sec:general_asy_laplace}
+%
+%Building on the general density \( f_{\tau,z,b}(x) \) introduced in Section~\ref{sec:general_AL_intro}, we now examine the case where \( z \neq 0 \). Varying the asymmetry parameter \( z \) allows us to simulate skewed noise distributions while preserving the property that the $\tau$-quantile lies at zero. This setup enables us to assess how skewness influences the estimation of the peak parameters \( (a, l, s) \) under quantile loss.
+%
+%\subsection{\texorpdfstring{Objective Profiles Across Varying \( z \)}{Objective Profiles Across Varying z}}
+%\label{subsec:objective_varying_z}
+%
+%We simulate observations according to the model
+%\[
+%I(t) = A \exp\left( -\frac{(t - L)^2}{S^2} \right) + e(t),
+%\]
+%where the noise $e(t)$ is drawn from the generalized Laplace distribution $GL_{\tau, z, b}(x)$, whose density is given by:
+%$$
+%f_{\tau,z,b}(x) =
+%\begin{cases}
+%\dfrac{\tau (1 + z)}{b} \exp\left( \dfrac{(1 + z)x}{b} \right), & x < 0, \\[6pt]
+%\dfrac{(1 - \tau)(1 - z)}{b} \exp\left( -\dfrac{(1 - z)x}{b} \right), & x \geq 0,
+%\end{cases}
+%$$
+%where $\tau = \frac{1 - z}{2}$, ensuring that $\mathbb{P}(e(t) < 0) = \tau$. The scale parameter $b$ is adjusted to ensure constant signal-to-noise ratio using the theoretical variance:
+%$$
+%\operatorname{Var}(e) = b^2 \left[
+%\frac{\tau}{(1 + z)^2} + \frac{1 - \tau}{(1 - z)^2}
+%- \frac{1}{4} \left( \frac{1 - \tau}{1 - z} - \frac{\tau}{1 + z} \right)^2
+%\right].
+%$$
+%The signal component is fixed with parameters \( A = 15000 \), \( L = 22 \), and \( S = 10 \), while the scale \( b \) is dynamically adjusted to maintain a constant signal-to-noise ratio \( \mathrm{SNR} = 1000 \) across all configurations.
+%For each combination of quantile level \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \) and sample size \( T \in \{2, 3, 10, 15, 20, 21\} \), we evaluate the quantile loss objective function
+%\[
+%f_\tau(l; T) = \min_{a,s>0} \frac{1}{T} \sum_{t=1}^T \rho_\tau\left( I(t) - a \exp\left(-\frac{(t - l)^2}{s^2} \right) \right),
+%\]
+%over a grid \( l \in \{18, \dots, 25\} \).
+%
+%Figure~\ref{fig:figure1} presents the resulting objective profiles \( f_\tau(l; T) \). Each row corresponds to a sample size \( T \), and each column to a quantile level \( \tau \). Within each panel, the curves for different values of \( z \) are superposed for visual comparison.
+%
+%\begin{figure}[htbp]
+%    \centering
+%    \includegraphics[width=\linewidth]{figure1_new_asy_laplace_all_tau_T.pdf}
+%    \caption{
+%    Quantile loss objective \( l \mapsto f_\tau(l; T) \) under asymmetric Laplace noise with skewness parameters \( z \in \{-0.9, -0.5, 0, 0.5, 0.9\} \), derived from the limiting form \( x \mapsto \exp\left( -\frac{|x|}{b}(1 - \mathrm{sgn}(x) z) \right) \).
+%    Rows correspond to sample sizes \( T \in \{2, 3, 10, 20, 21\} \), and columns correspond to quantile levels \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \). The vertical dashed line marks the true peak location \( L = 22 \). Colors indicate the value of \( z \).
+%    }
+%    \label{fig:figure1}
+%\end{figure}
+%
+%\vspace{1ex}
+%
+%To better isolate the effect of skewness for each quantile level, we generate composite plots that fix \( \tau \) and overlay all \( z \)-dependent curves, shown in Figure~\ref{fig:plot_all_tau_zcompare}.
+%
+%These overlays allow direct comparison of how different noise asymmetries influence the curvature, location, and convexity of the objective function for a given estimation target.
+%
+%\begin{figure}[htbp]
+%    \centering
+%    \includegraphics[width=\linewidth]{plot_all_tau_zcompare.pdf}
+%    \caption{Superposed objective functions \( l \mapsto f_\tau(l; T) \) under asymmetric Laplace noise with varying skewness parameters \( z \in \{-0.9, -0.5, 0, 0.5, 0.9\} \). Each row corresponds to sample sizes \( T \in \{2, 3, 10, 20, 21\} \), and each column to quantile levels \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \). The vertical dashed line indicates the true peak location \( L = 22 \); colors denote different values of \( z \).}
+%    \label{fig:plot_all_tau_zcompare}
+%\end{figure}
 
 \section{Parameter Estimation Trajectories}
 \label{sec:parameter_estimation_paths}
