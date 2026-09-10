@@ -477,50 +477,50 @@ The resulting profiles of the objective function are displayed in Figure~\ref{fi
 
 \paragraph{Remark.} A notable feature of Figure~\ref{fig:asymmetric_laplace_loss_profiles} is that all curves corresponding to different skewness levels \( z \in \{-0.9, -0.5, 0, 0.5, 0.9\} \) fall exactly on top of each other. This occurs because the data were generated using the asymmetric Laplace density \( f_{\tau}(x) \) that is exactly matched to the quantile loss function \( \rho_\tau(x) \), i.e., the negative log-likelihood is proportional to the loss function being minimized. 
 
-\subsection{\texorpdfstring{Asymmetric Laplace Noise with \( \tau = \frac{1 - z}{2} \)}{Asymmetric Laplace Noise with tau = (1 - z)/2}}
-\label{sec:asymmetric_laplace_z_tau}
-
-We now consider the noise model derived in Proposition~\ref{prop:adn}, in which the generalized asymmetric Laplace (GAL) kernel
-\[
-x \mapsto \exp\left(-\frac{(z - \lambda x/b)^2}{2\lambda} - \frac{|x|}{\lambda b}\right)
-\]
-converges (as \( \lambda \to 0 \)) to a piecewise exponential distribution with skewness parameter \( z \in (-1,1) \). The limiting density is given by:
-\[
-f_{z,b}(x) =
-\begin{cases}
-\dfrac{(1 - z)(1 + z)}{2b} \exp\left( \dfrac{(1 + z)x}{b} \right), & x < 0, \\[6pt]
-\dfrac{(1 - z)(1 + z)}{2b} \exp\left( -\dfrac{(1 - z)x}{b} \right), & x > 0,
-\end{cases}
-\]
-which corresponds to an asymmetric Laplace distribution with skewness \( z \) and scale \( b \), and has left tail probability $\mathbb{P}(e < 0) = \tau$, for $\tau = \frac{1 - z}{2}$. Its variance is given by:
-$$
-\operatorname{Var}(e) = b^2 \left[
-\frac{\tau}{(1 + z)^2} + \frac{1 - \tau}{(1 - z)^2}
-- \frac{1}{4} \left( \frac{1 - \tau}{1 - z} - \frac{\tau}{1 + z} \right)^2
-\right].
-$$
-This expression was used in the simulations to set the scale parameter $b$ to match the target signal-to-noise ratio.
-
-In our simulations, for each fixed value of \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \), we set \( z = 1 - 2\tau \) to ensure consistency with the theoretical limiting density. The observed process is then simulated as:
-\[
-I(t) = A \exp\left( -\frac{(t - L)^2}{S^2} \right) + e(t), \quad \text{with } e(t) \sim f_{z,b},
-\]
-where we fix \( A = 1 \), \( L = 22 \), \( S = 10 \), and a high signal-to-noise ratio \( \text{SNR} = 1000 \).
-
-For each combination of \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \) and \( T \in \{4, 6, 8, 9, 10\} \), we compute the quantile loss profile:
-\[
-f_\tau(l) = \min_{a, s > 0} \frac{1}{T} \sum_{t=1}^T \rho_\tau\left( I(t) - a \exp\left( -\frac{(t - l)^2}{s^2} \right) \right),
-\]
-where \( \rho_\tau \) is the asymmetric check loss used in quantile regression.
-
-As illustrated in Figure~\ref{fig:asy_laplace_objectives}, this construction avoids any need for manual shifting or recentering of the noise, and directly reflects the limiting behavior described in Proposition~\ref{prop:adn}.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{plot_asymmetric_all.pdf}
-    \caption{Objective function profiles \( l \mapsto f_\tau(T, a, l, s) \) under asymmetric Laplace noise with skewness parameter \( z = 1 - 2\tau \), corresponding to the theoretical limiting density derived in Proposition~\ref{prop:adn}. Each panel corresponds to a pair \( (T, \tau) \), and the red dashed line marks the true peak location \( L = 22 \).}
-    \label{fig:asy_laplace_objectives}
-\end{figure}
+%\subsection{\texorpdfstring{Asymmetric Laplace Noise with \( \tau = \frac{1 - z}{2} \)}{Asymmetric Laplace Noise with tau = (1 - z)/2}}
+%\label{sec:asymmetric_laplace_z_tau}
+%
+%We now consider the noise model derived in Proposition~\ref{prop:adn}, in which the generalized asymmetric Laplace (GAL) kernel
+%\[
+%x \mapsto \exp\left(-\frac{(z - \lambda x/b)^2}{2\lambda} - \frac{|x|}{\lambda b}\right)
+%\]
+%converges (as \( \lambda \to 0 \)) to a piecewise exponential distribution with skewness parameter \( z \in (-1,1) \). The limiting density is given by:
+%\[
+%f_{z,b}(x) =
+%\begin{cases}
+%\dfrac{(1 - z)(1 + z)}{2b} \exp\left( \dfrac{(1 + z)x}{b} \right), & x < 0, \\[6pt]
+%\dfrac{(1 - z)(1 + z)}{2b} \exp\left( -\dfrac{(1 - z)x}{b} \right), & x > 0,
+%\end{cases}
+%\]
+%which corresponds to an asymmetric Laplace distribution with skewness \( z \) and scale \( b \), and has left tail probability $\mathbb{P}(e < 0) = \tau$, for $\tau = \frac{1 - z}{2}$. Its variance is given by:
+%$$
+%\operatorname{Var}(e) = b^2 \left[
+%\frac{\tau}{(1 + z)^2} + \frac{1 - \tau}{(1 - z)^2}
+%- \frac{1}{4} \left( \frac{1 - \tau}{1 - z} - \frac{\tau}{1 + z} \right)^2
+%\right].
+%$$
+%This expression was used in the simulations to set the scale parameter $b$ to match the target signal-to-noise ratio.
+%
+%In our simulations, for each fixed value of \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \), we set \( z = 1 - 2\tau \) to ensure consistency with the theoretical limiting density. The observed process is then simulated as:
+%\[
+%I(t) = A \exp\left( -\frac{(t - L)^2}{S^2} \right) + e(t), \quad \text{with } e(t) \sim f_{z,b},
+%\]
+%where we fix \( A = 1 \), \( L = 22 \), \( S = 10 \), and a high signal-to-noise ratio \( \text{SNR} = 1000 \).
+%
+%For each combination of \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \) and \( T \in \{4, 6, 8, 9, 10\} \), we compute the quantile loss profile:
+%\[
+%f_\tau(l) = \min_{a, s > 0} \frac{1}{T} \sum_{t=1}^T \rho_\tau\left( I(t) - a \exp\left( -\frac{(t - l)^2}{s^2} \right) \right),
+%\]
+%where \( \rho_\tau \) is the asymmetric check loss used in quantile regression.
+%
+%As illustrated in Figure~\ref{fig:asy_laplace_objectives}, this construction avoids any need for manual shifting or recentering of the noise, and directly reflects the limiting behavior described in Proposition~\ref{prop:adn}.
+%
+%\begin{figure}[htbp]
+%    \centering
+%    \includegraphics[width=\linewidth]{plot_asymmetric_all.pdf}
+%    \caption{Objective function profiles \( l \mapsto f_\tau(T, a, l, s) \) under asymmetric Laplace noise with skewness parameter \( z = 1 - 2\tau \), corresponding to the theoretical limiting density derived in Proposition~\ref{prop:adn}. Each panel corresponds to a pair \( (T, \tau) \), and the red dashed line marks the true peak location \( L = 22 \).}
+%    \label{fig:asy_laplace_objectives}
+%\end{figure}
 
 \section{General Asymmetric Laplace Noise Model}
 \label{sec:general_asy_laplace}
