@@ -234,6 +234,122 @@ distribution reduces to the symmetric Laplace distribution centered at zero.
 Hence, the symmetric Laplace case is recovered as a special case of the
 $\tau$-aligned asymmetric Laplace model.}
 
+{\color{blue}
+\subsection{Simulation under Asymmetric Laplace Noise}
+\label{subsec:asymmetric_laplace_noise}
+
+We now investigate the behavior of the quantile-based peak estimation procedure when the additive noise follows the $\tau$-aligned asymmetric Laplace distribution introduced in Section~\ref{sec:general_AL_intro}. In the parameterization based on the quantile loss, the density of the noise can be written as
+\[
+f_{\tau,b}(x)
+=
+\frac{\tau(1-\tau)}{b}
+\exp\left(-\frac{1}{b}\rho_\tau(x)\right),
+\qquad
+\tau\in(0,1),\quad b>0,
+\]
+where
+\[
+\rho_\tau(x)=x\left(\tau-\mathbf{1}\{x<0\}\right).
+\]
+Equivalently,
+\[
+f_{\tau,b}(x)
+=
+\begin{cases}
+	\displaystyle
+	\frac{\tau(1-\tau)}{b}
+	\exp\left(-\frac{\tau x}{b}\right), & x\geq 0, \\[8pt]
+	\displaystyle
+	\frac{\tau(1-\tau)}{b}
+	\exp\left(\frac{(1-\tau)x}{b}\right), & x<0.
+\end{cases}
+\]
+The normalization follows from
+\[
+\int_{-\infty}^{+\infty}
+\exp\left(-\frac{1}{b}\rho_\tau(x)\right)\,dx
+=
+\frac{b}{1-\tau}+\frac{b}{\tau}
+=
+\frac{b}{\tau(1-\tau)}.
+\]
+Moreover, by construction,
+\[
+\mathbb{P}(e(t)<0)=\tau.
+\]
+
+This distribution is directly compatible with the quantile-based estimation criterion. Indeed,
+\[
+-\log f_{\tau,b}(e)
+=
+-\log\left(\frac{\tau(1-\tau)}{b}\right)
++
+\frac{1}{b}\rho_\tau(e).
+\]
+Therefore, for fixed $\tau$ and $b$, minimizing the negative log-likelihood is equivalent to minimizing the empirical quantile loss. The asymmetric Laplace model thus provides a probabilistic interpretation of the quantile-based peak estimation procedure without introducing a separate estimation criterion.
+
+For the simulation study, the true signal is
+\[
+I(t)
+=
+A\exp\left(-\frac{(t-L)^2}{S^2}\right),
+\]
+with
+\[
+A=1,\qquad L=22,\qquad S=10,
+\]
+and the signal-to-noise ratio is set to
+\[
+\mathrm{SNR}=1000.
+\]
+For each
+\[
+\tau\in\{0.25,0.5,0.75,0.95\},
+\]
+the corresponding asymmetric Laplace noise is generated with asymmetry parameter
+\[
+k=\sqrt{\frac{\tau}{1-\tau}}.
+\]
+The scale parameter $b$ is chosen so that the variance of the noise satisfies
+\[
+\operatorname{Var}(e(t))
+=
+\left(\frac{A}{\mathrm{SNR}}\right)^2.
+\]
+For the $\tau$-aligned asymmetric Laplace distribution, this variance is
+\[
+\operatorname{Var}(e(t))
+=
+b^2
+\frac{\tau^2+(1-\tau)^2}
+{\tau^2(1-\tau)^2},
+\]
+so that
+\[
+b
+=
+\frac{A}{\mathrm{SNR}}
+\frac{\tau(1-\tau)}
+{\sqrt{\tau^2+(1-\tau)^2}}.
+\]
+
+For each $\tau$, the objective function
+$l\mapsto f_\tau(T,a,l,s)$ is evaluated for the time horizons
+\[
+T\in\{4,6,8,9,10\}.
+\]
+For each candidate peak location $l$, the scale parameter $s$ is optimized over the prescribed interval, and the amplitude $a$ is determined as the weighted $\tau$-quantile described in Section~\ref{sec:weighted_median_method}. The resulting objective profiles are then compared across the different values of $\tau$.
+
+The resulting profiles are displayed in Figure~\ref{fig:asymmetric_laplace_loss_profiles}. The true peak location $L=22$ is marked by a vertical dashed line. Each panel corresponds to a different pair $(T,\tau)$, and the curves show the behavior of the quantile-loss objective across candidate peak locations.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\linewidth]{figure2_asymmetric_laplace_all_tau_T.pdf}
+	\caption{Objective function profiles $l\mapsto f_{\tau}(T,a,l,s)$ under $\emph{asymmetric Laplace}$ noise, for $\tau\in\{0.25,0.5,0.75,0.95\}$ and $T\in\{4,6,8,9,10\}$. Each panel corresponds to one value of $\tau$, and the dashed vertical line indicates the true peak location $L=22$.}
+	\label{fig:asymmetric_laplace_loss_profiles}
+\end{figure}
+}
+
 \subsection{Quantile-Based Estimation under Asymmetric Laplace Noise}
 \label{subsec:asymmetric_laplace_noise}
 
