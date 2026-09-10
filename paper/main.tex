@@ -555,41 +555,40 @@ $(L,A,S)=(22,1,10)$ are indicated by dashed horizontal lines.
 	\label{fig:combined_estimation_paths}
 \end{figure}
 }
-
-\section{Parameter Estimation Trajectories}
-\label{sec:parameter_estimation_paths}
-
-We now analyze how the estimated model parameters, location $\hat{l}(T)$, amplitude $\hat{a}(T)$, and scale $\hat{s}(T)$, evolve as the sample size $T$ increases. Our goal is to assess the stability and convergence of these estimators under both symmetric and asymmetric Laplace noise. All experiments use a fixed signal-to-noise ratio of $\text{SNR} = 1000$ and consider quantile levels $\tau \in \{0.25, 0.5, 0.75, 0.95\}$.
-
-\subsection{Symmetric Noise (z = 0)}
-
-We first consider the case of symmetric Laplace noise, corresponding to $z = 0$. The observations are generated according to the signal-plus-noise model
-\[
-I(t) = A \exp\left(-\frac{(t - L)^2}{S^2} \right) + e(t), \quad t = 1, \dots, 30,
-\]
-with $A = 1$, $L = 22$, and $S = 10$. The noise $e(t)$ follows the generalized Laplace distribution $GL_{\tau, b}(u)$, with density proportional to $\exp\left( -\rho_\tau(u / b) \right)$, where $\rho_\tau(u) = u(\tau - \mathbf{1}_{\{u < 0\}})$. The scale $b$ is calibrated so that the noise variance matches $(A / \text{SNR})^2$, using the expression:
-$$
-\operatorname{Var}(e) = b^2 \left[
-\frac{\tau}{(1 + z)^2} + \frac{1 - \tau}{(1 - z)^2}
-- \frac{1}{4} \left( \frac{1 - \tau}{1 - z} - \frac{\tau}{1 + z} \right)^2
-\right],
-$$
-with $z = 0$ for the symmetric case.
-
-At each time horizon $T \in [4,30]$, we estimate the parameters $(\hat{l}(T), \hat{a}(T), \hat{s}(T))$ by minimizing the quantile loss:
-\[
-\min_{l \in [1,h], s > 0} \frac{1}{T} \sum_{t=1}^T \rho_\tau\left( I(t) - a \exp\left(-\frac{(t - l)^2}{s^2} \right) \right),
-\]
-where $\rho_\tau(u) = u(\tau - \mathbf{1}_{\{u < 0\}})$ is the check function, and $a$ is re-estimated for each $(l,s)$ via a weighted $\tau$-quantile.
-
-Figure~\ref{fig:combined_estimation_paths} shows the estimation trajectories $T \mapsto \hat{l}(T)$, $T \mapsto \hat{a}(T)$, and $T \mapsto \hat{s}(T)$ for each quantile level.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.95\textwidth]{fig3_4a_4b_combined.pdf}
-\caption{Estimation paths $T \mapsto \hat{l}(T)$ (left), $\hat{a}(T)$ (middle), and $\hat{s}(T)$ (right) under symmetric Laplace noise with signal-to-noise ratio (SNR) 1000. Each row corresponds to a quantile level $\tau \in \{0.25, 0.5, 0.75, 0.95\}$. The true values $(L, A, S) = (22, 1, 10)$ are indicated by red dashed lines.}
-\label{fig:combined_estimation_paths}
-\end{figure}
+%\section{Parameter Estimation Trajectories}
+%\label{sec:parameter_estimation_paths}
+%
+%We now analyze how the estimated model parameters, location $\hat{l}(T)$, amplitude $\hat{a}(T)$, and scale $\hat{s}(T)$, evolve as the sample size $T$ increases. Our goal is to assess the stability and convergence of these estimators under both symmetric and asymmetric Laplace noise. All experiments use a fixed signal-to-noise ratio of $\text{SNR} = 1000$ and consider quantile levels $\tau \in \{0.25, 0.5, 0.75, 0.95\}$.
+%
+%\subsection{Symmetric Noise (z = 0)}
+%
+%We first consider the case of symmetric Laplace noise, corresponding to $z = 0$. The observations are generated according to the signal-plus-noise model
+%\[
+%I(t) = A \exp\left(-\frac{(t - L)^2}{S^2} \right) + e(t), \quad t = 1, \dots, 30,
+%\]
+%with $A = 1$, $L = 22$, and $S = 10$. The noise $e(t)$ follows the generalized Laplace distribution $GL_{\tau, b}(u)$, with density proportional to $\exp\left( -\rho_\tau(u / b) \right)$, where $\rho_\tau(u) = u(\tau - \mathbf{1}_{\{u < 0\}})$. The scale $b$ is calibrated so that the noise variance matches $(A / \text{SNR})^2$, using the expression:
+%$$
+%\operatorname{Var}(e) = b^2 \left[
+%\frac{\tau}{(1 + z)^2} + \frac{1 - \tau}{(1 - z)^2}
+%- \frac{1}{4} \left( \frac{1 - \tau}{1 - z} - \frac{\tau}{1 + z} \right)^2
+%\right],
+%$$
+%with $z = 0$ for the symmetric case.
+%
+%At each time horizon $T \in [4,30]$, we estimate the parameters $(\hat{l}(T), \hat{a}(T), \hat{s}(T))$ by minimizing the quantile loss:
+%\[
+%\min_{l \in [1,h], s > 0} \frac{1}{T} \sum_{t=1}^T \rho_\tau\left( I(t) - a \exp\left(-\frac{(t - l)^2}{s^2} \right) \right),
+%\]
+%where $\rho_\tau(u) = u(\tau - \mathbf{1}_{\{u < 0\}})$ is the check function, and $a$ is re-estimated for each $(l,s)$ via a weighted $\tau$-quantile.
+%
+%Figure~\ref{fig:combined_estimation_paths} shows the estimation trajectories $T \mapsto \hat{l}(T)$, $T \mapsto \hat{a}(T)$, and $T \mapsto \hat{s}(T)$ for each quantile level.
+%
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=0.95\textwidth]{fig3_4a_4b_combined.pdf}
+%\caption{Estimation paths $T \mapsto \hat{l}(T)$ (left), $\hat{a}(T)$ (middle), and $\hat{s}(T)$ (right) under symmetric Laplace noise with signal-to-noise ratio (SNR) 1000. Each row corresponds to a quantile level $\tau \in \{0.25, 0.5, 0.75, 0.95\}$. The true values $(L, A, S) = (22, 1, 10)$ are indicated by red dashed lines.}
+%\label{fig:combined_estimation_paths}
+%\end{figure}
 
 %\subsection{\texorpdfstring{Asymmetric Noise with Varying Skewness Parameter $z$}{Asymmetric Noise with Varying Skewness Parameter z}}
 %
