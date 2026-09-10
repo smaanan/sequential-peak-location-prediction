@@ -231,57 +231,55 @@ By construction,
 In particular, when $\tau=1/2$, we have $k=1$, and the asymmetric Laplace
 distribution reduces to the symmetric Laplace distribution centered at zero.
 Hence, the symmetric Laplace case is recovered as a special case of the
-$\tau$-aligned asymmetric Laplace model.
-}
-
-\subsection{Unified Noise Model: General Asymmetric Laplace}
-\label{sec:general_AL_intro}
-Let us start by announcing the following result. 
-\begin{proposition}
-\label{prop:adn}
-Let \(z\in (-1,1)\) and \(b, \lambda >0\). The probability distribution 
-proportional to \(x\in \R\to \exp(-\frac{(z-\lambda \frac{x}{b})^2}{2\lambda}-
-\frac{|x|}{\lambda b})\) 
-converges in distribution to the probability distribution proportional to 
-\(x\in \R\to \exp(-\frac{|x|}{b}(1-sgn(x)z)\) 
-as \(\lambda\to 0\). The latter distribution has the density 
-\[
-\frac{(1 - z)(1 + z)}{2b} \exp\left( \frac{(1 + z)x}{b} \right) \mathbf{1}_{[x < 0]} +
-\frac{(1 + z)(1 - z)}{2b} \exp\left( -\frac{(1 - z)x}{b} \right) \mathbf{1}_{[x > 0]}.
-\]
-\end{proposition}
-The convergence in distribution means that 
-\(\int_a^b \exp(-\frac{(z-\lambda \frac{x}{b})^2}{2\lambda}-
-\frac{|x|}{\lambda b})\frac{dx}{c(z,b,\lambda)}\to 
-\int_a^b \exp(-\frac{|x|}{b}(1-sgn(x)z)\frac{dx}{c(z,b)}\)
-for each couple of real numbers \(a<b\). Here 
-\(c(z,b,\lambda), c(z,b)\) are the constants of the normalizations (see~\cite{Der17}).
-
-Now we are going to solve the parameters of the model in Section~\ref{section:quantile_amplitude}
-using \(\tau\)-quantile regression with \(\tau\in (0,1)\). 
-To do that we need to assume that the noise \(e\) satisfies 
-\( \mathbb{P}(e < 0) = \tau \). 
-We consider two symmetric cases of this model: 1) Shifted symmetric Laplace: obtained by shifting a standard Laplace so that its $\tau$-quantile is at zero, 
-and 2) the generalized Laplace noise \(e\) parametrized by the three parameters \(\tau,z,b\)
-having the probability density function 
-\[
-f_{\tau,z,b}(x) =
-\begin{cases}
-\tau \dfrac{(1+z)}{b} \exp\left( \dfrac{(1+z)x}{b} \right), & x < 0, \\[6pt]
-(1-\tau) \dfrac{(1-z)}{b} \exp\left( -\dfrac{(1-z)x}{b} \right), & x \geq 0.
-\end{cases}
-\]
-clearly this noise satisfies the condition \( \mathbb{P}(e < 0) = \tau \) and its variance 
-equals 
-\[
-\operatorname{Var}(e) = b^2 \left[
-\frac{\tau}{(1+z)^2} + \frac{1 - \tau}{(1 - z)^2} -
-\frac{1}{4} \left( \frac{1 - \tau}{1 - z} - \frac{\tau}{1 + z} \right)^2
-\right].
-\]
-
-We obtain an asymmetric Laplace with \( z = 0 \): the GAL model reduces to a symmetric distribution centered at the $\tau$-quantile.
-We analyze both constructions and later generalize to arbitrary values of \( z \) in Section~\ref{sec:general_asy_laplace}.
+$\tau$-aligned asymmetric Laplace model.}
+%\subsection{Unified Noise Model: General Asymmetric Laplace}
+%\label{sec:general_AL_intro}
+%Let us start by announcing the following result. 
+%\begin{proposition}
+%\label{prop:adn}
+%Let \(z\in (-1,1)\) and \(b, \lambda >0\). The probability distribution 
+%proportional to \(x\in \R\to \exp(-\frac{(z-\lambda \frac{x}{b})^2}{2\lambda}-
+%\frac{|x|}{\lambda b})\) 
+%converges in distribution to the probability distribution proportional to 
+%\(x\in \R\to \exp(-\frac{|x|}{b}(1-sgn(x)z)\) 
+%as \(\lambda\to 0\). The latter distribution has the density 
+%\[
+%\frac{(1 - z)(1 + z)}{2b} \exp\left( \frac{(1 + z)x}{b} \right) \mathbf{1}_{[x < 0]} +
+%\frac{(1 + z)(1 - z)}{2b} \exp\left( -\frac{(1 - z)x}{b} \right) \mathbf{1}_{[x > 0]}.
+%\]
+%\end{proposition}
+%The convergence in distribution means that 
+%\(\int_a^b \exp(-\frac{(z-\lambda \frac{x}{b})^2}{2\lambda}-
+%\frac{|x|}{\lambda b})\frac{dx}{c(z,b,\lambda)}\to 
+%\int_a^b \exp(-\frac{|x|}{b}(1-sgn(x)z)\frac{dx}{c(z,b)}\)
+%for each couple of real numbers \(a<b\). Here 
+%\(c(z,b,\lambda), c(z,b)\) are the constants of the normalizations (see~\cite{Der17}).
+%
+%Now we are going to solve the parameters of the model in Section~\ref{section:quantile_amplitude}
+%using \(\tau\)-quantile regression with \(\tau\in (0,1)\). 
+%To do that we need to assume that the noise \(e\) satisfies 
+%\( \mathbb{P}(e < 0) = \tau \). 
+%We consider two symmetric cases of this model: 1) Shifted symmetric Laplace: obtained by shifting a standard Laplace so that its $\tau$-quantile is at zero, 
+%and 2) the generalized Laplace noise \(e\) parametrized by the three parameters \(\tau,z,b\)
+%having the probability density function 
+%\[
+%f_{\tau,z,b}(x) =
+%\begin{cases}
+%\tau \dfrac{(1+z)}{b} \exp\left( \dfrac{(1+z)x}{b} \right), & x < 0, \\[6pt]
+%(1-\tau) \dfrac{(1-z)}{b} \exp\left( -\dfrac{(1-z)x}{b} \right), & x \geq 0.
+%\end{cases}
+%\]
+%clearly this noise satisfies the condition \( \mathbb{P}(e < 0) = \tau \) and its variance 
+%equals 
+%\[
+%\operatorname{Var}(e) = b^2 \left[
+%\frac{\tau}{(1+z)^2} + \frac{1 - \tau}{(1 - z)^2} -
+%\frac{1}{4} \left( \frac{1 - \tau}{1 - z} - \frac{\tau}{1 + z} \right)^2
+%\right].
+%\]
+%
+%We obtain an asymmetric Laplace with \( z = 0 \): the GAL model reduces to a symmetric distribution centered at the $\tau$-quantile.
+%We analyze both constructions and later generalize to arbitrary values of \( z \) in Section~\ref{sec:general_asy_laplace}.
 
 \subsection{\texorpdfstring{Shifted Symmetric Laplace (Aligned at $\tau$)}{Shifted Symmetric Laplace (Aligned at tau)}}
 \label{sec:shifted_symmetric_laplace}
