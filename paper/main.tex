@@ -638,92 +638,193 @@ $(L,A,S)=(22,1,10)$ are indicated by dashed horizontal lines.
 %  \label{fig:fig3-4-superposed}
 %\end{figure}
 
+{\color{blue}
 \section{Stability Analysis}
 \label{sec:stability-analysis}
 
-This section investigates the temporal stability of peak estimators obtained by minimizing different loss functions. We begin by analyzing the performance of the quantile loss criterion under high noise scenarios, tracking the evolution of the estimated peak location as new data points become available. We then complement this analysis by introducing a likelihood-based loss derived from the asymmetric Laplace distribution. This second approach enables a probabilistic assessment of stability by incorporating distributional assumptions on the residuals. Together, these perspectives provide a robust evaluation of how estimation paths behave under varying levels of noise and asymmetry.
+This section investigates the temporal stability of the estimated peak location when the signal-to-noise ratio is reduced. We focus on the $\tau$-aligned asymmetric Laplace noise introduced in Section~\ref{sec:general_AL_intro} and examine how the estimated peak location evolves as new observations become available. In particular, we compare the stability of the estimation paths across different quantile levels and assess the effect of a lower signal-to-noise ratio on the ability to recover the true peak location.
 
 \subsection{Low Signal-to-Noise Performance}
 \label{subsec:low-snr}
 
-To evaluate the robustness of the quantile-based estimator under high noise, we simulate estimation paths under a signal-to-noise ratio of $\text{SNR} = 40$. We vary both the quantile level $\tau \in \{0.25, 0.5, 0.75, 0.95\}$ and the asymmetry parameter $z \in \{-0.9, -0.5, 0, 0.5, 0.9\}$. For each configuration, we compute the path $T \mapsto \hat{l}(T)$ as the number of observations $T$ increases from 4 to 35. Entry and exit times into a stable region are detected using thresholds $\varepsilon = 4$ and $\varepsilon' = 0$, respectively.
+To evaluate the robustness of the quantile-based estimator under a lower signal-to-noise ratio, we consider the signal-plus-noise model
+\[
+I(t)
+=
+A\exp\left(-\frac{(t-L)^2}{S^2}\right)+e(t),
+\qquad t=1,\ldots,35,
+\]
+with
+\[
+A=1,\qquad L=22,\qquad S=10.
+\]
+The noise $e(t)$ follows the $\tau$-aligned asymmetric Laplace distribution introduced in Section~\ref{sec:general_AL_intro}, with density
+\[
+f_{\tau,b}(x)
+=
+\frac{\tau(1-\tau)}{b}
+\exp\left(-\frac{1}{b}\rho_\tau(x)\right),
+\]
+where
+\[
+\rho_\tau(x)
+=
+x\left(\tau-\mathbf{1}_{\{x<0\}}\right).
+\]
+For each
+\[
+\tau\in\{0.25,0.5,0.75,0.95\},
+\]
+the scale parameter $b$ is calibrated so that
+\[
+\operatorname{Var}(e(t))
+=
+\left(\frac{A}{\mathrm{SNR}}\right)^2,
+\]
+with
+\[
+\mathrm{SNR}=40.
+\]
+Using the variance of the $\tau$-aligned asymmetric Laplace distribution gives
+\[
+b
+=
+\frac{A}{\mathrm{SNR}}
+\frac{\tau(1-\tau)}
+{\sqrt{\tau^2+(1-\tau)^2}}.
+\]
 
-Figure~\ref{fig:lhat_paths_snr40} shows the estimation paths $\hat{l}(T)$ for each $\tau$ and $z$, with the true peak location $L = 22$ marked by a horizontal dashed line. The corresponding entry and exit times are reported in Table~\ref{tab:entry_exit_times}.
+For each quantile level $\tau$, we compute the estimation path
+\[
+T\mapsto\hat{l}(T),
+\qquad T=4,\ldots,35,
+\]
+where $(\hat{l}(T),\hat{a}(T),\hat{s}(T))$ is obtained by minimizing the empirical quantile loss over the candidate peak locations and scale parameters, with the amplitude re-estimated as the weighted $\tau$-quantile described in Section~\ref{sec:weighted_median_method}.
+
+To characterize the stability of the estimated peak location, we define an entry time as the earliest observation horizon $T_{\mathrm{entry}}$ such that all subsequent estimates remain within a prescribed tolerance of one another. Specifically, for a tolerance $\varepsilon=4$, we define
+\[
+T_{\mathrm{entry}}
+=
+\min
+\left\{
+T:
+\max_{u\geq T}\hat{l}(u)
+-
+\min_{u\geq T}\hat{l}(u)
+\leq \varepsilon
+\right\}.
+\]
+This definition measures the earliest point from which the remaining estimation path remains confined to a stable range.
+
+Figure~\ref{fig:lhat_paths_snr40} displays the resulting estimation paths for the four quantile levels. The horizontal dashed line indicates the true peak location $L=22$. The comparison illustrates how the temporal stability of the estimated peak location depends on the quantile level when the signal-to-noise ratio is reduced.
+
+The corresponding entry times are reported in Table~\ref{tab:entry_times_snr40}. Smaller values of $T_{\mathrm{entry}}$ indicate that the estimator reaches a stable regime earlier, whereas larger values indicate that additional observations are required before the estimated peak location becomes stable.
 
 \begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\textwidth]{fig_lhat_paths_snr40_tau_z_overlay.pdf}
-    \caption{Estimation paths \( T \mapsto \hat{l}(T) \) under low signal-to-noise ratio (SNR = 40), for quantile levels \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \). Each panel corresponds to a different value of \( \tau \), and each curve within a panel represents a different asymmetry parameter \( z \in \{-0.9, -0.5, 0, 0.5, 0.9\} \). The horizontal dashed line indicates the true peak location \( L = 22 \).}
-    \label{fig:lhat_paths_snr40}
+	\centering
+	\includegraphics[width=\textwidth]{fig_lhat_paths_snr40_tau.pdf}
+	\caption{Estimation paths $T\mapsto\hat{l}(T)$ under a low signal-to-noise ratio (SNR = 40), for quantile levels $\tau\in\{0.25,0.5,0.75,0.95\}$. The horizontal dashed line indicates the true peak location $L=22$.}
+	\label{fig:lhat_paths_snr40}
 \end{figure}
 
-\begin{table}[H]
-\caption{Entry ($T_{\text{entry}}$) and exit ($T_{\text{exit}}$) times for each $(\tau, z)$ combination under SNR = 40.}
-\label{tab:entry_exit_times}
-\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}c|cccc|cccc}
-\toprule
-$z$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
-      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
-\midrule\addlinespace[2.5pt]
--0.9 & 10.0 & 10.0 & 10.0 & 10.0 & 21.0 & 20.0 & 16.0 & 15.0 \\ 
--0.5 & 17.0 & 15.0 & 11.0 & 10.0 & 21.0 & 20.0 & 16.0 & 15.0 \\ 
-0.0 & 18.0 & 17.0 & 11.0 & 10.0 & 20.0 & 20.0 & 22.0 & 15.0 \\ 
-0.5 & 17.0 & 17.0 & 11.0 & 10.0 & 22.0 & 25.0 & 23.0 & 28.0 \\ 
-0.9 & 17.0 & 15.0 & 11.0 & 6.0 & 22.0 & 25.0 & 23.0 & 28.0 \\ 
-\bottomrule
-\end{tabular*}
-\end{table}
-
-\subsection{Stability Analysis Based on Log-Likelihood Loss}
-\label{subsec:logloss-entry-exit}
-
-To complement our quantile loss analysis, we now evaluate stability using a log-likelihood-based criterion derived from the asymmetric Laplace density introduced in Section~\ref{sec:general_AL_intro}. Specifically, we consider the negative log-likelihood objective:
-
-$$
-\mathcal{L}_{\tau,z,b}(I; a, l, s) = -\sum_{t=1}^{T} \log f_{\tau,z,b}\left( I(t) - a \exp\left( -\frac{(t - l)^2}{s^2} \right) \right),
-$$
-
-where $f_{\tau,z,b}$ denotes the asymmetric Laplace density parameterized by quantile level $\tau$, asymmetry $z$, and scale $b$.
-
-This likelihood-based loss function directly incorporates the assumed noise distribution, offering a probabilistically motivated alternative to the piecewise linear quantile loss. Minimizing $\mathcal{L}_{\tau,z,b}$ over $(a, l, s)$ provides a maximum likelihood estimate of the parameters under the asymmetric Laplace error model.
-
-As in the previous section, we use the resulting estimator $\hat{l}(T)$ to track the estimated peak location over time. Entry time $T_{\text{entry}}$ is defined as the earliest time at which the estimation path stabilizes within a fixed window, and exit time $T_{\text{exit}}$ marks the point at which it departs from that window. We apply this procedure across multiple values of $\tau \in \{0.25, 0.5, 0.75, 0.95\}$ and asymmetry levels $z \in \{-0.9, -0.5, 0, 0.5, 0.9\}$, and report the results under two regimes: 1) Moderate Noise: Signal-to-noise ratio (SNR) fixed at 1000, 2) High Noise: SNR reduced to 40.
-
-\vspace{1ex}
-
 \begin{table}[htbp]
-\caption{Entry and exit times based on log-likelihood loss, for each \( (\tau, z) \) under SNR = 1000.}
-\label{tab:logloss_entry_exit_snr1000}
-\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
-\toprule
-$z$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
-      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
-\midrule\addlinespace[2.5pt]
--0.9 & 10.0 & 9.0 & 10.0 & 10.0 & 20.0 & 15.0 & 14.0 & 14.0 \\ 
--0.5 & 11.0 & 10.0 & 10.0 & 10.0 & 18.0 & 17.0 & 14.0 & 14.0 \\ 
-0.0 & 15.0 & 13.0 & 10.0 & 10.0 & 19.0 & 17.0 & 14.0 & 14.0 \\ 
-0.5 & 15.0 & 13.0 & 11.0 & 10.0 & 19.0 & 17.0 & 14.0 & 14.0 \\ 
-0.9 & 15.0 & 13.0 & 9.0 & 7.0 & 19.0 & 17.0 & 11.0 & 22.0 \\ 
-\bottomrule
-\end{tabular*}
-\end{table}
+	\caption{Entry times $T_{\mathrm{entry}}$ for the estimated peak location under SNR = 40 and different quantile levels.}
+	\label{tab:entry_times_snr40}
+	\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}c|cccc}
+		\toprule
+		& $\tau=0.25$ & $\tau=0.5$ & $\tau=0.75$ & $\tau=0.95$ \\
+		\midrule\addlinespace[2.5pt]
+		$T_{\mathrm{entry}}$ & -- & -- & -- & -- \\
+		\bottomrule
+	\end{tabular*}
+\end{table}}
 
-\begin{table}[htbp]
-\caption{Entry and exit times based on log-likelihood loss, for each \( (\tau, z) \) under SNR = 40.}
-\label{tab:logloss_entry_exit_snr40}
-\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
-\toprule
-$z$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
-      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
-\midrule\addlinespace[2.5pt]
--0.9 & 10.0 & 10.0 & 10.0 & 10.0 & 21.0 & 20.0 & 16.0 & 15.0 \\ 
--0.5 & 17.0 & 15.0 & 11.0 & 10.0 & 21.0 & 20.0 & 16.0 & 15.0 \\ 
-0.0 & 18.0 & 17.0 & 11.0 & 10.0 & 20.0 & 20.0 & 22.0 & 15.0 \\ 
-0.5 & 17.0 & 17.0 & 11.0 & 10.0 & 22.0 & 25.0 & 23.0 & 28.0 \\ 
-0.9 & 17.0 & 15.0 & 11.0 & 6.0 & 22.0 & 25.0 & 23.0 & 28.0 \\ 
-\bottomrule
-\end{tabular*}
-\end{table}
+%\section{Stability Analysis}
+%\label{sec:stability-analysis}
+%
+%This section investigates the temporal stability of peak estimators obtained by minimizing different loss functions. We begin by analyzing the performance of the quantile loss criterion under high noise scenarios, tracking the evolution of the estimated peak location as new data points become available. We then complement this analysis by introducing a likelihood-based loss derived from the asymmetric Laplace distribution. This second approach enables a probabilistic assessment of stability by incorporating distributional assumptions on the residuals. Together, these perspectives provide a robust evaluation of how estimation paths behave under varying levels of noise and asymmetry.
+%
+%\subsection{Low Signal-to-Noise Performance}
+%\label{subsec:low-snr}
+%
+%To evaluate the robustness of the quantile-based estimator under high noise, we simulate estimation paths under a signal-to-noise ratio of $\text{SNR} = 40$. We vary both the quantile level $\tau \in \{0.25, 0.5, 0.75, 0.95\}$ and the asymmetry parameter $z \in \{-0.9, -0.5, 0, 0.5, 0.9\}$. For each configuration, we compute the path $T \mapsto \hat{l}(T)$ as the number of observations $T$ increases from 4 to 35. Entry and exit times into a stable region are detected using thresholds $\varepsilon = 4$ and $\varepsilon' = 0$, respectively.
+%
+%Figure~\ref{fig:lhat_paths_snr40} shows the estimation paths $\hat{l}(T)$ for each $\tau$ and $z$, with the true peak location $L = 22$ marked by a horizontal dashed line. The corresponding entry and exit times are reported in Table~\ref{tab:entry_exit_times}.
+%
+%\begin{figure}[htbp]
+%    \centering
+%    \includegraphics[width=\textwidth]{fig_lhat_paths_snr40_tau_z_overlay.pdf}
+%    \caption{Estimation paths \( T \mapsto \hat{l}(T) \) under low signal-to-noise ratio (SNR = 40), for quantile levels \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \). Each panel corresponds to a different value of \( \tau \), and each curve within a panel represents a different asymmetry parameter \( z \in \{-0.9, -0.5, 0, 0.5, 0.9\} \). The horizontal dashed line indicates the true peak location \( L = 22 \).}
+%    \label{fig:lhat_paths_snr40}
+%\end{figure}
+%
+%\begin{table}[H]
+%\caption{Entry ($T_{\text{entry}}$) and exit ($T_{\text{exit}}$) times for each $(\tau, z)$ combination under SNR = 40.}
+%\label{tab:entry_exit_times}
+%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}c|cccc|cccc}
+%\toprule
+%$z$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
+%      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
+%\midrule\addlinespace[2.5pt]
+%-0.9 & 10.0 & 10.0 & 10.0 & 10.0 & 21.0 & 20.0 & 16.0 & 15.0 \\ 
+%-0.5 & 17.0 & 15.0 & 11.0 & 10.0 & 21.0 & 20.0 & 16.0 & 15.0 \\ 
+%0.0 & 18.0 & 17.0 & 11.0 & 10.0 & 20.0 & 20.0 & 22.0 & 15.0 \\ 
+%0.5 & 17.0 & 17.0 & 11.0 & 10.0 & 22.0 & 25.0 & 23.0 & 28.0 \\ 
+%0.9 & 17.0 & 15.0 & 11.0 & 6.0 & 22.0 & 25.0 & 23.0 & 28.0 \\ 
+%\bottomrule
+%\end{tabular*}
+%\end{table}
+%
+%\subsection{Stability Analysis Based on Log-Likelihood Loss}
+%\label{subsec:logloss-entry-exit}
+%
+%To complement our quantile loss analysis, we now evaluate stability using a log-likelihood-based criterion derived from the asymmetric Laplace density introduced in Section~\ref{sec:general_AL_intro}. Specifically, we consider the negative log-likelihood objective:
+%
+%$$
+%\mathcal{L}_{\tau,z,b}(I; a, l, s) = -\sum_{t=1}^{T} \log f_{\tau,z,b}\left( I(t) - a \exp\left( -\frac{(t - l)^2}{s^2} \right) \right),
+%$$
+%
+%where $f_{\tau,z,b}$ denotes the asymmetric Laplace density parameterized by quantile level $\tau$, asymmetry $z$, and scale $b$.
+%
+%This likelihood-based loss function directly incorporates the assumed noise distribution, offering a probabilistically motivated alternative to the piecewise linear quantile loss. Minimizing $\mathcal{L}_{\tau,z,b}$ over $(a, l, s)$ provides a maximum likelihood estimate of the parameters under the asymmetric Laplace error model.
+%
+%As in the previous section, we use the resulting estimator $\hat{l}(T)$ to track the estimated peak location over time. Entry time $T_{\text{entry}}$ is defined as the earliest time at which the estimation path stabilizes within a fixed window, and exit time $T_{\text{exit}}$ marks the point at which it departs from that window. We apply this procedure across multiple values of $\tau \in \{0.25, 0.5, 0.75, 0.95\}$ and asymmetry levels $z \in \{-0.9, -0.5, 0, 0.5, 0.9\}$, and report the results under two regimes: 1) Moderate Noise: Signal-to-noise ratio (SNR) fixed at 1000, 2) High Noise: SNR reduced to 40.
+%
+%\vspace{1ex}
+%
+%\begin{table}[htbp]
+%\caption{Entry and exit times based on log-likelihood loss, for each \( (\tau, z) \) under SNR = 1000.}
+%\label{tab:logloss_entry_exit_snr1000}
+%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
+%\toprule
+%$z$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
+%      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
+%\midrule\addlinespace[2.5pt]
+%-0.9 & 10.0 & 9.0 & 10.0 & 10.0 & 20.0 & 15.0 & 14.0 & 14.0 \\ 
+%-0.5 & 11.0 & 10.0 & 10.0 & 10.0 & 18.0 & 17.0 & 14.0 & 14.0 \\ 
+%0.0 & 15.0 & 13.0 & 10.0 & 10.0 & 19.0 & 17.0 & 14.0 & 14.0 \\ 
+%0.5 & 15.0 & 13.0 & 11.0 & 10.0 & 19.0 & 17.0 & 14.0 & 14.0 \\ 
+%0.9 & 15.0 & 13.0 & 9.0 & 7.0 & 19.0 & 17.0 & 11.0 & 22.0 \\ 
+%\bottomrule
+%\end{tabular*}
+%\end{table}
+%
+%\begin{table}[htbp]
+%\caption{Entry and exit times based on log-likelihood loss, for each \( (\tau, z) \) under SNR = 40.}
+%\label{tab:logloss_entry_exit_snr40}
+%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
+%\toprule
+%$z$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
+%      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
+%\midrule\addlinespace[2.5pt]
+%-0.9 & 10.0 & 10.0 & 10.0 & 10.0 & 21.0 & 20.0 & 16.0 & 15.0 \\ 
+%-0.5 & 17.0 & 15.0 & 11.0 & 10.0 & 21.0 & 20.0 & 16.0 & 15.0 \\ 
+%0.0 & 18.0 & 17.0 & 11.0 & 10.0 & 20.0 & 20.0 & 22.0 & 15.0 \\ 
+%0.5 & 17.0 & 17.0 & 11.0 & 10.0 & 22.0 & 25.0 & 23.0 & 28.0 \\ 
+%0.9 & 17.0 & 15.0 & 11.0 & 6.0 & 22.0 & 25.0 & 23.0 & 28.0 \\ 
+%\bottomrule
+%\end{tabular*}
+%\end{table}
 
 \end{document}
 
