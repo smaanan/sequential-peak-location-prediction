@@ -616,48 +616,48 @@ Figure~\ref{fig:combined_estimation_paths} shows the estimation trajectories $T 
 \label{fig:combined_estimation_paths}
 \end{figure}
 
-\subsection{\texorpdfstring{Asymmetric Noise with Varying Skewness Parameter $z$}{Asymmetric Noise with Varying Skewness Parameter z}}
-
-We investigate the influence of asymmetry in the additive noise distribution on the estimation trajectories. The signal retains the same Gaussian-shaped form as previously:
-$$
-I(t) = A \exp\left(-\frac{(t - L)^2}{S^2} \right) + e(t), \quad t = 1, \ldots, T,
-$$
-where the noise $e(t)$ is generated from the generalized Laplace distribution
-$$
-f_{\tau, b}(x) \propto \exp\left(-\rho_\tau\left(\frac{x}{b}\right)\right),
-$$
-with asymmetry parameter $z \in \{-0.9, -0.5, 0, 0.5, 0.9\}$, quantile level $\tau \in (0,1)$, and scale $b > 0$.
-
-The skewness and quantile level are linked via:
-$$
-P(e_t < 0) = \tau, \quad \text{with} \quad \tau = \frac{1 - z}{2},
-$$
-and the scale $b$ is calibrated such that the noise variance satisfies the fixed signal-to-noise ratio (SNR) condition:
-$$
-\operatorname{Var}(e) = \left( \frac{A}{\mathrm{SNR}} \right)^2.
-$$
-Using the exact variance of the asymmetric Laplace distribution $f_{\tau, b}$, the scale is computed as:
-$$
-b = \sqrt{ \frac{(A / \mathrm{SNR})^2}{\frac{\tau}{(1 + z)^2} + \frac{1 - \tau}{(1 - z)^2} - \frac{1}{4} \left( \frac{1 - \tau}{1 - z} - \frac{\tau}{1 + z} \right)^2} }.
-$$
-The estimation procedure remains unchanged and is applied sequentially for increasing sample sizes $T = 4, \ldots, 30$.
-
-Figure~\ref{fig:superposed_3x3} displays the estimation paths for the parameters $\hat{l}(T)$, $\hat{a}(T)$, and $\hat{s}(T)$ for each combination of $\tau$ and $z$, with true parameter values $(L, A, S) = (22, 1, 10)$ indicated by dashed horizontal lines.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.95\linewidth]{fig3_4_superposed_3x3.pdf}
-\caption{Estimation trajectories $T \mapsto \hat{l}(T)$ (left column), $\hat{a}(T)$ (middle column), and $\hat{s}(T)$ (right column) under asymmetric Laplace noise generated from $f_{\tau, b}(x) \propto \exp(-\rho_\tau(x / b))$, with skewness $z \in \{-0.9, -0.5, 0, 0.5, 0.9\}$ and fixed signal-to-noise ratio $\mathrm{SNR} = 1000$. Each row corresponds to a quantile level $\tau \in \{0.25, 0.5, 0.75, 0.95\}$. Colored lines track estimates as the sample size increases from $T=4$ to $T=30$. True parameter values $(L, A, S) = (22, 1, 10)$ are shown as horizontal dashed lines for reference.}
-\label{fig:superposed_3x3}
-\end{figure}
-To ensure comparability, we reuse the variance calibration method described above. Figure~\ref{fig:fig3-4-superposed} shows the resulting trajectories, where each row corresponds to a quantile level and each column to one of the estimated parameters.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.95\textwidth]{fig3_4_superposed_3x3_2.pdf}
-  \caption{Estimation paths \( T \mapsto \hat{l}(T) \), \( \hat{a}(T) \), and \( \hat{s}(T) \) under a general asymmetric Laplace noise model with skewness parameter \( z \in \{-0.9, -0.5, 0, 0.5, 0.9\} \) and fixed signal-to-noise ratio \( \mathrm{SNR} = 1000 \). Rows correspond to quantile levels \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \), columns correspond to estimated parameters. True parameter values \( (L, A, S) = (22, 1, 10) \) are indicated by dashed horizontal lines.}
-  \label{fig:fig3-4-superposed}
-\end{figure}
+%\subsection{\texorpdfstring{Asymmetric Noise with Varying Skewness Parameter $z$}{Asymmetric Noise with Varying Skewness Parameter z}}
+%
+%We investigate the influence of asymmetry in the additive noise distribution on the estimation trajectories. The signal retains the same Gaussian-shaped form as previously:
+%$$
+%I(t) = A \exp\left(-\frac{(t - L)^2}{S^2} \right) + e(t), \quad t = 1, \ldots, T,
+%$$
+%where the noise $e(t)$ is generated from the generalized Laplace distribution
+%$$
+%f_{\tau, b}(x) \propto \exp\left(-\rho_\tau\left(\frac{x}{b}\right)\right),
+%$$
+%with asymmetry parameter $z \in \{-0.9, -0.5, 0, 0.5, 0.9\}$, quantile level $\tau \in (0,1)$, and scale $b > 0$.
+%
+%The skewness and quantile level are linked via:
+%$$
+%P(e_t < 0) = \tau, \quad \text{with} \quad \tau = \frac{1 - z}{2},
+%$$
+%and the scale $b$ is calibrated such that the noise variance satisfies the fixed signal-to-noise ratio (SNR) condition:
+%$$
+%\operatorname{Var}(e) = \left( \frac{A}{\mathrm{SNR}} \right)^2.
+%$$
+%Using the exact variance of the asymmetric Laplace distribution $f_{\tau, b}$, the scale is computed as:
+%$$
+%b = \sqrt{ \frac{(A / \mathrm{SNR})^2}{\frac{\tau}{(1 + z)^2} + \frac{1 - \tau}{(1 - z)^2} - \frac{1}{4} \left( \frac{1 - \tau}{1 - z} - \frac{\tau}{1 + z} \right)^2} }.
+%$$
+%The estimation procedure remains unchanged and is applied sequentially for increasing sample sizes $T = 4, \ldots, 30$.
+%
+%Figure~\ref{fig:superposed_3x3} displays the estimation paths for the parameters $\hat{l}(T)$, $\hat{a}(T)$, and $\hat{s}(T)$ for each combination of $\tau$ and $z$, with true parameter values $(L, A, S) = (22, 1, 10)$ indicated by dashed horizontal lines.
+%
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=0.95\linewidth]{fig3_4_superposed_3x3.pdf}
+%\caption{Estimation trajectories $T \mapsto \hat{l}(T)$ (left column), $\hat{a}(T)$ (middle column), and $\hat{s}(T)$ (right column) under asymmetric Laplace noise generated from $f_{\tau, b}(x) \propto \exp(-\rho_\tau(x / b))$, with skewness $z \in \{-0.9, -0.5, 0, 0.5, 0.9\}$ and fixed signal-to-noise ratio $\mathrm{SNR} = 1000$. Each row corresponds to a quantile level $\tau \in \{0.25, 0.5, 0.75, 0.95\}$. Colored lines track estimates as the sample size increases from $T=4$ to $T=30$. True parameter values $(L, A, S) = (22, 1, 10)$ are shown as horizontal dashed lines for reference.}
+%\label{fig:superposed_3x3}
+%\end{figure}
+%To ensure comparability, we reuse the variance calibration method described above. Figure~\ref{fig:fig3-4-superposed} shows the resulting trajectories, where each row corresponds to a quantile level and each column to one of the estimated parameters.
+%
+%\begin{figure}[htbp]
+%  \centering
+%  \includegraphics[width=0.95\textwidth]{fig3_4_superposed_3x3_2.pdf}
+%  \caption{Estimation paths \( T \mapsto \hat{l}(T) \), \( \hat{a}(T) \), and \( \hat{s}(T) \) under a general asymmetric Laplace noise model with skewness parameter \( z \in \{-0.9, -0.5, 0, 0.5, 0.9\} \) and fixed signal-to-noise ratio \( \mathrm{SNR} = 1000 \). Rows correspond to quantile levels \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \), columns correspond to estimated parameters. True parameter values \( (L, A, S) = (22, 1, 10) \) are indicated by dashed horizontal lines.}
+%  \label{fig:fig3-4-superposed}
+%\end{figure}
 
 \section{Stability Analysis}
 \label{sec:stability-analysis}
