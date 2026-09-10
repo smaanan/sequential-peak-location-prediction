@@ -167,6 +167,73 @@ Since the goal is to predict the location \( L \) of the peak before it becomes 
 
 To analyze how quantile-aligned noise affects peak estimation, we introduce a unified noise model based on the \textit{general asymmetric Laplace} (GAL) distribution. This flexible family allows both symmetric and asymmetric noise structures while maintaining the property that the $\tau$-quantile of the noise is at zero.
 
+{\color{blue}
+\subsection{Asymmetric Laplace Noise Aligned with the $\tau$-Quantile}
+\label{sec:general_AL_intro}
+
+We consider an asymmetric Laplace distribution parametrized by a location parameter
+$m\in\mathbb{R}$, a scale parameter $\lambda>0$, and an asymmetry parameter
+$k>0$. Its density is given by
+\[
+f_{m,\lambda,k}(x)
+=
+\frac{\lambda}{k+k^{-1}}
+\begin{cases}
+	\exp\left(\dfrac{\lambda(x-m)}{k}\right), & x<m, \\[8pt]
+	\exp\left(-\lambda k(x-m)\right), & x\geq m.
+\end{cases}
+\]
+The parameter $m$ is the mode of the distribution, while $k$ controls its
+asymmetry and $\lambda$ controls its concentration.
+
+The distribution function evaluated at the mode is
+\[
+\mathbb{P}(X<m)
+=
+\frac{\lambda}{k+k^{-1}}
+\int_{-\infty}^{m}
+\exp\left(\frac{\lambda(x-m)}{k}\right)\,dx
+=
+\frac{k^2}{1+k^2}.
+\]
+Therefore, to align the asymmetric Laplace noise with the $\tau$-quantile
+regression criterion, we require
+\[
+\mathbb{P}(e<0)=\tau,
+\qquad \tau\in(0,1).
+\]
+Since the location of the noise can be fixed at zero, we set $m=0$. The
+corresponding asymmetry parameter is then determined by
+\[
+\frac{k^2}{1+k^2}=\tau,
+\]
+or equivalently,
+\[
+k=\sqrt{\frac{\tau}{1-\tau}}.
+\]
+Thus, the $\tau$-aligned asymmetric Laplace noise has density
+\[
+f_{\tau,\lambda}(x)
+=
+\frac{\lambda}{k+k^{-1}}
+\begin{cases}
+	\exp\left(\dfrac{\lambda x}{k}\right), & x<0, \\[8pt]
+	\exp(-\lambda kx), & x\geq 0,
+\end{cases}
+\qquad
+k=\sqrt{\frac{\tau}{1-\tau}}.
+\]
+By construction,
+\[
+\mathbb{P}(e<0)=\tau.
+\]
+
+In particular, when $\tau=1/2$, we have $k=1$, and the asymmetric Laplace
+distribution reduces to the symmetric Laplace distribution centered at zero.
+Hence, the symmetric Laplace case is recovered as a special case of the
+$\tau$-aligned asymmetric Laplace model.
+}
+
 \subsection{Unified Noise Model: General Asymmetric Laplace}
 \label{sec:general_AL_intro}
 Let us start by announcing the following result. 
