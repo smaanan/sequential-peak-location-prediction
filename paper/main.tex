@@ -1061,65 +1061,65 @@ These values indicate that different regions of the conditional distribution may
 %\end{tabular*}
 %\end{table}
 
-\subsection{Entry and Exit Times Using the GAL Loss}
-\label{subsec:gal-loss-entry-exit}
-
-We now investigate the stability of the estimated peak location using an alternative loss function derived from the Generalized Asymmetric Laplace (GAL) distribution. Specifically, we consider the loss function
-\[
-u \mapsto \frac{\left(z - \frac{\lambda u}{b}\right)^2}{2\lambda} + \frac{|u|}{b},
-\]
-where \( z = 1 - 2\tau \) and \( \lambda > 0 \) is a tuning parameter. This formulation generalizes the standard asymmetric Laplace-based log-likelihood used in our earlier peak estimation procedure, and as \( \lambda \to 0 \), it converges to a scaled version of the Laplace loss \( \rho_\tau(u) / b \), as formalized in Proposition~\ref{prop:adn}.
-
-This robust loss penalizes deviations asymmetrically and allows for heavier or lighter tails depending on the value of \( \lambda \), providing additional flexibility in modeling the noise structure in real-world epidemiological data.
-
-For each country (China, France, and Germany), we use the same trajectory of daily confirmed cases as in previous sections, and apply the modified estimation procedure based on the GAL loss. For each quantile level \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \), we evaluate three values of \( \lambda \in \{1, 0.5, 0.1\} \), which control the departure from the asymmetric Laplace limit. Entry and exit times are estimated by analyzing the stability of the estimated peak location \( \hat{\ell}(T) \), as in our earlier definition, using thresholds adapted to each country's data characteristics. 
-
-Tables~\ref{tab:gal-entry-exit-china}–\ref{tab:gal-entry-exit-germany} report the estimated entry and exit times for China, France, and Germany respectively. 
-
-\begin{table}[htbp]
-\caption{Entry and exit times based on GAL loss, for each \( (\tau, \lambda) \) for China, using thresholds $\varepsilon=3$ and $\varepsilon'=0$.}
-\label{tab:gal-entry-exit-china}
-\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
-\toprule
-$\lambda$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
-      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
-\midrule\addlinespace[2.5pt]
-0.1 & 22.0 & 22.0 & 23.0 & 27.0 & 35.0 & 34.0 & 29.0 & 29.0 \\ 
-0.5 & 22.0 & 22.0 & 23.0 & 27.0 & 35.0 & 34.0 & 29.0 & 29.0 \\ 
-1.0 & 22.0 & 22.0 & 23.0 & 27.0 & 35.0 & 34.0 & 29.0 & 29.0 \\ 
-\bottomrule
-\end{tabular*}
-\end{table}
-
-\begin{table}[htbp]
-\caption{Entry and exit times based on GAL loss, for each \( (\tau, \lambda) \) for France, using thresholds $\varepsilon=5$ and $\varepsilon'=1$.}
-\label{tab:gal-entry-exit-france}
-\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
-\toprule
-$\lambda$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
-      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
-\midrule\addlinespace[2.5pt]
-0.1 & 81.0 & 78.0 & 74.0 & 87.0 & 88.0 & 87.0 & 86.0 & 89.0 \\ 
-0.5 & 81.0 & 78.0 & 74.0 & 87.0 & 88.0 & 87.0 & 86.0 & 89.0 \\ 
-1.0 & 81.0 & 78.0 & 74.0 & 87.0 & 88.0 & 87.0 & 86.0 & 89.0 \\ 
-\bottomrule
-\end{tabular*}
-\end{table}
-
-\begin{table}[htbp]
-\caption{Entry and exit times based on GAL loss, for each \( (\tau, \lambda) \) for Germany, using thresholds $\varepsilon=15$ and $\varepsilon'=2$.}
-\label{tab:gal-entry-exit-germany}
-\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
-\toprule
-$\lambda$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
-      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
-\midrule\addlinespace[2.5pt]
-0.1 & 53.0 & 53.0 & 53.0 & 55.0 & 69.0 & 71.0 & 70.0 & 70.0 \\ 
-0.5 & 53.0 & 53.0 & 53.0 & 55.0 & 69.0 & 71.0 & 70.0 & 70.0 \\ 
-1.0 & 53.0 & 53.0 & 53.0 & 55.0 & 69.0 & 71.0 & 70.0 & 70.0 \\ 
-\bottomrule
-\end{tabular*}
-\end{table}
+%\subsection{Entry and Exit Times Using the GAL Loss}
+%\label{subsec:gal-loss-entry-exit}
+%
+%We now investigate the stability of the estimated peak location using an alternative loss function derived from the Generalized Asymmetric Laplace (GAL) distribution. Specifically, we consider the loss function
+%\[
+%u \mapsto \frac{\left(z - \frac{\lambda u}{b}\right)^2}{2\lambda} + \frac{|u|}{b},
+%\]
+%where \( z = 1 - 2\tau \) and \( \lambda > 0 \) is a tuning parameter. This formulation generalizes the standard asymmetric Laplace-based log-likelihood used in our earlier peak estimation procedure, and as \( \lambda \to 0 \), it converges to a scaled version of the Laplace loss \( \rho_\tau(u) / b \), as formalized in Proposition~\ref{prop:adn}.
+%
+%This robust loss penalizes deviations asymmetrically and allows for heavier or lighter tails depending on the value of \( \lambda \), providing additional flexibility in modeling the noise structure in real-world epidemiological data.
+%
+%For each country (China, France, and Germany), we use the same trajectory of daily confirmed cases as in previous sections, and apply the modified estimation procedure based on the GAL loss. For each quantile level \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \), we evaluate three values of \( \lambda \in \{1, 0.5, 0.1\} \), which control the departure from the asymmetric Laplace limit. Entry and exit times are estimated by analyzing the stability of the estimated peak location \( \hat{\ell}(T) \), as in our earlier definition, using thresholds adapted to each country's data characteristics. 
+%
+%Tables~\ref{tab:gal-entry-exit-china}–\ref{tab:gal-entry-exit-germany} report the estimated entry and exit times for China, France, and Germany respectively. 
+%
+%\begin{table}[htbp]
+%\caption{Entry and exit times based on GAL loss, for each \( (\tau, \lambda) \) for China, using thresholds $\varepsilon=3$ and $\varepsilon'=0$.}
+%\label{tab:gal-entry-exit-china}
+%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
+%\toprule
+%$\lambda$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
+%      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
+%\midrule\addlinespace[2.5pt]
+%0.1 & 22.0 & 22.0 & 23.0 & 27.0 & 35.0 & 34.0 & 29.0 & 29.0 \\ 
+%0.5 & 22.0 & 22.0 & 23.0 & 27.0 & 35.0 & 34.0 & 29.0 & 29.0 \\ 
+%1.0 & 22.0 & 22.0 & 23.0 & 27.0 & 35.0 & 34.0 & 29.0 & 29.0 \\ 
+%\bottomrule
+%\end{tabular*}
+%\end{table}
+%
+%\begin{table}[htbp]
+%\caption{Entry and exit times based on GAL loss, for each \( (\tau, \lambda) \) for France, using thresholds $\varepsilon=5$ and $\varepsilon'=1$.}
+%\label{tab:gal-entry-exit-france}
+%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
+%\toprule
+%$\lambda$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
+%      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
+%\midrule\addlinespace[2.5pt]
+%0.1 & 81.0 & 78.0 & 74.0 & 87.0 & 88.0 & 87.0 & 86.0 & 89.0 \\ 
+%0.5 & 81.0 & 78.0 & 74.0 & 87.0 & 88.0 & 87.0 & 86.0 & 89.0 \\ 
+%1.0 & 81.0 & 78.0 & 74.0 & 87.0 & 88.0 & 87.0 & 86.0 & 89.0 \\ 
+%\bottomrule
+%\end{tabular*}
+%\end{table}
+%
+%\begin{table}[htbp]
+%\caption{Entry and exit times based on GAL loss, for each \( (\tau, \lambda) \) for Germany, using thresholds $\varepsilon=15$ and $\varepsilon'=2$.}
+%\label{tab:gal-entry-exit-germany}
+%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
+%\toprule
+%$\lambda$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
+%      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
+%\midrule\addlinespace[2.5pt]
+%0.1 & 53.0 & 53.0 & 53.0 & 55.0 & 69.0 & 71.0 & 70.0 & 70.0 \\ 
+%0.5 & 53.0 & 53.0 & 53.0 & 55.0 & 69.0 & 71.0 & 70.0 & 70.0 \\ 
+%1.0 & 53.0 & 53.0 & 53.0 & 55.0 & 69.0 & 71.0 & 70.0 & 70.0 \\ 
+%\bottomrule
+%\end{tabular*}
+%\end{table}
 
 \clearpage
 \section*{}
