@@ -79,9 +79,20 @@ where \( A > 0 \) is the amplitude, \( L > 0 \) the peak location, \( S > 0 \) t
 for a fixed quantile level \( \tau \in (0,1) \).
 
 We define the quantile objective:
-\[
-f_\tau(T,a,l,s) = \frac{1}{T} \sum_{t=1}^T \rho_\tau\left( I(t) - a \exp\left(-\frac{(t - l)^2}{s^2} \right) \right).
-\]
+%\[
+%f_\tau(T, a, l, s) = \frac{1}{T} \sum_{t=1}^T \rho_\tau\left( I(t) - a \exp\left(-\frac{(t - l)^2}{s^2} \right) \right).
+%\]
+\begin{equation}
+	f_\tau(T,a,l,s)
+	=
+	\frac{1}{T}
+	\sum_{t=1}^T
+	\rho_\tau
+	\left(
+	I(t)-a\exp\left(-\frac{(t-l)^2}{s^2}\right)
+	\right).
+	\label{eq:quantile_objective}
+\end{equation}
 
 For fixed candidate values of \( (l,s) \), the optimal amplitude \( a \) minimizes \( a \mapsto f_\tau(T,a,l,s) \). This minimizer is a weighted \(\tau\)-quantile of a transformed version of the data, as described below.
 
