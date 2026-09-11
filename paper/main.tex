@@ -69,6 +69,13 @@ Section~\ref{sec:covid-real-data} is dedicated to application results to forecas
 \label{section:quantile_amplitude}
 
 We consider the problem of estimating the amplitude, location, and spread of a unimodal signal corrupted by noise. The model is:
+\begin{equation}
+	I(t)
+	=
+	A\exp\left(-\frac{(t-L)^2}{S^2}\right)+e(t),
+	\qquad t=1,\ldots,T.
+	\label{eq:signal_model}
+\end{equation}
 \[
 I(t) = A \exp\left(-\frac{(t - L)^2}{S^2}\right) + e(t), \quad t = 1, \dots, T,
 \]
