@@ -354,7 +354,28 @@ noise is chosen according to
 In the simulations, we consider
 \(
 \mathrm{SNR}=1000.
+\)}
+{\color{blue}
+Since the Gaussian signal has peak amplitude
+\(
+\max_t I_0(t)=A,
 \)
+where
+\[
+I_0(t)
+=
+A\exp\left(-\frac{(t-L)^2}{S^2}\right),
+\]
+we define the signal-to-noise ratio as the ratio between the peak
+amplitude of the signal and the standard deviation of the noise:
+\begin{equation}
+	\mathrm{SNR}
+	=
+	\frac{A}{\sigma_e}
+	=
+	\frac{A}{\sqrt{\operatorname{Var}(e(t))}}.
+	\label{eq:SNR_definition}
+\end{equation}
 }
 For the $\tau$-aligned asymmetric Laplace distribution, this variance is
 \begin{equation}
