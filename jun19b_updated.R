@@ -267,11 +267,6 @@ plot_shifted_all_tau <- function(results_all, L_true) {
 
 # ----------------- Generate Figure --------------------------
 
-plot_shifted_all_tau(
-  results_all,
-  L_true
-)
+plot_shifted_all_tau(results_all,L_true)
 
-cat(
-  "Figure 2 saved to figure2_shifted_laplace_all_tau_T.pdf\n"
-)
+cat("Figure 2 saved to figure2_shifted_laplace_all_tau_T.pdf\n")

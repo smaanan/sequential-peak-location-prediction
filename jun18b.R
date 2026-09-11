@@ -14,12 +14,23 @@ rGL_tau_b <- function(n, tau, b) {
 }
 
 # Correct GL variance from document
-gl_variance <- function(tau) {
-  z <- 1 - 2 * tau
-  t1 <- tau / (1 + z)^2
-  t2 <- (1 - tau) / (1 - z)^2
-  mu <- (1 - tau) / (1 - z) - tau / (1 + z)
-  t1 + t2 - 0.25 * mu^2
+# gl_variance <- function(tau) {
+#   z <- 1 - 2 * tau
+#   t1 <- tau / (1 + z)^2
+#   t2 <- (1 - tau) / (1 - z)^2
+#   mu <- (1 - tau) / (1 - z) - tau / (1 + z)
+#   t1 + t2 - 0.25 * mu^2
+# }
+
+# Variance coefficient for the tau-aligned asymmetric Laplace distribution:
+#
+#   Var(e) =
+#     b^2 * [tau^2 + (1-tau)^2]
+#         / [tau^2 (1-tau)^2]
+
+al_variance <- function(tau) {
+  (tau^2 + (1 - tau)^2) /
+    (tau^2 * (1 - tau)^2)
 }
 
 # Quantile loss
@@ -81,7 +92,7 @@ par(mfrow = c(4, 3), mar = c(2, 2, 1, 1), oma = c(3, 3, 2.5, 1))  # reduce inner
 for (tau in taus) {
   set.seed(seed)
   signal_full <- A_true * exp(-((1:h) - L_true)^2 / S_true^2)
-  b <- sqrt((A_true / snr)^2 / gl_variance(tau))
+  b <- sqrt((A_true / snr)^2 / al_variance(tau))
   noise_full <- rGL_tau_b(h, tau, b)
   I_full <- signal_full + noise_full
   

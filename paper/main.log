@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.7.29)  10 SEP 2026 14:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.7.29)  11 SEP 2026 19:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -552,157 +552,110 @@ Underfull \hbox (badness 10000) in paragraph at lines 51--56
 
 [2] [3]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 125.
+put line 134.
  [4]
-<../plot_quantile_all.pdf, id=169, 722.7pt x 903.375pt>
+<../plot_quantile_all.pdf, id=140, 722.7pt x 903.375pt>
 File: ../plot_quantile_all.pdf Graphic file (type pdf)
 <use ../plot_quantile_all.pdf>
-Package pdftex.def Info: ../plot_quantile_all.pdf  used on input line 158.
+Package pdftex.def Info: ../plot_quantile_all.pdf  used on input line 164.
 (pdftex.def)             Requested size: 483.69687pt x 604.62404pt.
  [5] [6 <../plot_quantile_all.pdf>]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 171.
+(hyperref)                removing `math shift' on input line 176.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\tau' on input line 171.
+(hyperref)                removing `\tau' on input line 176.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 171.
+(hyperref)                removing `math shift' on input line 176.
 
-[7]
-<../figure2_shifted_laplace_all_tau_T.pdf, id=198, 578.16pt x 433.62pt>
-File: ../figure2_shifted_laplace_all_tau_T.pdf Graphic file (type pdf)
-<use ../figure2_shifted_laplace_all_tau_T.pdf>
-Package pdftex.def Info: ../figure2_shifted_laplace_all_tau_T.pdf  used on inpu
-t line 391.
-(pdftex.def)             Requested size: 483.69687pt x 362.76945pt.
- [8] [9 <../figure2_shifted_laplace_all_tau_T.pdf>]
-<../figure2_asymmetric_laplace_all_tau_T.pdf, id=215, 722.7pt x 903.375pt>
+[7] [8]
+<../figure2_asymmetric_laplace_all_tau_T.pdf, id=182, 578.16pt x 433.62pt>
 File: ../figure2_asymmetric_laplace_all_tau_T.pdf Graphic file (type pdf)
 <use ../figure2_asymmetric_laplace_all_tau_T.pdf>
 Package pdftex.def Info: ../figure2_asymmetric_laplace_all_tau_T.pdf  used on i
-nput line 473.
-(pdftex.def)             Requested size: 483.69687pt x 604.62404pt.
- [10] [11 <../figure2_asymmetric_laplace_all_tau_T.pdf>]
+nput line 367.
+(pdftex.def)             Requested size: 483.69687pt x 362.76945pt.
+ [9 <../figure2_asymmetric_laplace_all_tau_T.pdf>]
 
-LaTeX Warning: Reference `prop:adn' on page 12 undefined on input line 483.
-
-
-LaTeX Warning: Reference `prop:adn' on page 12 undefined on input line 516.
-
-<../plot_asymmetric_all.pdf, id=234, 722.7pt x 903.375pt>
-File: ../plot_asymmetric_all.pdf Graphic file (type pdf)
-<use ../plot_asymmetric_all.pdf>
-Package pdftex.def Info: ../plot_asymmetric_all.pdf  used on input line 520.
-(pdftex.def)             Requested size: 483.69687pt x 604.62404pt.
-
-LaTeX Warning: Reference `prop:adn' on page 12 undefined on input line 521.
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 387.
 
 
-LaTeX Warning: Reference `prop:adn' on page 12 undefined on input line 521.
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\tau' on input line 387.
 
-[12] [13 <../plot_asymmetric_all.pdf>]
-<../figure1_new_asy_laplace_all_tau_T.pdf, id=254, 722.7pt x 903.375pt>
-File: ../figure1_new_asy_laplace_all_tau_T.pdf Graphic file (type pdf)
-<use ../figure1_new_asy_laplace_all_tau_T.pdf>
-Package pdftex.def Info: ../figure1_new_asy_laplace_all_tau_T.pdf  used on inpu
-t line 563.
-(pdftex.def)             Requested size: 483.69687pt x 604.62404pt.
-<../plot_all_tau_zcompare.pdf, id=256, 722.7pt x 903.375pt>
-File: ../plot_all_tau_zcompare.pdf Graphic file (type pdf)
-<use ../plot_all_tau_zcompare.pdf>
-Package pdftex.def Info: ../plot_all_tau_zcompare.pdf  used on input line 579.
-(pdftex.def)             Requested size: 483.69687pt x 604.62404pt.
- [14] [15 <../figure1_new_asy_laplace_all_tau_T.pdf>] [16 <../plot_all_tau_zcom
-pare.pdf>]
-<../fig3_4a_4b_combined.pdf, id=284, 578.16pt x 578.16pt>
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 387.
+
+<../fig3_4a_4b_combined.pdf, id=207, 578.16pt x 578.16pt>
 File: ../fig3_4a_4b_combined.pdf Graphic file (type pdf)
 <use ../fig3_4a_4b_combined.pdf>
-Package pdftex.def Info: ../fig3_4a_4b_combined.pdf  used on input line 614.
+Package pdftex.def Info: ../fig3_4a_4b_combined.pdf  used on input line 435.
 (pdftex.def)             Requested size: 459.51054pt x 459.5115pt.
- [17] [18 <../fig3_4a_4b_combined.pdf>]
-<../fig3_4_superposed_3x3.pdf, id=302, 578.16pt x 650.43pt>
-File: ../fig3_4_superposed_3x3.pdf Graphic file (type pdf)
-<use ../fig3_4_superposed_3x3.pdf>
-Package pdftex.def Info: ../fig3_4_superposed_3x3.pdf  used on input line 649.
-(pdftex.def)             Requested size: 459.51054pt x 516.95044pt.
-<../fig3_4_superposed_3x3_2.pdf, id=304, 578.16pt x 686.565pt>
-File: ../fig3_4_superposed_3x3_2.pdf Graphic file (type pdf)
-<use ../fig3_4_superposed_3x3_2.pdf>
-Package pdftex.def Info: ../fig3_4_superposed_3x3_2.pdf  used on input line 657
-.
-(pdftex.def)             Requested size: 459.51054pt x 545.6699pt.
- [19] [20 <../fig3_4_superposed_3x3.pdf>] [21 <../fig3_4_superposed_3x3_2.pdf>]
-<../fig_lhat_paths_snr40_tau_z_overlay.pdf, id=334, 614.295pt x 469.755pt>
-File: ../fig_lhat_paths_snr40_tau_z_overlay.pdf Graphic file (type pdf)
-<use ../fig_lhat_paths_snr40_tau_z_overlay.pdf>
-Package pdftex.def Info: ../fig_lhat_paths_snr40_tau_z_overlay.pdf  used on inp
-ut line 676.
+[10] [11 <../fig3_4a_4b_combined.pdf>]
+<../fig_lhat_paths_snr40_tau.pdf, id=232, 614.295pt x 469.755pt>
+File: ../fig_lhat_paths_snr40_tau.pdf Graphic file (type pdf)
+<use ../fig_lhat_paths_snr40_tau.pdf>
+Package pdftex.def Info: ../fig_lhat_paths_snr40_tau.pdf  used on input line 50
+0.
 (pdftex.def)             Requested size: 483.69687pt x 369.89102pt.
- [22 <../fig_lhat_paths_snr40_tau_z_overlay.pdf>] [23]
-<../covid_series_1x3.pdf, id=355, 867.24pt x 289.08pt>
+ [12] [13 <../fig_lhat_paths_snr40_tau.pdf>]
+<../covid_series_1x3.pdf, id=253, 867.24pt x 289.08pt>
 File: ../covid_series_1x3.pdf Graphic file (type pdf)
 <use ../covid_series_1x3.pdf>
-Package pdftex.def Info: ../covid_series_1x3.pdf  used on input line 758.
+Package pdftex.def Info: ../covid_series_1x3.pdf  used on input line 524.
 (pdftex.def)             Requested size: 483.69687pt x 161.23528pt.
- [24 <../covid_series_1x3.pdf>] [25] [26
+ [14 <../covid_series_1x3.pdf>] [15] [16
 
 
-] [27] [28
+] [17] [18
 
 
-] [29] [30
+] [19] [20
 
 
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
-
-LaTeX Warning: Reference `prop:adn' on page 31 undefined on input line 991.
-
-[31] [32] [33
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}] [21
 
 ] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-03-20>
  ***********
-
-
-LaTeX Warning: There were undefined references.
-
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 3A54F3B861BB5E56E1B3D4762FA23E94;6321.
+(rerunfilecheck)             Checksum: 18D36F5D863CE7261F19CC3B1DFBDF2D;3920.
  ) 
 Here is how much of TeX's memory you used:
- 13591 strings out of 469296
- 214908 string characters out of 5465561
- 653866 words of memory out of 6000000
- 42146 multiletter control sequences out of 15000+600000
- 640738 words of font info for 89 fonts, out of 8000000 for 9000
+ 13495 strings out of 469296
+ 211867 string characters out of 5465561
+ 648891 words of memory out of 6000000
+ 42075 multiletter control sequences out of 15000+600000
+ 641439 words of font info for 91 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 75i,13n,84p,1218b,549s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,11n,84p,1218b,524s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texl
-ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/font
-s/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1
-/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cms
-y10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/
-share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texlive
-/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on main.pdf (33 pages, 525884 bytes).
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cms
+y6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/
+share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/t
+exlive/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
+Output written on main.pdf (21 pages, 293753 bytes).
 PDF statistics:
- 521 PDF objects out of 1000 (max. 8388607)
- 425 compressed objects within 5 object streams
- 100 named destinations out of 1000 (max. 500000)
- 264 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 395 PDF objects out of 1000 (max. 8388607)
+ 326 compressed objects within 4 object streams
+ 73 named destinations out of 1000 (max. 500000)
+ 170 words of extra memory for PDF output out of 10000 (max. 10000000)
 
