@@ -158,12 +158,13 @@ We first consider the idealized scenario where the signal is not corrupted by no
 I(t) = A \exp\left( -\frac{(t - L)^2}{S^2} \right), \quad t = 1, \dots, T,
 \]
 where \( A = 15000 \), \( L = 22 \), \( S = 10 \), and \( T \in \{2, 3, 10, 20, 21\} \). The quantile-based estimation procedure is implemented by minimizing the following objective function
-~\eqref{eq:quantile_objective}, 
+~\eqref{eq:quantile_objective}.
 %:
 %\[
 %f_\tau(T, a, l, s) = \frac{1}{T} \sum_{t=1}^T \rho_\tau\left( I(t) - a \exp\left( -\frac{(t - l)^2}{s^2} \right) \right),
 %\]
-where \( \rho_\tau(u) = u(\tau - \mathbf{1}_{\{u < 0\}}) \) denotes the asymmetric quantile loss. The amplitude \( a \) is computed via a weighted \( \tau \)-quantile, as described in Section~\ref{section:quantile_amplitude}.
+%where \( \rho_\tau(u) = u(\tau - \mathbf{1}_{\{u < 0\}}) \) denotes the asymmetric quantile loss.
+The amplitude \( a \) is computed via a weighted \( \tau \)-quantile, as described in Section~\ref{section:quantile_amplitude}.
 
 Since the goal is to predict the location \( L \) of the peak before it becomes observable, we restrict the minimization over candidate peak locations \( l > T \). For each value of \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \), we compute and visualize the objective curve \( l \mapsto f_\tau(T, a(T,l), l, s(T,l)) \) for the selected values of \( T \) (see Figure~\ref{fig:quantile_objective_noise_free}).
 
