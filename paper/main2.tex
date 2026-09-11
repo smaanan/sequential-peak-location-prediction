@@ -1,0 +1,1331 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,booktabs,setspace,subcaption,algorithm,algorithmic}
+\usepackage{graphicx}
+\graphicspath{{../}} 
+\usepackage[dvipsnames]{xcolor}
+\usepackage{pdflscape}
+\usepackage[colorlinks=true,linkcolor=red,citecolor=red,urlcolor=blue]{hyperref}
+\usepackage[round,sort,comma]{natbib}
+\usepackage[margin=2cm]{geometry}
+\usepackage[title]{appendix}
+\usepackage{multirow}
+\usepackage{float}
+\newcommand{\R}{\mathbb{R}}
+\newtheorem{proposition}{Proposition} 
+\newtheorem{corollary}{Corollary}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+
+\newtheorem*{remark}{Remark}
+\onehalfspacing
+
+\title{\textbf{Parametrization of Peak Prediction Using Quantile Regression and Asymmetric Laplace Noise}}
+\author{Authors}
+\date{\today}
+
+\begin{document}
+	\maketitle
+	\begin{abstract}
+		\noindent In many signal processing applications, defining and finding peaks is an important part of the pipeline. Peak prediction can be a very challenging endeavor, especially when there is a lot of noise. In this work, the peak region is considered as a combination of a Gaussian trend with additive asymmetric Laplace noise, and the peak is modeled as the peak of the Gaussian trend. 
+		
+		We propose a criterion based on the weighted quantile which predicts the optimal number of observations necessary for the exact prediction of the peak's location. We analyze the effect of the signal-to-noise ratio on our prediction. We show that for small signal-to-noise ratio (a lot of noise), the prediction becomes inaccurate. 
+		
+		In this case, we propose a new idea called the entry time into the region of the peak and the exit time from the region of the peak. We demonstrate how to apply our new idea to real data and we analyze the effect of the choice of the objective function.
+		As a numerical application, we consider the peak prediction of the daily infections during the first wave of COVID-19 in China, France, and Germany.
+	\end{abstract}
+	
+	\noindent
+	\textbf{Keywords:} Gaussian model, least absolute deviation, weighted median, entry time, region of the peak, daily infection.\\
+	
+	\noindent
+	\textbf{Mathematics subject classification:} 62M10, 60G35.
+	\section{Introduction} \label{section:1}
+	Predicting peaks in time series data is crucial across various domains for proactive decision-making, risk management, resource allocation, and disaster preparedness. The ability to anticipate spikes in data can serve as an early warning system for events such as disease outbreaks in epidemiology, allowing public health officials to allocate resources and implement preventive measures effectively. In energy management, predicting peak electricity demand enables utility companies to adjust generation and distribution schedules, ensuring a reliable power supply and preventing shortages. Financial analysts use peak prediction to manage investment risks by anticipating fluctuations in stock prices or market volatility. Additionally, environmental scientists rely on peak prediction to monitor pollution levels and natural disasters, facilitating disaster preparedness and response efforts. The examples justifying the usefulness of locating, measuring, and understanding these peaks are numerous.
+	
+	Predicting peaks in time series data is a complex task due to several reasons. Firstly, the presence of noise and variability in the data makes it difficult to accurately identify and predict peaks. This noise can originate from various sources, such as measurement errors or random fluctuations in the data. Additionally, many real-world systems exhibit nonlinear dynamics, meaning that the relationship between variables is not strictly linear. Nonlinearities can lead to unexpected behaviors in the data, further complicating peak prediction. Moreover, time series data often contain complex patterns, such as multiple overlapping peaks or irregular intervals between peaks, making it challenging to develop accurate prediction models. In the literature, existing peak prediction methods often rely on specific assumptions about the data distribution or peak characteristics, which may not always hold true in practice, leading to inaccurate predictions (see for instance,~\cite{See17} and~\cite{Tuc20}).\\
+	
+	Popular forecasting models such as Autoregressive Integrated Moving Average (ARIMA) and Recurrent Neural Networks (RNN) often struggle to accurately define or forecast peak values in time series data. Despite their effectiveness in capturing general trends and patterns, these models may overlook or underestimate the occurrence of peaks due to their complexity and the inherent variability of peak events.\\
+	
+	In the realm of peak prediction, there has been relatively little theoretical work compared to more generalized forecasting approaches. One notable contribution in this area is Tucker thesis \cite{Tuc20}, which delved into the dynamics of trend, seasonality, and noise in time series data to predict peaks. Tucker research explored how the interplay between these components could be leveraged to identify and forecast peak events accurately. Inspired by previous studies \cite{YuB2019}, Tucker applied a combination of general prediction techniques and specialized peak prediction methods. He utilized the Peaks function available in Scipy's Signal module, which offers tools for detecting and analyzing peak values in data. Tucker thesis represents a significant step forward in the field of peak prediction, offering insights into the complex dynamics underlying peak events and proposing practical methods for their prediction. By building on existing theoretical frameworks and leveraging advanced computational tools, Tucker work contributes to the growing body of research aimed at improving the accuracy and reliability of peak forecasting in time series data.\\
+	
+	We adopt in this work the same approach as in \cite{Der25} 
+	. We assume that the peak region is equal to $[T,h]$, where $T$ represents the current date and $h$ a specific time horizon. To model this hypothesis effectively, we consider our time series over the interval $[1,T]$ as a composite of a Gaussian trend and noise.
+	Our primary objective is to forecast the amplitude $A$, location $L$, and width $S$ of the Gaussian trend based on observed data from the interval $[1,T]$. We introduce a criterion based on the weighted quantile technique, which enables us to determine the optimal number of observations required for accurately predicting the location $L$ of the peak. Additionally, we conduct an analysis to assess the impact of the signal-to-noise ratio on our predictive accuracy. We show that in case of low signal-to-noise ratios, prediction accuracy diminishes. To address this challenge, we propose 
+	as in \cite{Der25}
+	a novel concept termed the "peak region entry and exit times".\\
+	
+	The aim of our study is to extend the work of \cite{Der25} 
+	to the quantile regression. First, we introduce our approach to selecting the 
+	minimization of the quantile regression and demonstrate, using simulated data, the number of observations required to accurately predict the location of the peak. This approach is based on the concept of the weighted quantile. Secondly, we establish that for high signal-to-noise ratios, the peak location prediction is correct. However, in cases of low \texttt{SNR} (indicating high noise levels), the accuracy of the prediction deteriorates. In these cases, we propose a new concept called "peak region entry time" and "peak region exit time". We illustrate this concept by
+	parameterizing the entry time in the peak region and the exit time from the peak region by 
+	the tau-quantile when the data are 
+	the daily COVID-19 infections during the first wave in China \cite{Bar20}, France and Germany.
+	
+	The remainder of this paper is organized as follows. In Section~\ref{section:quantile_amplitude} we present our proposed model. More
+	precisely, we consider Gaussian trend with additive generalized Laplace noise. 
+	Section~\ref{sec:covid-real-data} is dedicated to application results to forecast the peak incidence of daily COVID-19 infections during the initial wave in China, France, and Germany.
+	
+	\section{Quantile-Based Estimation Methodology}
+	\label{section:quantile_amplitude}
+	
+	We consider the problem of estimating the amplitude, location, and spread of a unimodal signal corrupted by noise. The model is:
+	\[
+	I(t) = A \exp\left(-\frac{(t - L)^2}{S^2}\right) + e(t), \quad t = 1, \dots, T,
+	\]
+	where \( A > 0 \) is the amplitude, \( L > 0 \) the peak location, \( S > 0 \) the spread (scale), and \( e(t) \) is additive noise. Given observations \( (I(t))_{t=1}^T \), our goal is to estimate the underlying parameters using quantile regression, i.e., minimizing the asymmetric loss
+	\[
+	\rho_\tau(u) = u \cdot (\tau - \mathbf{1}_{\{u < 0\}}),
+	\]
+	for a fixed quantile level \( \tau \in (0,1) \).
+	
+	We define the quantile objective:
+	\[
+	f_\tau(T,a,l,s) = \frac{1}{T} \sum_{t=1}^T \rho_\tau\left( I(t) - a \exp\left(-\frac{(t - l)^2}{s^2} \right) \right).
+	\]
+	
+	For fixed candidate values of \( (l,s) \), the optimal amplitude \( a \) minimizes \( a \mapsto f_\tau(T,a,l,s) \). This minimizer is a weighted \(\tau\)-quantile of a transformed version of the data, as described below.
+	
+	\subsection{Weighted Quantile Estimation of Amplitude}
+	\label{sec:weighted_median_method}
+	
+	Let \( w(t) = \exp\left( -\frac{(t - l)^2}{s^2} \right) \) be the weight associated with time point \( t \), and define:
+	\[
+	x(t) = I(t) \exp\left( \frac{(t - l)^2}{s^2} \right).
+	\]
+	Then the optimal amplitude \( a \) is the weighted \(\tau\)-quantile of \( x(t) \) with weights \( w(t) \), i.e.,
+	\[
+	a = \arg\min_{a'} \sum_{t=1}^T w(t) \rho_\tau(a' - x(t)).
+	\]
+	
+	The proof of the following Proposition is the same as in the work of~\cite{Nov20}.
+	\begin{proposition}
+		\label{prop:weighted:quantile}
+		Let \( (x(t), w(t)) \) be a sequence of real values with positive weights \( w(t) > 0 \). Then, for any \( \tau \in (0,1) \), the weighted \( \tau \)-quantile minimizes the weighted quantile loss:
+		\[
+		q_\tau = \arg\min_{a \in \mathbb{R}} \sum_{t=1}^T w(t)\, \rho_\tau(a - x(t)),
+		\]
+		where \( \rho_\tau(u) = u(\tau - \mathbf{1}\{u < 0\}) \) is the quantile check function.
+		
+		To compute \( q_\tau \), sort the values \( x(t) \) in increasing order, obtaining a permutation \( \pi \) such that
+		\[
+		x(\pi(1)) \leq x(\pi(2)) \leq \dots \leq x(\pi(T)).
+		\]
+		Define the reordered weights \( w_\pi(t) = w(\pi(t)) \). Let
+		\[
+		k = \min \left\{ j \in \{1, \dots, T\} : \sum_{t=1}^j w_\pi(t) \geq \tau \sum_{t=1}^T w(t) \right\}.
+		\]
+		Then the weighted \( \tau \)-quantile satisfies \( q_\tau = x(\pi(k)) \).
+	\end{proposition}
+	
+	
+	\subsection{Quantile-Based Estimation Procedure}
+	
+	We define the following steps to jointly estimate the location \( \hat{l}(T) \), amplitude \( \hat{a}(T) \), and spread \( \hat{s}(T) \):
+	
+	\begin{algorithm}[htbp]
+		\caption{Quantile-based estimation of peak parameters}
+		\label{algo:quantile}
+		\begin{algorithmic}[1]
+			\REQUIRE Time horizon \( T \), upper bound \( h > T \), quantile level \( \tau \in (0,1) \)
+			\STATE For each candidate \( l \in [1, h] \), find \( s^*(l) = \arg\min_s f_\tau(T, a^*(l,s), l, s) \)
+			\STATE Set \( \hat{l}(T) = \arg\min_l f_\tau(T, a^*(l,s^*(l)), l, s^*(l)) \)
+			\STATE Set \( \hat{s}(T) = s^*(\hat{l}(T)) \)
+			\STATE Set \( \hat{a}(T) = a^*(\hat{l}(T), \hat{s}(T)) \)
+			\ENSURE Estimated parameters \( (\hat{l}(T), \hat{a}(T), \hat{s}(T)) \)
+		\end{algorithmic}
+	\end{algorithm}
+	
+	\subsection{Remark on Asymmetry and Robustness}
+	
+	This method generalizes the classic Least Absolute Deviations (LAD) estimator, recovered at \( \tau = 0.5 \). By adjusting \( \tau \), we introduce asymmetry into the estimation loss, enabling the model to better adapt to skewed noise distributions. This makes the approach especially valuable in early-warning systems and epidemic peak detection where overestimation and underestimation have asymmetric consequences.
+	
+	
+	\section{Quantile-Based Objective Function under Noise-Free Conditions}
+	
+	We first consider the idealized scenario where the signal is not corrupted by noise. The model of interest is given by
+	\[
+	I(t) = A \exp\left( -\frac{(t - L)^2}{S^2} \right), \quad t = 1, \dots, T,
+	\]
+	where \( A = 15000 \), \( L = 22 \), \( S = 10 \), and \( T \in \{2, 3, 10, 20, 21\} \). The quantile-based estimation procedure is implemented by minimizing the following objective function:
+	\[
+	f_\tau(T, a, l, s) = \frac{1}{T} \sum_{t=1}^T \rho_\tau\left( I(t) - a \exp\left( -\frac{(t - l)^2}{s^2} \right) \right),
+	\]
+	where \( \rho_\tau(u) = u(\tau - \mathbf{1}_{\{u < 0\}}) \) denotes the asymmetric quantile loss. The amplitude \( a \) is computed via a weighted \( \tau \)-quantile, as described in Section~\ref{section:quantile_amplitude}.
+	
+	Since the goal is to predict the location \( L \) of the peak before it becomes observable, we restrict the minimization over candidate peak locations \( l > T \). For each value of \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \), we compute and visualize the objective curve \( l \mapsto f_\tau(T, a(T,l), l, s(T,l)) \) for the selected values of \( T \) (see Figure~\ref{fig:quantile_objective_noise_free}).
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=\linewidth]{plot_quantile_all.pdf}
+		\caption{Objective function \( l \mapsto f_\tau(T, a, l, s) \) computed for \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \) and \( T \in \{2, 3, 10, 20, 21\} \), under a noise-free signal. The vertical dashed line indicates the true peak location \( L = 22 \), and the search is restricted to values \( l > T \).}
+		\label{fig:quantile_objective_noise_free}
+	\end{figure}
+	
+	\paragraph{Remark.} For each fixed sample size $T$, we computed the value of the minimized objective function at the estimated parameters $(\hat{a}, \hat{l}, \hat{s})$. The results indicate that the lowest objective value is typically achieved for $\tau = 0.95$, suggesting that upper quantiles align particularly well with the noiseless signal structure. The only exception is at $T = 20$, where $\tau = 0.75$ yields a slightly smaller loss. This empirical observation may help guide quantile selection when prior knowledge of signal shape or noise properties is limited.
+	
+	\section{\texorpdfstring{Quantile-Based Estimation with $\tau$-Aligned Noise}{Quantile-Based Estimation with tau-Aligned Noise}}
+	\label{sec:symmetric_laplace_estimation}
+	
+	To analyze how quantile-aligned noise affects peak estimation, we introduce a unified noise model based on the \textit{general asymmetric Laplace} (GAL) distribution. This flexible family allows both symmetric and asymmetric noise structures while maintaining the property that the $\tau$-quantile of the noise is at zero.
+	
+	{\color{blue}
+		\subsection{Asymmetric Laplace Noise Aligned with the $\tau$-Quantile}
+		\label{sec:general_AL_intro}
+		
+		We consider an asymmetric Laplace distribution parametrized by a location parameter
+		$m\in\mathbb{R}$, a scale parameter $\lambda>0$, and an asymmetry parameter
+		$k>0$. Its density is given by
+		\[
+		f_{m,\lambda,k}(x)
+		=
+		\frac{\lambda}{k+k^{-1}}
+		\begin{cases}
+			\exp\left(\dfrac{\lambda(x-m)}{k}\right), & x<m, \\[8pt]
+			\exp\left(-\lambda k(x-m)\right), & x\geq m.
+		\end{cases}
+		\]
+		The parameter $m$ is the mode of the distribution, while $k$ controls its
+		asymmetry and $\lambda$ controls its concentration.
+		The distribution function evaluated at the mode is
+		\[
+		\mathbb{P}(X<m)
+		=
+		\frac{\lambda}{k+k^{-1}}
+		\int_{-\infty}^{m}
+		\exp\left(\frac{\lambda(x-m)}{k}\right)\,dx
+		=
+		\frac{k^2}{1+k^2}.
+		\]
+		Therefore, to align the asymmetric Laplace noise with the $\tau$-quantile
+		regression criterion, we require
+		\(
+		\mathbb{P}(e<0)=\tau,
+		\)
+		and
+		\(
+		\tau\in(0,1).
+		\)
+		Since the location of the noise can be fixed at zero, we set $m=0$. The
+		corresponding asymmetry parameter is then determined by
+		\[
+		\frac{k^2}{1+k^2}=\tau,
+		\]
+		or equivalently,
+		\[
+		k=\sqrt{\frac{\tau}{1-\tau}}.
+		\]
+		Thus, the $\tau$-aligned asymmetric Laplace noise has density
+		\[
+		f_{\tau,\lambda}(x)
+		=
+		\frac{\lambda}{k+k^{-1}}
+		\begin{cases}
+			\exp\left(\dfrac{\lambda x}{k}\right), & x<0, \\[8pt]
+			\exp(-\lambda kx), & x\geq 0,
+		\end{cases}
+		\qquad
+		k=\sqrt{\frac{\tau}{1-\tau}}.
+		\]
+		By construction,
+		\(
+		\mathbb{P}(e<0)=\tau.
+		\)
+		In particular, when $\tau=1/2$, we have $k=1$, and the asymmetric Laplace
+		distribution reduces to the symmetric Laplace distribution centered at zero.
+		Hence, the symmetric Laplace case is recovered as a special case of the
+		$\tau$-aligned asymmetric Laplace model.}
+	
+	{\color{blue}
+		\subsection{Simulation under Asymmetric Laplace Noise}
+		\label{subsec:asymmetric_laplace_noise}
+		
+		We now investigate the behavior of the quantile-based peak estimation procedure when the additive noise follows the $\tau$-aligned asymmetric Laplace distribution introduced in Section~\ref{sec:general_AL_intro}. In the parameterization based on the quantile loss, the density of the noise can be written as
+		\[
+		f_{\tau,b}(x)
+		=
+		\frac{\tau(1-\tau)}{b}
+		\exp\left(-\frac{1}{b}\rho_\tau(x)\right),
+		\qquad
+		\tau\in(0,1),\quad b>0,
+		\]
+		where
+		\(
+		\rho_\tau(x)=x\left(\tau-\mathbf{1}\{x<0\}\right).
+		\)
+		Equivalently,
+		\[
+		f_{\tau,b}(x)
+		=
+		\begin{cases}
+			\displaystyle
+			\frac{\tau(1-\tau)}{b}
+			\exp\left(-\frac{\tau x}{b}\right), & x\geq 0, \\[8pt]
+			\displaystyle
+			\frac{\tau(1-\tau)}{b}
+			\exp\left(\frac{(1-\tau)x}{b}\right), & x<0.
+		\end{cases}
+		\]
+		The normalization follows from
+		\[
+		\int_{-\infty}^{+\infty}
+		\exp\left(-\frac{1}{b}\rho_\tau(x)\right)\,dx
+		=
+		\frac{b}{1-\tau}+\frac{b}{\tau}
+		=
+		\frac{b}{\tau(1-\tau)}.
+		\]
+		Moreover, by construction,
+		\(
+		\mathbb{P}(e(t)<0)=\tau.
+		\)
+		This distribution is directly compatible with the quantile-based estimation criterion. Indeed,
+		\[
+		-\log f_{\tau,b}(e)
+		=
+		-\log\left(\frac{\tau(1-\tau)}{b}\right)
+		+
+		\frac{1}{b}\rho_\tau(e).
+		\]
+		Therefore, for fixed $\tau$ and $b$, minimizing the negative log-likelihood is equivalent to minimizing the empirical quantile loss. The asymmetric Laplace model thus provides a probabilistic interpretation of the quantile-based peak estimation procedure without introducing a separate estimation criterion.
+		For the simulation study, the true signal is
+		\[
+		I(t)
+		=
+		A\exp\left(-\frac{(t-L)^2}{S^2}\right),
+		\]
+		with
+		%\[
+		$A=1,$
+		%\qquad 
+		$L=22,$
+		%\qquad 
+		$S=10,$
+		%\]
+		and the signal-to-noise ratio is set to
+		\(
+		\mathrm{SNR}=1000.
+		\)
+		For each
+		\(
+		\tau\in\{0.25,0.5,0.75,0.95\},
+		\)
+		the corresponding asymmetric Laplace noise is generated with asymmetry parameter
+		\[
+		k=\sqrt{\frac{\tau}{1-\tau}}.
+		\]
+		The scale parameter $b$ is chosen so that the variance of the noise satisfies
+		\[
+		\operatorname{Var}(e(t))
+		=
+		\left(\frac{A}{\mathrm{SNR}}\right)^2.
+		\]
+		For the $\tau$-aligned asymmetric Laplace distribution, this variance is
+		\[
+		\operatorname{Var}(e(t))
+		=
+		b^2
+		\frac{\tau^2+(1-\tau)^2}
+		{\tau^2(1-\tau)^2},
+		\]
+		so that
+		\[
+		b
+		=
+		\frac{A}{\mathrm{SNR}}
+		\frac{\tau(1-\tau)}
+		{\sqrt{\tau^2+(1-\tau)^2}}.
+		\]
+		For each $\tau$, the objective function
+		$l\mapsto f_\tau(T,a,l,s)$ is evaluated for the time horizons
+		\(
+		T\in\{4,6,8,9,10\}.
+		\)
+		For each candidate peak location $l$, the scale parameter $s$ is optimized over the prescribed interval, and the amplitude $a$ is determined as the weighted $\tau$-quantile described in Section~\ref{sec:weighted_median_method}. The resulting objective profiles are then compared across the different values of $\tau$.
+		The resulting profiles are displayed in Figure~\ref{fig:asymmetric_laplace_loss_profiles}. The true peak location $L=22$ is marked by a vertical dashed line. Each panel corresponds to a different pair $(T,\tau)$, and the curves show the behavior of the quantile-loss objective across candidate peak locations.
+		
+		\begin{figure}[htbp]
+			\centering
+			\includegraphics[width=\linewidth]{figure2_asymmetric_laplace_all_tau_T.pdf}
+			\caption{Objective function profiles $l\mapsto f_{\tau}(T,a,l,s)$ under $\emph{asymmetric Laplace}$ noise, for $\tau\in\{0.25,0.5,0.75,0.95\}$ and $T\in\{4,6,8,9,10\}$. Each subfigure corresponds to one value of $\tau$, and the dashed vertical line indicates the true peak location $L=22$.}
+			\label{fig:asymmetric_laplace_loss_profiles}
+	\end{figure}}
+	%\subsection{Quantile-Based Estimation under Asymmetric Laplace Noise}
+	%\label{subsec:asymmetric_laplace_noise}
+	%
+	%In this subsection, we revisit the quantile-based estimation procedure using a noise model that is fully compatible with the asymmetric quantile loss function \( \rho_\tau \). Specifically, we assume that the additive noise follows the asymmetric Laplace distribution, which arises as the maximum likelihood model for quantile regression. This distribution has density
+	%\[
+	%f_{\tau, b}(x) =
+	%\begin{cases}
+	%\displaystyle \frac{\tau}{b} \exp\left(-\frac{\tau x}{b}\right), & x \geq 0, \\[6pt]
+	%\displaystyle \frac{1 - \tau}{b} \exp\left(\frac{(1 - \tau)x}{b}\right), & x < 0,
+	%\end{cases}
+	%\]
+	%where \( \tau \in (0,1) \) denotes the target quantile and \( b > 0 \) the scale parameter. This distribution ensures that \( \mathbb{P}(e(t) < 0) = \tau \), in perfect alignment with the quantile loss minimization objective.
+	%
+	%To ensure that $f_{\tau, b}(x)$ integrates to 1, one can verify that its normalizing constant is $\frac{\tau(1 - \tau)}{b}$. Indeed, since $\rho_\tau(x) = x(\tau - \mathbf{1}\{x < 0\})$, the function $f_{\tau, b}(x) \propto \exp\left(-\frac{1}{b} \rho_\tau(x)\right)$ defines a valid probability density on $\mathbb{R}$, with
+	%
+	%$$
+	%\int_{-\infty}^{+\infty} \exp\left(-\frac{1}{b} \rho_\tau(x)\right) dx
+	%= \int_{-\infty}^0 \exp\left(\frac{(1 - \tau) x}{b}\right) dx
+	%+ \int_0^{+\infty} \exp\left(-\frac{\tau x}{b}\right) dx
+	%= \frac{b}{1 - \tau} + \frac{b}{\tau}.
+	%$$
+	%Hence the proper density is
+	%
+	%$$
+	%f_{\tau, b}(x) = \frac{\tau(1 - \tau)}{b} \exp\left(-\frac{1}{b} \rho_\tau(x)\right),
+	%$$
+	%which is precisely the distribution used to simulate the noise in our experiments.
+	%
+	%We replicate the simulation design used in the previous subsection: the true signal is \( I(t) = A \exp\left(-\frac{(t - L)^2}{S^2}\right) \) with \( A = 1 \), \( L = 22 \), and \( S = 10 \), and the signal-to-noise ratio is set to \( \text{SNR} = 1000 \). For each \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \), we generate additive asymmetric Laplace noise with appropriate scale \( b \) ensuring that the variance of the noise matches the desired SNR level. The objective function \( l \mapsto f_\tau(T, a, l, s) \) is computed for time horizons \( T \in \{4, 6, 8, 9, 10\} \), and for each \( l \) in a discrete grid, we minimize over \( s \) and determine the optimal amplitude \( a \) as the weighted \( \tau \)-quantile.
+	%
+	%The resulting profiles of the objective function are displayed in Figure~\ref{fig:asymmetric_laplace_loss_profiles}. The true peak location \( L = 22 \) is marked by a vertical dashed line. Each panel corresponds to a different pair \( (T, \tau) \), and the curves illustrate the behavior of the loss function across different candidate peak locations. The red, blue, green, and grey lines correspond to varying levels of skewness \( z \), introduced implicitly through the choice of \( \tau \).
+	%
+	%\begin{figure}[htbp]
+	%    \centering
+	%    \includegraphics[width=\linewidth]{figure2_asymmetric_laplace_all_tau_T.pdf}
+	%    \caption{Objective function profiles \( l \mapsto f_{\tau}(T, a, l, s) \) under \emph{asymmetric Laplace} noise, for \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \) and \( T \in \{4, 6, 8, 9, 10\} \). Each curve corresponds to a different skewness setting \( z \in \{-0.9, -0.5, 0, 0.5, 0.9\} \), and the dashed vertical line indicates the true peak location \( L = 22 \).}
+	%    \label{fig:asymmetric_laplace_loss_profiles}
+	%\end{figure}
+	%
+	%\paragraph{Remark.} A notable feature of Figure~\ref{fig:asymmetric_laplace_loss_profiles} is that all curves corresponding to different skewness levels \( z \in \{-0.9, -0.5, 0, 0.5, 0.9\} \) fall exactly on top of each other. This occurs because the data were generated using the asymmetric Laplace density \( f_{\tau}(x) \) that is exactly matched to the quantile loss function \( \rho_\tau(x) \), i.e., the negative log-likelihood is proportional to the loss function being minimized.
+	
+	%\section{General Asymmetric Laplace Noise Model}
+	%\label{sec:general_asy_laplace}
+	%
+	%Building on the general density \( f_{\tau,z,b}(x) \) introduced in Section~\ref{sec:general_AL_intro}, we now examine the case where \( z \neq 0 \). Varying the asymmetry parameter \( z \) allows us to simulate skewed noise distributions while preserving the property that the $\tau$-quantile lies at zero. This setup enables us to assess how skewness influences the estimation of the peak parameters \( (a, l, s) \) under quantile loss.
+	%
+	%\subsection{\texorpdfstring{Objective Profiles Across Varying \( z \)}{Objective Profiles Across Varying z}}
+	%\label{subsec:objective_varying_z}
+	%
+	%We simulate observations according to the model
+	%\[
+	%I(t) = A \exp\left( -\frac{(t - L)^2}{S^2} \right) + e(t),
+	%\]
+	%where the noise $e(t)$ is drawn from the generalized Laplace distribution $GL_{\tau, z, b}(x)$, whose density is given by:
+	%$$
+	%f_{\tau,z,b}(x) =
+	%\begin{cases}
+	%\dfrac{\tau (1 + z)}{b} \exp\left( \dfrac{(1 + z)x}{b} \right), & x < 0, \\[6pt]
+	%\dfrac{(1 - \tau)(1 - z)}{b} \exp\left( -\dfrac{(1 - z)x}{b} \right), & x \geq 0,
+	%\end{cases}
+	%$$
+	%where $\tau = \frac{1 - z}{2}$, ensuring that $\mathbb{P}(e(t) < 0) = \tau$. The scale parameter $b$ is adjusted to ensure constant signal-to-noise ratio using the theoretical variance:
+	%$$
+	%\operatorname{Var}(e) = b^2 \left[
+	%\frac{\tau}{(1 + z)^2} + \frac{1 - \tau}{(1 - z)^2}
+	%- \frac{1}{4} \left( \frac{1 - \tau}{1 - z} - \frac{\tau}{1 + z} \right)^2
+	%\right].
+	%$$
+	%The signal component is fixed with parameters \( A = 15000 \), \( L = 22 \), and \( S = 10 \), while the scale \( b \) is dynamically adjusted to maintain a constant signal-to-noise ratio \( \mathrm{SNR} = 1000 \) across all configurations.
+	%For each combination of quantile level \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \) and sample size \( T \in \{2, 3, 10, 15, 20, 21\} \), we evaluate the quantile loss objective function
+	%\[
+	%f_\tau(l; T) = \min_{a,s>0} \frac{1}{T} \sum_{t=1}^T \rho_\tau\left( I(t) - a \exp\left(-\frac{(t - l)^2}{s^2} \right) \right),
+	%\]
+	%over a grid \( l \in \{18, \dots, 25\} \).
+	%
+	%Figure~\ref{fig:figure1} presents the resulting objective profiles \( f_\tau(l; T) \). Each row corresponds to a sample size \( T \), and each column to a quantile level \( \tau \). Within each panel, the curves for different values of \( z \) are superposed for visual comparison.
+	%
+	%\begin{figure}[htbp]
+	%    \centering
+	%    \includegraphics[width=\linewidth]{figure1_new_asy_laplace_all_tau_T.pdf}
+	%    \caption{
+		%    Quantile loss objective \( l \mapsto f_\tau(l; T) \) under asymmetric Laplace noise with skewness parameters \( z \in \{-0.9, -0.5, 0, 0.5, 0.9\} \), derived from the limiting form \( x \mapsto \exp\left( -\frac{|x|}{b}(1 - \mathrm{sgn}(x) z) \right) \).
+		%    Rows correspond to sample sizes \( T \in \{2, 3, 10, 20, 21\} \), and columns correspond to quantile levels \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \). The vertical dashed line marks the true peak location \( L = 22 \). Colors indicate the value of \( z \).
+		%    }
+	%    \label{fig:figure1}
+	%\end{figure}
+	%
+	%\vspace{1ex}
+	%
+	%To better isolate the effect of skewness for each quantile level, we generate composite plots that fix \( \tau \) and overlay all \( z \)-dependent curves, shown in Figure~\ref{fig:plot_all_tau_zcompare}.
+	%
+	%These overlays allow direct comparison of how different noise asymmetries influence the curvature, location, and convexity of the objective function for a given estimation target.
+	%
+	%\begin{figure}[htbp]
+	%    \centering
+	%    \includegraphics[width=\linewidth]{plot_all_tau_zcompare.pdf}
+	%    \caption{Superposed objective functions \( l \mapsto f_\tau(l; T) \) under asymmetric Laplace noise with varying skewness parameters \( z \in \{-0.9, -0.5, 0, 0.5, 0.9\} \). Each row corresponds to sample sizes \( T \in \{2, 3, 10, 20, 21\} \), and each column to quantile levels \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \). The vertical dashed line indicates the true peak location \( L = 22 \); colors denote different values of \( z \).}
+	%    \label{fig:plot_all_tau_zcompare}
+	%\end{figure}
+	
+	{\color{blue}
+		\section{Parameter Estimation Trajectories}
+		\label{sec:parameter_estimation_paths}
+		
+		We now analyze how the estimated model parameters, location $\hat{l}(T)$, amplitude $\hat{a}(T)$, and scale $\hat{s}(T)$, evolve as the sample size $T$ increases. Our goal is to assess the stability and convergence of these estimators under the $\tau$-aligned asymmetric Laplace noise introduced in Section~\ref{sec:general_AL_intro}, including its symmetric special case. All experiments use a fixed signal-to-noise ratio of $\mathrm{SNR}=1000$ and consider quantile levels
+		\(
+		\tau\in\{0.25,0.5,0.75,0.95\}.
+		\)
+		
+		\subsection{$\tau$-Aligned Asymmetric Laplace Noise}
+		\label{subsec:asymmetric_laplace_trajectories}
+		
+		We consider the signal-plus-noise model
+		\[
+		I(t)
+		=
+		A\exp\left(-\frac{(t-L)^2}{S^2}\right)+e(t),
+		\qquad t=1,\ldots,30,
+		\]
+		with
+		%\[
+		$A=1,$
+		%\qquad 
+		$L=22,$
+		%\qquad 
+		$S=10.$
+		%\]
+		The noise $e(t)$ follows the $\tau$-aligned asymmetric Laplace distribution introduced in Section~\ref{sec:general_AL_intro}, with density
+		\[
+		f_{\tau,b}(x)
+		=
+		\frac{\tau(1-\tau)}{b}
+		\exp\left(-\frac{1}{b}\rho_\tau(x)\right),
+		\]
+		where
+		\(
+		\rho_\tau(x)
+		=
+		x\left(\tau-\mathbf{1}_{\{x<0\}}\right).
+		\)
+		The asymmetry parameter is determined by the quantile level according to
+		\[
+		k=\sqrt{\frac{\tau}{1-\tau}},
+		\]
+		so that
+		\(
+		\mathbb{P}(e(t)<0)=\tau.
+		\)
+		In particular, $\tau=1/2$ corresponds to the symmetric Laplace distribution, whereas the other values of $\tau$ considered here produce asymmetric noise.
+		The scale parameter $b$ is calibrated separately for each $\tau$ so that the variance of the noise satisfies the fixed signal-to-noise ratio condition
+		\[
+		\operatorname{Var}(e(t))
+		=
+		\left(\frac{A}{\mathrm{SNR}}\right)^2.
+		\]
+		For the $\tau$-aligned asymmetric Laplace distribution,
+		\[
+		\operatorname{Var}(e(t))
+		=
+		b^2
+		\frac{\tau^2+(1-\tau)^2}
+		{\tau^2(1-\tau)^2},
+		\]
+		and therefore
+		\[
+		b
+		=
+		\frac{A}{\mathrm{SNR}}
+		\frac{\tau(1-\tau)}
+		{\sqrt{\tau^2+(1-\tau)^2}}.
+		\]
+		At each time horizon $T\in\{4,\ldots,30\}$, we estimate the parameters
+		$(\hat{l}(T),\hat{a}(T),\hat{s}(T))$ by minimizing the quantile loss
+		\[
+		\min_{l\in[1,30],\,s>0}
+		\frac{1}{T}
+		\sum_{t=1}^{T}
+		\rho_\tau
+		\left(
+		I(t)
+		-
+		a\exp\left(-\frac{(t-l)^2}{s^2}\right)
+		\right),
+		\]
+		where
+		\(
+		\rho_\tau(u)
+		=
+		u\left(\tau-\mathbf{1}_{\{u<0\}}\right),
+		\)
+		and $a$ is re-estimated for each pair $(l,s)$ as the weighted $\tau$-quantile described in Section~\ref{sec:weighted_median_method}. The scale parameter $s$ is optimized over the prescribed interval, and the location parameter $l$ is selected by minimizing the resulting objective over the candidate locations.
+		Figure~\ref{fig:combined_estimation_paths} shows the resulting estimation trajectories
+		\[
+		T\mapsto\hat{l}(T),\qquad
+		T\mapsto\hat{a}(T),\qquad
+		T\mapsto\hat{s}(T),
+		\]
+		for each quantile level $\tau$. The true parameter values
+		$(L,A,S)=(22,1,10)$ are indicated by dashed horizontal lines.
+		
+		\begin{figure}[htbp]
+			\centering
+			\includegraphics[width=0.95\textwidth]{fig3_4a_4b_combined.pdf}
+			\caption{Estimation paths $T\mapsto\hat{l}(T)$ (left),
+				$\hat{a}(T)$ (middle), and $\hat{s}(T)$ (right) under
+				$\tau$-aligned asymmetric Laplace noise with signal-to-noise ratio
+				(SNR) 1000. Each row corresponds to a quantile level
+				$\tau\in\{0.25,0.5,0.75,0.95\}$. The true values
+				$(L,A,S)=(22,1,10)$ are indicated by dashed horizontal lines.}
+			\label{fig:combined_estimation_paths}
+	\end{figure}}
+	%\section{Parameter Estimation Trajectories}
+	%\label{sec:parameter_estimation_paths}
+	%
+	%We now analyze how the estimated model parameters, location $\hat{l}(T)$, amplitude $\hat{a}(T)$, and scale $\hat{s}(T)$, evolve as the sample size $T$ increases. Our goal is to assess the stability and convergence of these estimators under both symmetric and asymmetric Laplace noise. All experiments use a fixed signal-to-noise ratio of $\text{SNR} = 1000$ and consider quantile levels $\tau \in \{0.25, 0.5, 0.75, 0.95\}$.
+	%
+	%\subsection{Symmetric Noise (z = 0)}
+	%
+	%We first consider the case of symmetric Laplace noise, corresponding to $z = 0$. The observations are generated according to the signal-plus-noise model
+	%\[
+	%I(t) = A \exp\left(-\frac{(t - L)^2}{S^2} \right) + e(t), \quad t = 1, \dots, 30,
+	%\]
+	%with $A = 1$, $L = 22$, and $S = 10$. The noise $e(t)$ follows the generalized Laplace distribution $GL_{\tau, b}(u)$, with density proportional to $\exp\left( -\rho_\tau(u / b) \right)$, where $\rho_\tau(u) = u(\tau - \mathbf{1}_{\{u < 0\}})$. The scale $b$ is calibrated so that the noise variance matches $(A / \text{SNR})^2$, using the expression:
+	%$$
+	%\operatorname{Var}(e) = b^2 \left[
+	%\frac{\tau}{(1 + z)^2} + \frac{1 - \tau}{(1 - z)^2}
+	%- \frac{1}{4} \left( \frac{1 - \tau}{1 - z} - \frac{\tau}{1 + z} \right)^2
+	%\right],
+	%$$
+	%with $z = 0$ for the symmetric case.
+	%
+	%At each time horizon $T \in [4,30]$, we estimate the parameters $(\hat{l}(T), \hat{a}(T), \hat{s}(T))$ by minimizing the quantile loss:
+	%\[
+	%\min_{l \in [1,h], s > 0} \frac{1}{T} \sum_{t=1}^T \rho_\tau\left( I(t) - a \exp\left(-\frac{(t - l)^2}{s^2} \right) \right),
+	%\]
+	%where $\rho_\tau(u) = u(\tau - \mathbf{1}_{\{u < 0\}})$ is the check function, and $a$ is re-estimated for each $(l,s)$ via a weighted $\tau$-quantile.
+	%
+	%Figure~\ref{fig:combined_estimation_paths} shows the estimation trajectories $T \mapsto \hat{l}(T)$, $T \mapsto \hat{a}(T)$, and $T \mapsto \hat{s}(T)$ for each quantile level.
+	%
+	%\begin{figure}[htbp]
+	%\centering
+	%\includegraphics[width=0.95\textwidth]{fig3_4a_4b_combined.pdf}
+	%\caption{Estimation paths $T \mapsto \hat{l}(T)$ (left), $\hat{a}(T)$ (middle), and $\hat{s}(T)$ (right) under symmetric Laplace noise with signal-to-noise ratio (SNR) 1000. Each row corresponds to a quantile level $\tau \in \{0.25, 0.5, 0.75, 0.95\}$. The true values $(L, A, S) = (22, 1, 10)$ are indicated by red dashed lines.}
+	%\label{fig:combined_estimation_paths}
+	%\end{figure}
+	
+	%\subsection{\texorpdfstring{Asymmetric Noise with Varying Skewness Parameter $z$}{Asymmetric Noise with Varying Skewness Parameter z}}
+	%
+	%We investigate the influence of asymmetry in the additive noise distribution on the estimation trajectories. The signal retains the same Gaussian-shaped form as previously:
+	%$$
+	%I(t) = A \exp\left(-\frac{(t - L)^2}{S^2} \right) + e(t), \quad t = 1, \ldots, T,
+	%$$
+	%where the noise $e(t)$ is generated from the generalized Laplace distribution
+	%$$
+	%f_{\tau, b}(x) \propto \exp\left(-\rho_\tau\left(\frac{x}{b}\right)\right),
+	%$$
+	%with asymmetry parameter $z \in \{-0.9, -0.5, 0, 0.5, 0.9\}$, quantile level $\tau \in (0,1)$, and scale $b > 0$.
+	%
+	%The skewness and quantile level are linked via:
+	%$$
+	%P(e_t < 0) = \tau, \quad \text{with} \quad \tau = \frac{1 - z}{2},
+	%$$
+	%and the scale $b$ is calibrated such that the noise variance satisfies the fixed signal-to-noise ratio (SNR) condition:
+	%$$
+	%\operatorname{Var}(e) = \left( \frac{A}{\mathrm{SNR}} \right)^2.
+	%$$
+	%Using the exact variance of the asymmetric Laplace distribution $f_{\tau, b}$, the scale is computed as:
+	%$$
+	%b = \sqrt{ \frac{(A / \mathrm{SNR})^2}{\frac{\tau}{(1 + z)^2} + \frac{1 - \tau}{(1 - z)^2} - \frac{1}{4} \left( \frac{1 - \tau}{1 - z} - \frac{\tau}{1 + z} \right)^2} }.
+	%$$
+	%The estimation procedure remains unchanged and is applied sequentially for increasing sample sizes $T = 4, \ldots, 30$.
+	%
+	%Figure~\ref{fig:superposed_3x3} displays the estimation paths for the parameters $\hat{l}(T)$, $\hat{a}(T)$, and $\hat{s}(T)$ for each combination of $\tau$ and $z$, with true parameter values $(L, A, S) = (22, 1, 10)$ indicated by dashed horizontal lines.
+	%
+	%\begin{figure}[htbp]
+	%\centering
+	%\includegraphics[width=0.95\linewidth]{fig3_4_superposed_3x3.pdf}
+	%\caption{Estimation trajectories $T \mapsto \hat{l}(T)$ (left column), $\hat{a}(T)$ (middle column), and $\hat{s}(T)$ (right column) under asymmetric Laplace noise generated from $f_{\tau, b}(x) \propto \exp(-\rho_\tau(x / b))$, with skewness $z \in \{-0.9, -0.5, 0, 0.5, 0.9\}$ and fixed signal-to-noise ratio $\mathrm{SNR} = 1000$. Each row corresponds to a quantile level $\tau \in \{0.25, 0.5, 0.75, 0.95\}$. Colored lines track estimates as the sample size increases from $T=4$ to $T=30$. True parameter values $(L, A, S) = (22, 1, 10)$ are shown as horizontal dashed lines for reference.}
+	%\label{fig:superposed_3x3}
+	%\end{figure}
+	%To ensure comparability, we reuse the variance calibration method described above. Figure~\ref{fig:fig3-4-superposed} shows the resulting trajectories, where each row corresponds to a quantile level and each column to one of the estimated parameters.
+	%
+	%\begin{figure}[htbp]
+	%  \centering
+	%  \includegraphics[width=0.95\textwidth]{fig3_4_superposed_3x3_2.pdf}
+	%  \caption{Estimation paths \( T \mapsto \hat{l}(T) \), \( \hat{a}(T) \), and \( \hat{s}(T) \) under a general asymmetric Laplace noise model with skewness parameter \( z \in \{-0.9, -0.5, 0, 0.5, 0.9\} \) and fixed signal-to-noise ratio \( \mathrm{SNR} = 1000 \). Rows correspond to quantile levels \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \), columns correspond to estimated parameters. True parameter values \( (L, A, S) = (22, 1, 10) \) are indicated by dashed horizontal lines.}
+	%  \label{fig:fig3-4-superposed}
+	%\end{figure}
+	
+	{\color{blue}
+		\section{Stability Analysis}
+		\label{sec:stability-analysis}
+		
+		This section investigates the temporal stability of the estimated peak location when the signal-to-noise ratio is reduced. We focus on the $\tau$-aligned asymmetric Laplace noise introduced in Section~\ref{sec:general_AL_intro} and examine how the estimated peak location evolves as new observations become available. In particular, we compare the stability of the estimation paths across different quantile levels and assess the effect of a lower signal-to-noise ratio on the ability to recover the true peak location.
+		
+		\subsection{Low Signal-to-Noise Performance}
+		\label{subsec:low-snr}
+		
+		To evaluate the robustness of the quantile-based estimator under a lower signal-to-noise ratio, we consider the signal-plus-noise model
+		\[
+		I(t)
+		=
+		A\exp\left(-\frac{(t-L)^2}{S^2}\right)+e(t),
+		\qquad t=1,\ldots,35,
+		\]
+		with
+		\[
+		A=1,\qquad L=22,\qquad S=10.
+		\]
+		The noise $e(t)$ follows the $\tau$-aligned asymmetric Laplace distribution introduced in Section~\ref{sec:general_AL_intro}, with density
+		\[
+		f_{\tau,b}(x)
+		=
+		\frac{\tau(1-\tau)}{b}
+		\exp\left(-\frac{1}{b}\rho_\tau(x)\right),
+		\]
+		where
+		\[
+		\rho_\tau(x)
+		=
+		x\left(\tau-\mathbf{1}_{\{x<0\}}\right).
+		\]
+		For each
+		\[
+		\tau\in\{0.25,0.5,0.75,0.95\},
+		\]
+		the scale parameter $b$ is calibrated so that
+		\[
+		\operatorname{Var}(e(t))
+		=
+		\left(\frac{A}{\mathrm{SNR}}\right)^2,
+		\]
+		with
+		\[
+		\mathrm{SNR}=40.
+		\]
+		Using the variance of the $\tau$-aligned asymmetric Laplace distribution gives
+		\[
+		b
+		=
+		\frac{A}{\mathrm{SNR}}
+		\frac{\tau(1-\tau)}
+		{\sqrt{\tau^2+(1-\tau)^2}}.
+		\]
+		
+		For each quantile level $\tau$, we compute the estimation path
+		\[
+		T\mapsto\hat{l}(T),
+		\qquad T=4,\ldots,35,
+		\]
+		where $(\hat{l}(T),\hat{a}(T),\hat{s}(T))$ is obtained by minimizing the empirical quantile loss over the candidate peak locations and scale parameters, with the amplitude re-estimated as the weighted $\tau$-quantile described in Section~\ref{sec:weighted_median_method}.
+		
+		To characterize the stability of the estimated peak location, we define an entry time as the earliest observation horizon $T_{\mathrm{entry}}$ such that all subsequent estimates remain within a prescribed tolerance of one another. Specifically, for a tolerance $\varepsilon=4$, we define
+		\[
+		T_{\mathrm{entry}}
+		=
+		\min
+		\left\{
+		T:
+		\max_{u\geq T}\hat{l}(u)
+		-
+		\min_{u\geq T}\hat{l}(u)
+		\leq \varepsilon
+		\right\}.
+		\]
+		This definition measures the earliest point from which the remaining estimation path remains confined to a stable range.
+		
+		Figure~\ref{fig:lhat_paths_snr40} displays the resulting estimation paths for the four quantile levels. The horizontal dashed line indicates the true peak location $L=22$. The comparison illustrates how the temporal stability of the estimated peak location depends on the quantile level when the signal-to-noise ratio is reduced.
+		
+		The corresponding entry times are reported in Table~\ref{tab:entry_times_snr40}. Smaller values of $T_{\mathrm{entry}}$ indicate that the estimator reaches a stable regime earlier, whereas larger values indicate that additional observations are required before the estimated peak location becomes stable.
+		
+		\begin{figure}[htbp]
+			\centering
+			\includegraphics[width=\textwidth]{fig_lhat_paths_snr40_tau.pdf}
+			\caption{Estimation paths $T\mapsto\hat{l}(T)$ under a low signal-to-noise ratio (SNR = 40), for quantile levels $\tau\in\{0.25,0.5,0.75,0.95\}$. The horizontal dashed line indicates the true peak location $L=22$.}
+			\label{fig:lhat_paths_snr40}
+		\end{figure}
+		
+		\begin{table}[htbp]
+			\caption{Entry times $T_{\mathrm{entry}}$ for the estimated peak location under SNR = 40 and different quantile levels.}
+			\label{tab:entry_times_snr40}
+			\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}c|cccc}
+				\toprule
+				& $\tau=0.25$ & $\tau=0.5$ & $\tau=0.75$ & $\tau=0.95$ \\
+				\midrule\addlinespace[2.5pt]
+				$T_{\mathrm{entry}}$ & 17 & 17 & 11 & 10 \\
+				\bottomrule
+			\end{tabular*}
+	\end{table}}
+	
+	%\section{Stability Analysis}
+	%\label{sec:stability-analysis}
+	%
+	%This section investigates the temporal stability of peak estimators obtained by minimizing different loss functions. We begin by analyzing the performance of the quantile loss criterion under high noise scenarios, tracking the evolution of the estimated peak location as new data points become available. We then complement this analysis by introducing a likelihood-based loss derived from the asymmetric Laplace distribution. This second approach enables a probabilistic assessment of stability by incorporating distributional assumptions on the residuals. Together, these perspectives provide a robust evaluation of how estimation paths behave under varying levels of noise and asymmetry.
+	%
+	%\subsection{Low Signal-to-Noise Performance}
+	%\label{subsec:low-snr}
+	%
+	%To evaluate the robustness of the quantile-based estimator under high noise, we simulate estimation paths under a signal-to-noise ratio of $\text{SNR} = 40$. We vary both the quantile level $\tau \in \{0.25, 0.5, 0.75, 0.95\}$ and the asymmetry parameter $z \in \{-0.9, -0.5, 0, 0.5, 0.9\}$. For each configuration, we compute the path $T \mapsto \hat{l}(T)$ as the number of observations $T$ increases from 4 to 35. Entry and exit times into a stable region are detected using thresholds $\varepsilon = 4$ and $\varepsilon' = 0$, respectively.
+	%
+	%Figure~\ref{fig:lhat_paths_snr40} shows the estimation paths $\hat{l}(T)$ for each $\tau$ and $z$, with the true peak location $L = 22$ marked by a horizontal dashed line. The corresponding entry and exit times are reported in Table~\ref{tab:entry_exit_times}.
+	%
+	%\begin{figure}[htbp]
+	%    \centering
+	%    \includegraphics[width=\textwidth]{fig_lhat_paths_snr40_tau_z_overlay.pdf}
+	%    \caption{Estimation paths \( T \mapsto \hat{l}(T) \) under low signal-to-noise ratio (SNR = 40), for quantile levels \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \). Each panel corresponds to a different value of \( \tau \), and each curve within a panel represents a different asymmetry parameter \( z \in \{-0.9, -0.5, 0, 0.5, 0.9\} \). The horizontal dashed line indicates the true peak location \( L = 22 \).}
+	%    \label{fig:lhat_paths_snr40}
+	%\end{figure}
+	%
+	%\begin{table}[H]
+	%\caption{Entry ($T_{\text{entry}}$) and exit ($T_{\text{exit}}$) times for each $(\tau, z)$ combination under SNR = 40.}
+	%\label{tab:entry_exit_times}
+	%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}c|cccc|cccc}
+	%\toprule
+	%$z$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
+	%      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
+	%\midrule\addlinespace[2.5pt]
+	%-0.9 & 10.0 & 10.0 & 10.0 & 10.0 & 21.0 & 20.0 & 16.0 & 15.0 \\ 
+	%-0.5 & 17.0 & 15.0 & 11.0 & 10.0 & 21.0 & 20.0 & 16.0 & 15.0 \\ 
+	%0.0 & 18.0 & 17.0 & 11.0 & 10.0 & 20.0 & 20.0 & 22.0 & 15.0 \\ 
+	%0.5 & 17.0 & 17.0 & 11.0 & 10.0 & 22.0 & 25.0 & 23.0 & 28.0 \\ 
+	%0.9 & 17.0 & 15.0 & 11.0 & 6.0 & 22.0 & 25.0 & 23.0 & 28.0 \\ 
+	%\bottomrule
+	%\end{tabular*}
+	%\end{table}
+	%
+	%\subsection{Stability Analysis Based on Log-Likelihood Loss}
+	%\label{subsec:logloss-entry-exit}
+	%
+	%To complement our quantile loss analysis, we now evaluate stability using a log-likelihood-based criterion derived from the asymmetric Laplace density introduced in Section~\ref{sec:general_AL_intro}. Specifically, we consider the negative log-likelihood objective:
+	%
+	%$$
+	%\mathcal{L}_{\tau,z,b}(I; a, l, s) = -\sum_{t=1}^{T} \log f_{\tau,z,b}\left( I(t) - a \exp\left( -\frac{(t - l)^2}{s^2} \right) \right),
+	%$$
+	%
+	%where $f_{\tau,z,b}$ denotes the asymmetric Laplace density parameterized by quantile level $\tau$, asymmetry $z$, and scale $b$.
+	%
+	%This likelihood-based loss function directly incorporates the assumed noise distribution, offering a probabilistically motivated alternative to the piecewise linear quantile loss. Minimizing $\mathcal{L}_{\tau,z,b}$ over $(a, l, s)$ provides a maximum likelihood estimate of the parameters under the asymmetric Laplace error model.
+	%
+	%As in the previous section, we use the resulting estimator $\hat{l}(T)$ to track the estimated peak location over time. Entry time $T_{\text{entry}}$ is defined as the earliest time at which the estimation path stabilizes within a fixed window, and exit time $T_{\text{exit}}$ marks the point at which it departs from that window. We apply this procedure across multiple values of $\tau \in \{0.25, 0.5, 0.75, 0.95\}$ and asymmetry levels $z \in \{-0.9, -0.5, 0, 0.5, 0.9\}$, and report the results under two regimes: 1) Moderate Noise: Signal-to-noise ratio (SNR) fixed at 1000, 2) High Noise: SNR reduced to 40.
+	%
+	%\vspace{1ex}
+	%
+	%\begin{table}[htbp]
+	%\caption{Entry and exit times based on log-likelihood loss, for each \( (\tau, z) \) under SNR = 1000.}
+	%\label{tab:logloss_entry_exit_snr1000}
+	%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
+	%\toprule
+	%$z$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
+	%      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
+	%\midrule\addlinespace[2.5pt]
+	%-0.9 & 10.0 & 9.0 & 10.0 & 10.0 & 20.0 & 15.0 & 14.0 & 14.0 \\ 
+	%-0.5 & 11.0 & 10.0 & 10.0 & 10.0 & 18.0 & 17.0 & 14.0 & 14.0 \\ 
+	%0.0 & 15.0 & 13.0 & 10.0 & 10.0 & 19.0 & 17.0 & 14.0 & 14.0 \\ 
+	%0.5 & 15.0 & 13.0 & 11.0 & 10.0 & 19.0 & 17.0 & 14.0 & 14.0 \\ 
+	%0.9 & 15.0 & 13.0 & 9.0 & 7.0 & 19.0 & 17.0 & 11.0 & 22.0 \\ 
+	%\bottomrule
+	%\end{tabular*}
+	%\end{table}
+	%
+	%\begin{table}[htbp]
+	%\caption{Entry and exit times based on log-likelihood loss, for each \( (\tau, z) \) under SNR = 40.}
+	%\label{tab:logloss_entry_exit_snr40}
+	%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
+	%\toprule
+	%$z$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
+	%      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
+	%\midrule\addlinespace[2.5pt]
+	%-0.9 & 10.0 & 10.0 & 10.0 & 10.0 & 21.0 & 20.0 & 16.0 & 15.0 \\ 
+	%-0.5 & 17.0 & 15.0 & 11.0 & 10.0 & 21.0 & 20.0 & 16.0 & 15.0 \\ 
+	%0.0 & 18.0 & 17.0 & 11.0 & 10.0 & 20.0 & 20.0 & 22.0 & 15.0 \\ 
+	%0.5 & 17.0 & 17.0 & 11.0 & 10.0 & 22.0 & 25.0 & 23.0 & 28.0 \\ 
+	%0.9 & 17.0 & 15.0 & 11.0 & 6.0 & 22.0 & 25.0 & 23.0 & 28.0 \\ 
+	%\bottomrule
+	%\end{tabular*}
+	%\end{table}
+	%
+	%\section{Real-World Application: COVID-19 Case Study}
+	%\label{sec:covid-real-data}
+	%
+	%We now demonstrate the application of our quantile-based peak estimation framework on real-world data. We focus on the daily confirmed COVID-19 cases in China, France, and Germany. Figure~\ref{fig:covid-1x3} displays the daily case series for these three countries. For each country, we analyze the sequence $T \mapsto \hat{l}(T)$ for various quantile levels $\tau \in \{0.25, 0.5, 0.75, 0.95\}$, using quantile loss minimization over a Gaussian-shaped parametric model (parametrized 
+	%only by \(\tau\)). We identify the entry and exit times into the region where $\hat{l}(T)$ stabilizes, based on thresholds $\varepsilon$ and $\varepsilon'$ specific to each country, and 
+	%the parameter \(\tau\). 
+	%
+	%\begin{figure}[H]
+	%  \centering
+	%  \includegraphics[width=\textwidth]{covid_series_1x3.pdf}
+	%  \caption{Daily confirmed COVID-19 cases in China, France, and Germany (left to right).}
+	%  \label{fig:covid-1x3}
+	%\end{figure}
+	%
+	%\subsection{China}
+	%\label{subsec:china}
+	%
+	%We analyze the first wave of the COVID-19 epidemic in China, using the first 60 daily new case counts from January 22 to March 22, 2020. The smoothing parameter is set to $h = 35$, and the thresholds are $\varepsilon = 3$ and $\varepsilon' = 0$. The results for the four quantile levels are reported below. The estimated peak location sequences for $\tau = 0.25$, $0.5$, $0.75$, and $0.95$ are shown in Table~\ref{tab:china_tau}.
+	%
+	%\begin{landscape}
+	%\begin{table}[htbp]
+	%\caption{Estimated peak location $\hat{l}(T)$ for COVID-19 in China using quantile level \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \)}
+	%\label{tab:china_tau}
+	%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrrrrrrrrrrrrrrr}
+	%\toprule
+	%% \midrule
+	%\addlinespace[2.5pt]
+	%\multicolumn{17}{c}{\textbf{$\tau = 0.25, T_{entry} = 15, T_{exit} = 27, \varepsilon = 3, \varepsilon' = 0$}} \\
+	%\addlinespace[2.5pt]
+	%\midrule
+	%$T$ & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 & 18 & 19 \\
+	%$\hat{l}(T)$ & 6 & 5 & 35 & 14 & 11 & 11 & 11 & 11 & 14 & 14 & 21 & 18 & 15 & 15 & 15 & 15 \\
+	%$T$ & 20 & 21 & 22 & 23 & 24 & 25 & 26 & 27 & 28 & 29 & 30 & 31 & 32 & 33 & 34 & 35 \\
+	%$\hat{l}(T)$ & 15 & 15 & 15 & 15 & 15 & 15 & 15 & 16 & 16 & 16 & 16 & 16 & 16 & 16 & 16 & 16 \\
+	%\midrule\addlinespace[2.5pt]
+	%\multicolumn{17}{c}{\textbf{$\tau = 0.5, T_{entry} = 13, T_{exit} = 30, \varepsilon = 3, \varepsilon' = 0$}} \\
+	%\addlinespace[2.5pt]
+	%\midrule
+	%$T$ & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 & 18 & 19 \\
+	%$\hat{l}(T)$ & 6 & 5 & 35 & 8 & 9 & 11 & 11 & 12 & 14 & 15 & 18 & 17 & 16 & 16 & 15 & 16 \\
+	%$T$ & 20 & 21 & 22 & 23 & 24 & 25 & 26 & 27 & 28 & 29 & 30 & 31 & 32 & 33 & 34 & 35 \\
+	%$\hat{l}(T)$ & 15 & 15 & 15 & 16 & 16 & 17 & 17 & 18 & 18 & 18 & 17 & 17 & 17 & 17 & 17 & 17 \\
+	%\midrule\addlinespace[2.5pt]
+	%\multicolumn{17}{c}{\textbf{$\tau = 0.75, T_{entry} = 23, T_{exit} = 26, \varepsilon = 3, \varepsilon' = 0$}} \\
+	%\addlinespace[2.5pt]
+	%\midrule
+	%$T$ & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 & 18 & 19 \\
+	%$\hat{l}(T)$ & 6 & 5 & 35 & 8 & 7 & 8 & 10 & 13 & 14 & 16 & 24 & 18 & 17 & 16 & 15 & 15 \\
+	%$T$ & 20 & 21 & 22 & 23 & 24 & 25 & 26 & 27 & 28 & 29 & 30 & 31 & 32 & 33 & 34 & 35 \\
+	%$\hat{l}(T)$ & 15 & 15 & 35 & 20 & 20 & 20 & 18 & 18 & 18 & 18 & 18 & 18 & 18 & 18 & 18 & 18 \\
+	%\midrule\addlinespace[2.5pt]
+	%\multicolumn{17}{c}{\textbf{$\tau = 0.95, T_{entry} = 28, T_{exit} = 31, \varepsilon = 3, \varepsilon' = 0$}} \\
+	%\addlinespace[2.5pt]
+	%\midrule
+	%$T$ & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 & 18 & 19 \\
+	%$\hat{l}(T)$ & 6 & 5 & 35 & 9 & 7 & 8 & 9 & 10 & 11 & 15 & 29 & 29 & 15 & 14 & 14 & 15 \\
+	%$T$ & 20 & 21 & 22 & 23 & 24 & 25 & 26 & 27 & 28 & 29 & 30 & 31 & 32 & 33 & 34 & 35 \\
+	%$\hat{l}(T)$ & 15 & 14 & 35 & 35 & 35 & 35 & 35 & 26 & 22 & 21 & 21 & 20 & 20 & 20 & 20 & 20 \\
+	%\bottomrule
+	%\end{tabular*}
+	%\end{table}
+	%\end{landscape}
+	%
+	%\subsection{France}
+	%\label{subsec:france}
+	%
+	%Next, we apply the estimation method to daily COVID-19 cases in France, using ECDC data from January 15 to May 31, 2020. The analysis covers $T \in [50, 89]$, with a smoothing window of $h = 120$. We use thresholds $\varepsilon = 5$ and $\varepsilon' = 1$ to identify the stable peak zone. Results for the four values of $\tau$ are presented below. The estimated peak location sequences for $\tau = 0.25$, $0.5$, $0.75$, and $0.95$ are reported in Table~\ref{tab:france_tau}.
+	%
+	%\begin{landscape}
+	%\begin{table}[htbp]
+	%\caption{Estimated peak location $\hat{l}(T)$ for COVID-19 in France using quantile level \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \)}
+	%\label{tab:france_tau}
+	%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrrrrrrrrrrrrrrrrrrr}
+	%\toprule
+	%% \midrule
+	%\addlinespace[2.5pt]
+	%\multicolumn{21}{c}{\textbf{$\tau = 0.25, T_{entry} = 85, T_{exit} = 86, \varepsilon = 5, \varepsilon' = 1$}} \\
+	%\addlinespace[2.5pt]
+	%\midrule
+	%$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+	%$\hat{l}(T)$ & 63 & 61 & 120 & 120 & 56 & 119 & 96 & 71 & 83 & 71 & 72 & 67 & 65 & 66 & 66 & 66 & 74 & 72 & 72 & 69 \\
+	%$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
+	%$\hat{l}(T)$ & 69 & 72 & 81 & 82 & 90 & 92 & 76 & 80 & 89 & 88 & 75 & 79 & 83 & 76 & 76 & 80 & 82 & 82 & 82 & 82 \\
+	%\midrule\addlinespace[2.5pt]
+	%\multicolumn{21}{c}{\textbf{$\tau = 0.5, T_{entry} = 82, T_{exit} = 86, \varepsilon = 5, \varepsilon' = 1$}} \\
+	%\addlinespace[2.5pt]
+	%\midrule
+	%$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+	%$\hat{l}(T)$ & 49 & 54 & 88 & 72 & 54 & 120 & 58 & 60 & 120 & 87 & 108 & 71 & 69 & 77 & 67 & 72 & 73 & 71 & 73 & 70 \\
+	%$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
+	%$\hat{l}(T)$ & 74 & 78 & 78 & 83 & 88 & 90 & 88 & 85 & 90 & 86 & 85 & 86 & 83 & 80 & 79 & 79 & 80 & 80 & 81 & 80 \\
+	%\midrule\addlinespace[2.5pt]
+	%\multicolumn{21}{c}{\textbf{$\tau = 0.75, T_{entry} = 80, T_{exit} = 87, \varepsilon = 5, \varepsilon' = 1$}} \\
+	%\addlinespace[2.5pt]
+	%\midrule
+	%$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+	%$\hat{l}(T)$ & 48 & 51 & 120 & 120 & 120 & 120 & 120 & 59 & 64 & 65 & 87 & 68 & 66 & 81 & 73 & 70 & 83 & 83 & 72 & 72 \\
+	%$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
+	%$\hat{l}(T)$ & 120 & 89 & 78 & 84 & 84 & 86 & 85 & 83 & 120 & 87 & 83 & 81 & 81 & 81 & 80 & 79 & 79 & 81 & 81 & 81 \\
+	%\midrule\addlinespace[2.5pt]
+	%\multicolumn{21}{c}{\textbf{$\tau = 0.95, T_{entry} = 85, T_{exit} = 87, \varepsilon = 5, \varepsilon' = 1$}} \\
+	%\addlinespace[2.5pt]
+	%\midrule
+	%$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+	%$\hat{l}(T)$ & 48 & 51 & 56 & 106 & 59 & 120 & 120 & 69 & 59 & 60 & 63 & 63 & 64 & 67 & 67 & 70 & 94 & 87 & 77 & 70 \\
+	%$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
+	%$\hat{l}(T)$ & 120 & 120 & 120 & 120 & 79 & 76 & 76 & 76 & 89 & 89 & 89 & 86 & 86 & 86 & 85 & 83 & 80 & 78 & 79 & 79 \\
+	%\bottomrule
+	%\end{tabular*}
+	%\end{table}
+	%\end{landscape}
+	%
+	%\subsection{Germany}
+	%\label{subsec:germany}
+	%
+	%Finally, we consider COVID-19 daily cases in Germany from January 28 to July 5, 2020. To align the peak location with day $t = 61$, we index the data starting on January 28. We analyze $T \in [40, 75]$ with a smoothing window of $h = 160$. Due to the more complex shape of the infection curve, we adopt larger thresholds: $\varepsilon = 15$ and $\varepsilon' = 2$. The peak estimation results for the four quantile levels are summarized below. Table~\ref{tab:germany_tau} displays the estimation results for $\tau = 0.25$, $0.5$, $0.75$, and $0.95$.
+	%
+	%\begin{landscape}
+	%\begin{table}[htbp]
+	%\caption{Estimated peak location $\hat{l}(T)$ for COVID-19 in Germany using quantile level \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \)}
+	%\label{tab:germany_tau}
+	%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrrrrrrrrrrrrrrrrr}
+	%\toprule
+	%% \midrule
+	%\addlinespace[2.5pt]
+	%\multicolumn{19}{c}{\textbf{$\tau = 0.25, T_{entry} = 61, T_{exit} = 70, \varepsilon = 15, \varepsilon' = 2$}} \\
+	%\addlinespace[2.5pt]
+	%\midrule
+	%$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+	%$\hat{l}(T)$ & 160 & 45 & 42 & 41 & 44 & 47 & 160 & 88 & 48 & 160 & 54 & 52 & 51 & 51 & 110 & 160 & 96 & 96 \\
+	%$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+	%$\hat{l}(T)$ & 56 & 56 & 78 & 71 & 60 & 61 & 62 & 62 & 68 & 75 & 72 & 70 & 65 & 65 & 65 & 66 & 66 & 66 \\
+	%\midrule\addlinespace[2.5pt]
+	%\multicolumn{19}{c}{\textbf{$\tau = 0.5, T_{entry} = 59, T_{exit} = 67, \varepsilon = 15, \varepsilon' = 2$}} \\
+	%\addlinespace[2.5pt]
+	%\midrule
+	%$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+	%$\hat{l}(T)$ & 159 & 40 & 40 & 46 & 42 & 46 & 160 & 87 & 64 & 74 & 68 & 58 & 51 & 160 & 160 & 102 & 73 & 72 \\
+	%$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+	%$\hat{l}(T)$ & 56 & 63 & 74 & 71 & 62 & 61 & 61 & 61 & 63 & 65 & 66 & 66 & 66 & 64 & 64 & 65 & 66 & 66 \\
+	%\midrule\addlinespace[2.5pt]
+	%\multicolumn{19}{c}{\textbf{$\tau = 0.75, T_{entry} = 56, T_{exit} = 66, \varepsilon = 15, \varepsilon' = 2$}} \\
+	%\addlinespace[2.5pt]
+	%\midrule
+	%$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+	%$\hat{l}(T)$ & 160 & 40 & 40 & 44 & 42 & 47 & 160 & 144 & 54 & 106 & 60 & 57 & 52 & 160 & 160 & 160 & 55 & 56 \\
+	%$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+	%$\hat{l}(T)$ & 56 & 61 & 66 & 67 & 66 & 64 & 60 & 62 & 64 & 64 & 65 & 65 & 65 & 65 & 64 & 65 & 66 & 66 \\
+	%\midrule\addlinespace[2.5pt]
+	%\multicolumn{19}{c}{\textbf{$\tau = 0.95, T_{entry} = 57, T_{exit} = 73, \varepsilon = 15, \varepsilon' = 2$}} \\
+	%\addlinespace[2.5pt]
+	%\midrule
+	%$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+	%$\hat{l}(T)$ & 160 & 50 & 43 & 41 & 41 & 43 & 53 & 53 & 53 & 53 & 54 & 54 & 54 & 160 & 160 & 160 & 71 & 55 \\
+	%$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+	%$\hat{l}(T)$ & 53 & 55 & 57 & 58 & 58 & 57 & 58 & 59 & 60 & 61 & 61 & 61 & 61 & 61 & 61 & 64 & 66 & 66 \\
+	%\bottomrule
+	%\end{tabular*}
+	%\end{table}
+	%\end{landscape}
+	%
+	%\subsection{Comparison Across Quantile Levels}
+	%
+	%To compare the performance of different quantile levels, we compute the value of the quantile loss-based objective function at the final time point $T_{\max}$ for each country. This allows us to identify the quantile level $\tau$ that best fits the observed trajectory. The best-performing quantiles (i.e., the ones minimizing the objective function at $T_{\max}$) are:
+	%\begin{itemize}
+	%  \item China: $\tau = 0.25$ at $T = 35$,
+	%  \item France: $\tau = 0.95$ at $T = 89$,
+	%  \item Germany: $\tau = 0.95$ at $T = 75$.
+	%\end{itemize}
+	%These values indicate that different regions of the conditional distribution may best capture the epidemic dynamics in different countries, with higher quantile levels offering better fits for France and Germany, while lower quantiles provide better performance for China.
+	
+	%\subsection{Stability Analysis Using Asymmetric Laplace Log-Likelihood}
+	%\label{subsec:asym-laplace-stability}
+	%
+	%To further investigate the robustness of our peak location estimates, we extend the stability analysis introduced in Section~\ref{sec:stability-analysis} to real COVID-19 case data. Specifically, we replace the quantile loss objective by the asymmetric Laplace-based objective
+	%\[
+	%-\log(f_{\tau,z,b}(e)) = -\log\left(\frac{\tau (1 - z) + (1 - \tau)(1 + z)}{2b}\right) + \frac{|e|}{b}\left[(1 + z)\mathbf{1}_{\{e < 0\}} + (1 - z)\mathbf{1}_{\{e \ge 0\}}\right],
+	%\]
+	%where \( e = I(t) - a \cdot \exp\left(-\frac{(t - l)^2}{s^2}\right) \), and \( (\tau, z, b) \) parameterize the asymmetric Laplace distribution.
+	%
+	%Using the real daily case data for China, France, and Germany, we estimate the entry and exit times into the stable region of the estimated peak location path \( T \mapsto \hat{l}(T) \) across combinations of quantile levels \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \) and asymmetry parameters \( z \in \{-0.9, -0.5, 0, 0.5, 0.9\} \). The scale parameter is fixed to \( b = 1 \), and thresholds \( \varepsilon \), \( \varepsilon' \) are set to country-specific values determined by the complexity of each epidemic curve.
+	%
+	%The following tables summarize the entry and exit times computed from the log-likelihood loss for each country:
+	%
+	%\begin{table}[htbp]
+	%\caption{Entry and exit times based on $-\log(f_{\tau,z,b}(e))$ objective, for each \( (\tau, z) \) for China, using thresholds $\varepsilon=3$ and $\varepsilon'=0$.}
+	%\label{tab:logloss_entry_exit_china}
+	%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
+	%\toprule
+	%$z$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
+	%      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
+	%\midrule\addlinespace[2.5pt]
+	%-0.9 & 29.0 & 19.0 & 19.0 & 25.0 & 32.0 & 33.0 & 30.0 & 33.0 \\ 
+	%-0.5 & 29.0 & 19.0 & 14.0 & 24.0 & 35.0 & 33.0 & 27.0 & 27.0 \\ 
+	%0.0 & 24.0 & 22.0 & 14.0 & 13.0 & 30.0 & 31.0 & 30.0 & 28.0 \\ 
+	%0.5 & 29.0 & 17.0 & 13.0 & 13.0 & 33.0 & 33.0 & 34.0 & 19.0 \\ 
+	%0.9 & 29.0 & 14.0 & 13.0 & 21.0 & 35.0 & 24.0 & 16.0 & 21.0 \\ 
+	%\bottomrule
+	%\end{tabular*}
+	%\end{table}
+	%
+	%\begin{table}[htbp]
+	%\caption{Entry and exit times based on $-\log(f_{\tau,z,b}(e))$ objective, for each \( (\tau, z) \) for France, using thresholds $\varepsilon=5$ and $\varepsilon'=1$.}
+	%\label{tab:logloss_entry_exit_france}
+	%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
+	%\toprule
+	%$z$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
+	%      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
+	%\midrule\addlinespace[2.5pt]
+	%-0.9 & 87.0 & 81.0 & 77.0 & 78.0 & 88.0 & 87.0 & 84.0 & 86.0 \\ 
+	%-0.5 & 87.0 & 81.0 & 74.0 & 85.0 & 88.0 & 87.0 & 81.0 & 86.0 \\ 
+	%0.0 & 88.0 & 81.0 & 73.0 & 87.0 & 89.0 & 86.0 & 86.0 & 87.0 \\ 
+	%0.5 & 80.0 & 84.0 & 74.0 & 84.0 & 88.0 & 85.0 & 84.0 & 87.0 \\ 
+	%0.9 & 77.0 & 85.0 & 84.0 & 86.0 & 86.0 & 85.0 & 84.0 & 86.0 \\ 
+	%\bottomrule
+	%\end{tabular*}
+	%\end{table}
+	%
+	%\begin{table}[htbp]
+	%\caption{Entry and exit times based on $-\log(f_{\tau,z,b}(e))$ objective, for each \( (\tau, z) \) for Germany, using thresholds $\varepsilon=15$ and $\varepsilon'=2$.}
+	%\label{tab:logloss_entry_exit_germany}
+	%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
+	%\toprule
+	%$z$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
+	%      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
+	%\midrule\addlinespace[2.5pt]
+	%-0.9 & 54.0 & 51.0 & 51.0 & 50.0 & 70.0 & 69.0 & 68.0 & 67.0 \\ 
+	%-0.5 & 55.0 & 53.0 & 51.0 & 50.0 & 73.0 & 72.0 & 67.0 & 66.0 \\ 
+	%0.0 & 55.0 & 51.0 & 53.0 & 53.0 & 74.0 & 68.0 & 73.0 & 61.0 \\ 
+	%0.5 & 54.0 & 55.0 & 54.0 & 53.0 & 69.0 & 70.0 & 71.0 & 72.0 \\ 
+	%0.9 & 53.0 & 55.0 & 75.0 & 75.0 & 63.0 & 71.0 & 75.0 & 75.0 \\ 
+	%\bottomrule
+	%\end{tabular*}
+	%\end{table}
+	%
+	%\subsection{Entry and Exit Times Using the GAL Loss}
+	%\label{subsec:gal-loss-entry-exit}
+	%
+	%We now investigate the stability of the estimated peak location using an alternative loss function derived from the Generalized Asymmetric Laplace (GAL) distribution. Specifically, we consider the loss function
+	%\[
+	%u \mapsto \frac{\left(z - \frac{\lambda u}{b}\right)^2}{2\lambda} + \frac{|u|}{b},
+	%\]
+	%where \( z = 1 - 2\tau \) and \( \lambda > 0 \) is a tuning parameter. This formulation generalizes the standard asymmetric Laplace-based log-likelihood used in our earlier peak estimation procedure, and as \( \lambda \to 0 \), it converges to a scaled version of the Laplace loss \( \rho_\tau(u) / b \), as formalized in Proposition~\ref{prop:adn}.
+	%
+	%This robust loss penalizes deviations asymmetrically and allows for heavier or lighter tails depending on the value of \( \lambda \), providing additional flexibility in modeling the noise structure in real-world epidemiological data.
+	%
+	%For each country (China, France, and Germany), we use the same trajectory of daily confirmed cases as in previous sections, and apply the modified estimation procedure based on the GAL loss. For each quantile level \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \), we evaluate three values of \( \lambda \in \{1, 0.5, 0.1\} \), which control the departure from the asymmetric Laplace limit. Entry and exit times are estimated by analyzing the stability of the estimated peak location \( \hat{\ell}(T) \), as in our earlier definition, using thresholds adapted to each country's data characteristics. 
+	%
+	%Tables~\ref{tab:gal-entry-exit-china}–\ref{tab:gal-entry-exit-germany} report the estimated entry and exit times for China, France, and Germany respectively. 
+	%
+	%\begin{table}[htbp]
+	%\caption{Entry and exit times based on GAL loss, for each \( (\tau, \lambda) \) for China, using thresholds $\varepsilon=3$ and $\varepsilon'=0$.}
+	%\label{tab:gal-entry-exit-china}
+	%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
+	%\toprule
+	%$\lambda$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
+	%      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
+	%\midrule\addlinespace[2.5pt]
+	%0.1 & 22.0 & 22.0 & 23.0 & 27.0 & 35.0 & 34.0 & 29.0 & 29.0 \\ 
+	%0.5 & 22.0 & 22.0 & 23.0 & 27.0 & 35.0 & 34.0 & 29.0 & 29.0 \\ 
+	%1.0 & 22.0 & 22.0 & 23.0 & 27.0 & 35.0 & 34.0 & 29.0 & 29.0 \\ 
+	%\bottomrule
+	%\end{tabular*}
+	%\end{table}
+	%
+	%\begin{table}[htbp]
+	%\caption{Entry and exit times based on GAL loss, for each \( (\tau, \lambda) \) for France, using thresholds $\varepsilon=5$ and $\varepsilon'=1$.}
+	%\label{tab:gal-entry-exit-france}
+	%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
+	%\toprule
+	%$\lambda$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
+	%      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
+	%\midrule\addlinespace[2.5pt]
+	%0.1 & 81.0 & 78.0 & 74.0 & 87.0 & 88.0 & 87.0 & 86.0 & 89.0 \\ 
+	%0.5 & 81.0 & 78.0 & 74.0 & 87.0 & 88.0 & 87.0 & 86.0 & 89.0 \\ 
+	%1.0 & 81.0 & 78.0 & 74.0 & 87.0 & 88.0 & 87.0 & 86.0 & 89.0 \\ 
+	%\bottomrule
+	%\end{tabular*}
+	%\end{table}
+	%
+	%\begin{table}[htbp]
+	%\caption{Entry and exit times based on GAL loss, for each \( (\tau, \lambda) \) for Germany, using thresholds $\varepsilon=15$ and $\varepsilon'=2$.}
+	%\label{tab:gal-entry-exit-germany}
+	%\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l|rrrr|rrrr}
+	%\toprule
+	%$\lambda$ & $T_{\text{entry}}^{\tau=0.25}$ & $T_{\text{entry}}^{\tau=0.5}$ & $T_{\text{entry}}^{\tau=0.75}$ & $T_{\text{entry}}^{\tau=0.95}$ &
+	%      $T_{\text{exit}}^{\tau=0.25}$ & $T_{\text{exit}}^{\tau=0.5}$ & $T_{\text{exit}}^{\tau=0.75}$ & $T_{\text{exit}}^{\tau=0.95}$ \\
+	%\midrule\addlinespace[2.5pt]
+	%0.1 & 53.0 & 53.0 & 53.0 & 55.0 & 69.0 & 71.0 & 70.0 & 70.0 \\ 
+	%0.5 & 53.0 & 53.0 & 53.0 & 55.0 & 69.0 & 71.0 & 70.0 & 70.0 \\ 
+	%1.0 & 53.0 & 53.0 & 53.0 & 55.0 & 69.0 & 71.0 & 70.0 & 70.0 \\ 
+	%\bottomrule
+	%\end{tabular*}
+	%\end{table}
+	
+	{\color{blue}
+		\section{Real-World Application: COVID-19 Case Study}
+		\label{sec:covid-real-data}
+		
+		We now demonstrate the application of our quantile-based peak estimation framework to real-world data. We focus on the daily confirmed COVID-19 cases in China, France, and Germany. Figure~\ref{fig:covid-1x3} displays the daily case series for these three countries. For each country, we analyze the sequence $T \mapsto \hat{l}(T)$ for the quantile levels $\tau \in \{0.25,0.5,0.75,0.95\}$, using quantile-loss minimization over the Gaussian-shaped parametric peak model. The candidate peak location is restricted to the currently observed range, $l\in\{1,\ldots,T\}$. We then assess the temporal stabilization of the estimated peak location using the retrospective stabilization criterion introduced in Section~\ref{sec:stability-analysis}. The corresponding stabilization time $T_{\mathrm{entry}}$ is determined separately for each country and quantile level.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=\textwidth]{covid_series_1x3.pdf}
+			\caption{Daily confirmed COVID-19 cases in China, France, and Germany (left to right).}
+			\label{fig:covid-1x3}
+		\end{figure}
+		
+		\subsection{China}
+		\label{subsec:china}
+		
+		We analyze the first wave of the COVID-19 epidemic in China, using the first 60 daily new case counts from January 22 to March 22, 2020. The estimation is performed for observation horizons $T=4,\ldots,35$. For each quantile level $\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the sequence $T\mapsto\hat{l}(T)$ by minimizing the empirical quantile loss over the Gaussian-shaped peak model, with candidate peak locations restricted to $l\in\{1,\ldots,T\}$. Temporal stabilization is assessed using the criterion introduced in Section~\ref{sec:stability-analysis}, with tolerance $\varepsilon=3$. The resulting estimated peak-location sequences are reported in Table~\ref{tab:china_tau}.
+		
+		\begin{landscape}
+			\begin{table}[htbp]
+				\caption{Estimated peak location $\hat{l}(T)$ for COVID-19 in China using quantile levels $\tau\in\{0.25,0.5,0.75,0.95\}$.}
+				\label{tab:china_tau}
+				\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrrrrrrrrrrrrrrr}
+					\toprule
+					\addlinespace[2.5pt]
+					\multicolumn{17}{c}{\textbf{$\tau=0.25,\ T_{\mathrm{entry}}=13,\ \varepsilon=3$}} \\
+					\addlinespace[2.5pt]
+					\midrule
+					$T$ & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 & 18 & 19 \\
+					$\hat{l}(T)$ & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 15 & 15 & 15 & 15 \\
+					$T$ & 20 & 21 & 22 & 23 & 24 & 25 & 26 & 27 & 28 & 29 & 30 & 31 & 32 & 33 & 34 & 35 \\
+					$\hat{l}(T)$ & 15 & 15 & 15 & 15 & 15 & 15 & 15 & 16 & 16 & 16 & 16 & 16 & 16 & 16 & 16 & 16 \\
+					\midrule\addlinespace[2.5pt]
+					\multicolumn{17}{c}{\textbf{$\tau=0.5,\ T_{\mathrm{entry}}=15,\ \varepsilon=3$}} \\
+					\addlinespace[2.5pt]
+					\midrule
+					$T$ & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 & 18 & 19 \\
+					$\hat{l}(T)$ & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 16 & 15 & 16 \\
+					$T$ & 20 & 21 & 22 & 23 & 24 & 25 & 26 & 27 & 28 & 29 & 30 & 31 & 32 & 33 & 34 & 35 \\
+					$\hat{l}(T)$ & 15 & 15 & 15 & 16 & 16 & 17 & 17 & 18 & 18 & 18 & 17 & 17 & 17 & 17 & 17 & 17 \\
+					\midrule\addlinespace[2.5pt]
+					\multicolumn{17}{c}{\textbf{$\tau=0.75,\ T_{\mathrm{entry}}=22,\ \varepsilon=3$}} \\
+					\addlinespace[2.5pt]
+					\midrule
+					$T$ & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 & 18 & 19 \\
+					$\hat{l}(T)$ & 4 & 5 & 6 & 7 & 7 & 8 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 16 & 15 & 15 \\
+					$T$ & 20 & 21 & 22 & 23 & 24 & 25 & 26 & 27 & 28 & 29 & 30 & 31 & 32 & 33 & 34 & 35 \\
+					$\hat{l}(T)$ & 15 & 15 & 18 & 20 & 20 & 20 & 18 & 18 & 18 & 18 & 18 & 18 & 18 & 18 & 18 & 18 \\
+					\midrule\addlinespace[2.5pt]
+					\multicolumn{17}{c}{\textbf{$\tau=0.95,\ T_{\mathrm{entry}}=28,\ \varepsilon=3$}} \\
+					\addlinespace[2.5pt]
+					\midrule
+					$T$ & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 & 18 & 19 \\
+					$\hat{l}(T)$ & 4 & 5 & 6 & 7 & 7 & 8 & 9 & 10 & 11 & 13 & 14 & 15 & 15 & 14 & 14 & 15 \\
+					$T$ & 20 & 21 & 22 & 23 & 24 & 25 & 26 & 27 & 28 & 29 & 30 & 31 & 32 & 33 & 34 & 35 \\
+					$\hat{l}(T)$ & 15 & 14 & 22 & 23 & 24 & 25 & 26 & 26 & 22 & 21 & 21 & 20 & 20 & 20 & 20 & 20 \\
+					\bottomrule
+				\end{tabular*}
+			\end{table}
+		\end{landscape}
+		
+		\subsection{France}
+		\label{subsec:france}
+		
+		Next, we apply the estimation method to daily COVID-19 cases in France, using ECDC data from January 15 to May 31, 2020. The analysis covers observation horizons $T=50,\ldots,89$. For each quantile level $\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the corresponding estimation path $T\mapsto\hat{l}(T)$, with candidate peak locations restricted to $l\in\{1,\ldots,T\}$. Temporal stabilization is assessed using the criterion introduced in Section~\ref{sec:stability-analysis}, with tolerance $\varepsilon=5$. The estimated peak-location sequences are reported in Table~\ref{tab:france_tau}.
+		
+		\begin{landscape}
+			\begin{table}[htbp]
+				\caption{Estimated peak location $\hat{l}(T)$ for COVID-19 in France using quantile levels $\tau\in\{0.25,0.5,0.75,0.95\}$.}
+				\label{tab:france_tau}
+				\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrrrrrrrrrrrrrrrrrrr}
+					\toprule
+					\addlinespace[2.5pt]
+					\multicolumn{21}{c}{\textbf{$\tau=0.25,\ T_{\mathrm{entry}}=85,\ \varepsilon=5$}} \\
+					\addlinespace[2.5pt]
+					\midrule
+					$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+					$\hat{l}(T)$ & 1 & 1 & 1 & 1 & 1 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+					$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
+					$\hat{l}(T)$ & 69 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 75 & 79 & 82 & 76 & 76 & 80 & 82 & 82 & 82 & 82 \\
+					\midrule\addlinespace[2.5pt]
+					\multicolumn{21}{c}{\textbf{$\tau=0.5,\ T_{\mathrm{entry}}=77,\ \varepsilon=5$}} \\
+					\addlinespace[2.5pt]
+					\midrule
+					$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+					$\hat{l}(T)$ & 49 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+					$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
+					$\hat{l}(T)$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 80 & 79 & 79 & 80 & 80 & 81 & 80 \\
+					\midrule\addlinespace[2.5pt]
+					\multicolumn{21}{c}{\textbf{$\tau=0.75,\ T_{\mathrm{entry}}=76,\ \varepsilon=5$}} \\
+					\addlinespace[2.5pt]
+					\midrule
+					$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+					$\hat{l}(T)$ & 48 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+					$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
+					$\hat{l}(T)$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 81 & 81 & 80 & 79 & 79 & 81 & 81 & 81 \\
+					\midrule\addlinespace[2.5pt]
+					\multicolumn{21}{c}{\textbf{$\tau=0.95,\ T_{\mathrm{entry}}=85,\ \varepsilon=5$}} \\
+					\addlinespace[2.5pt]
+					\midrule
+					$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+					$\hat{l}(T)$ & 48 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+					$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
+					$\hat{l}(T)$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 76 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 83 & 80 & 78 & 79 & 79 \\
+					\bottomrule
+				\end{tabular*}
+			\end{table}
+		\end{landscape}
+		
+		\subsection{Germany}
+		\label{subsec:germany}
+		
+		Finally, we consider COVID-19 daily cases in Germany from January 28 to July 5, 2020. To align the peak location with day $t=61$, we index the data starting on January 28. We analyze observation horizons $T=40,\ldots,75$. For each quantile level $\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the estimation path $T\mapsto\hat{l}(T)$, with candidate peak locations restricted to $l\in\{1,\ldots,T\}$. Temporal stabilization is assessed using the criterion introduced in Section~\ref{sec:stability-analysis}, with tolerance $\varepsilon=15$. The resulting estimation paths are reported in Table~\ref{tab:germany_tau}.
+		
+		\begin{landscape}
+			\begin{table}[htbp]
+				\caption{Estimated peak location $\hat{l}(T)$ for COVID-19 in Germany using quantile levels $\tau\in\{0.25,0.5,0.75,0.95\}$.}
+				\label{tab:germany_tau}
+				\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrrrrrrrrrrrrrrrrr}
+					\toprule
+					\addlinespace[2.5pt]
+					\multicolumn{19}{c}{\textbf{$\tau=0.25,\ T_{\mathrm{entry}}=55,\ \varepsilon=15$}} \\
+					\addlinespace[2.5pt]
+					\midrule
+					$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+					$\hat{l}(T)$ & 1 & 1 & 42 & 41 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 51 & 51 & 52 & 55 & 56 & 57 \\
+					$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+					$\hat{l}(T)$ & 56 & 56 & 60 & 61 & 60 & 61 & 62 & 62 & 66 & 67 & 68 & 69 & 65 & 65 & 65 & 66 & 66 & 66 \\
+					\midrule\addlinespace[2.5pt]
+					\multicolumn{19}{c}{\textbf{$\tau=0.5,\ T_{\mathrm{entry}}=51,\ \varepsilon=15$}} \\
+					\addlinespace[2.5pt]
+					\midrule
+					$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+					$\hat{l}(T)$ & 40 & 40 & 40 & 43 & 42 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 51 & 53 & 54 & 55 & 56 & 57 \\
+					$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+					$\hat{l}(T)$ & 56 & 59 & 60 & 61 & 62 & 61 & 61 & 61 & 63 & 65 & 66 & 66 & 66 & 64 & 64 & 65 & 66 & 66 \\
+					\midrule\addlinespace[2.5pt]
+					\multicolumn{19}{c}{\textbf{$\tau=0.75,\ T_{\mathrm{entry}}=51,\ \varepsilon=15$}} \\
+					\addlinespace[2.5pt]
+					\midrule
+					$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+					$\hat{l}(T)$ & 40 & 40 & 40 & 43 & 42 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 55 & 56 \\
+					$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+					$\hat{l}(T)$ & 56 & 59 & 60 & 61 & 62 & 63 & 60 & 62 & 64 & 64 & 65 & 65 & 65 & 65 & 64 & 65 & 66 & 66 \\
+					\midrule\addlinespace[2.5pt]
+					\multicolumn{19}{c}{\textbf{$\tau=0.95,\ T_{\mathrm{entry}}=51,\ \varepsilon=15$}} \\
+					\addlinespace[2.5pt]
+					\midrule
+					$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+					$\hat{l}(T)$ & 40 & 41 & 42 & 41 & 41 & 43 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 55 \\
+					$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+					$\hat{l}(T)$ & 53 & 55 & 57 & 58 & 58 & 57 & 58 & 59 & 60 & 61 & 61 & 61 & 61 & 61 & 61 & 64 & 66 & 66 \\
+					\bottomrule
+				\end{tabular*}
+			\end{table}
+		\end{landscape}
+		
+		\subsection{Comparison Across Quantile Levels}
+		
+		To compare the four quantile specifications, we evaluate the minimized quantile-loss objective at the final observation horizon $T_{\max}$ for each country. This provides a descriptive comparison of the empirical objective values obtained under the different quantile levels considered. The quantile level yielding the smallest objective value at $T_{\max}$ is reported for each data set.
+		The resulting minima are obtained for
+		\begin{itemize}
+			\item China: $\tau=0.25$ at $T=35$,
+			\item France: $\tau=0.95$ at $T=89$,
+			\item Germany: $\tau=0.95$ at $T=75$.
+		\end{itemize}
+		These results indicate that the empirical quantile-loss criterion favors different quantile specifications across the three epidemic trajectories. In particular, the lower quantile $\tau=0.25$ yields the smallest objective value for China, whereas the upper quantile $\tau=0.95$ yields the smallest objective value for both France and Germany. This comparison is descriptive and is intended to characterize the behavior of the proposed estimator under the four quantile levels considered, rather than to establish that any one of these quantiles represents the true conditional quantile of the epidemic process.
+	}
+	
+	\clearpage
+	\section*{}
+	\makeatletter
+	\renewcommand{\@biblabel}[1]{}
+	\makeatother
+	\begin{thebibliography}{99}
+		\bibitem[Barmparis and Tsironis(2020)]{Bar20} Barmparis, G.D. and Tsironis, G.P. (2020). \newblock  {Estimating the infection horizon of COVID-
+			19 in eight countries with a data-driven approach}, \newblock \textit{Chaos Solitons Fractals}, {\bf 135}, $109842$.
+		
+		\bibitem[Dermoune et al.(2017)]{Der17}
+		Dermoune, A., Ounaissi, D.  and Rahmania, N. (2017).
+		\newblock  {Oscillation of Metropolis–Hastings and simulated annealing algorithms around LASSO estimator}.
+		\newblock \textit{Math. Comput. Simulation}, {\bf 135}, 39--50.
+		
+		\bibitem[Dermoune et al.(2025)]{Der25}
+		Dermoune, A., Maanan, S., Ounaissi, D.  and Slaoui, Y. (2025).
+		\newblock  {Forecasting the amplitude, the location and the width of the peak  
+			of a time series using the weighted median}.  \newblock \textit{In revision}.
+		
+		\bibitem[Novoselac(2020)]{Nov20}
+		Novoselac, V. (2020).
+		\newblock  {The Component Weighted Median Absolute Deviations Problem}.
+		\newblock \textit{Eur. J. Pure Appl. Math.}, {\bf 13}, 964--976.
+		
+		\bibitem[Pei and Shaman(2017)]{See17} Pei, S. and Shaman, J. (2017). 
+		\newblock{Counteracting structural errors in ensemble forecast of influenza outbreaks}. 
+		\newblock \textit{Natur. Comm.}, {\bf 8}(1), doi: 10.1038/s41467-017-01033-1.  
+		
+		\bibitem[Tucker(2020)]{Tuc20} Tucker, RS. (2020).
+		\newblock{Peak Volume Prediction via Time Series Decomposition}. 
+		\newblock \textit{Bachelor of Science Computer Science and Systems University of Washington Tacoma.}, June 2020. 
+		
+		\bibitem[Yu(2019)]{YuB2019} Yu, B., Graciani, G., Nascimento, A., and Hu, J. (2019).
+		\newblock{Cost-adaptive neural networks for peak volume prediction.} 
+		\newblock Proceedings of Beijing 19: ACM International Conference on Information and Knowledge Management. 
+		
+	\end{thebibliography}
+	
+\end{document}
