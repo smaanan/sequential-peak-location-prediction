@@ -323,6 +323,39 @@ The scale parameter $b$ is chosen so that the variance of the noise satisfies
 	\left(\frac{A}{\mathrm{SNR}}\right)^2.
 	\label{eq:SNR_condition}
 \end{equation}}
+{\color{red}
+For the simulation study, the true signal is
+\[
+I(t)
+=
+A\exp\left(-\frac{(t-L)^2}{S^2}\right),
+\]
+with
+$A=1,$
+$L=22,$
+$S=10.$
+We define the signal-to-noise ratio by the ratio between the
+peak amplitude of the signal and the standard deviation of the noise,
+namely
+\begin{equation}
+	\mathrm{SNR}
+	=
+	\frac{A}{\sqrt{\operatorname{Var}(e(t))}}.
+	\label{eq:SNR_definition}
+\end{equation}
+Thus, for a prescribed value of $\mathrm{SNR}$, the variance of the
+noise is chosen according to
+\begin{equation}
+	\operatorname{Var}(e(t))
+	=
+	\left(\frac{A}{\mathrm{SNR}}\right)^2.
+	\label{eq:SNR_condition}
+\end{equation}
+In the simulations, we consider
+\(
+\mathrm{SNR}=1000.
+\)
+}
 For the $\tau$-aligned asymmetric Laplace distribution, this variance is
 \begin{equation}
 	\operatorname{Var}(e(t))
