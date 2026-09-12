@@ -77,9 +77,15 @@ We consider the problem of estimating the amplitude, location, and spread of a u
 	\label{eq:signal_model}
 \end{equation}
 where \( A > 0 \) is the amplitude, \( L > 0 \) the peak location, \( S > 0 \) the spread (scale), and \( e(t) \) is additive noise. Given observations \( (I(t))_{t=1}^T \), our goal is to estimate the underlying parameters using quantile regression, i.e., minimizing the asymmetric loss
-\[
-\rho_\tau(u) = u \cdot (\tau - \mathbf{1}_{\{u < 0\}}),
-\]
+%\[
+%\rho_\tau(u) = u \cdot (\tau - \mathbf{1}_{\{u < 0\}}),
+%\]
+\begin{equation}
+	\rho_\tau(u)
+	=
+	u\left(\tau-\mathbf{1}_{\{u<0\}}\right).
+	\label{eq:check_function}
+\end{equation}
 for a fixed quantile level \( \tau \in (0,1) \).
 We define the quantile objective:
 \begin{equation}
