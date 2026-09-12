@@ -398,12 +398,11 @@ In particular, $\tau=1/2$ corresponds to the symmetric Laplace distribution, whe
 The scale parameter $b$ is calibrated separately for each $\tau$ so that the variance of the noise satisfies the fixed signal-to-noise ratio condition~\eqref{eq:SNR_condition}.
 For the $\tau$-aligned asymmetric Laplace distribution, this gives~\eqref{eq:AL_variance},
 and therefore~\eqref{eq:scale_calibration}.
-{\color{blue}
 At each time horizon $T\in\{4,\ldots,30\}$, we estimate the parameters
 $(\hat{l}(T),\hat{a}(T),\hat{s}(T))$ by minimizing the objective function
 \eqref{eq:quantile_objective} over the candidate peak locations and scale
 parameters, with the amplitude $a$ re-estimated for each pair $(l,s)$ as
-the weighted $\tau$-quantile described in Section~\ref{sec:weighted_median_method}.}
+the weighted $\tau$-quantile described in Section~\ref{sec:weighted_median_method}.
 The scale parameter $s$ is optimized over the prescribed interval, and the location parameter $l$ is selected by minimizing the resulting objective over the candidate locations.
 Figure~\ref{fig:combined_estimation_paths} shows the resulting estimation trajectories
 $T\mapsto\hat{l}(T),$
