@@ -449,25 +449,26 @@ This section investigates the temporal stability of the estimated peak location 
 
 \subsection{Low Signal-to-Noise Performance}
 \label{subsec:low-snr}
-{\color{red}
-We consider the signal-plus-noise model~\eqref{eq:signal_model},
+
+To evaluate the robustness of the quantile-based estimator under a lower signal-to-noise ratio, 
+{\color{blue}
+we consider the signal-plus-noise model~\eqref{eq:signal_model},
 with
 $T=35,$
 $A=1,$
 $L=22,$
 $S=10.$}
-
-To evaluate the robustness of the quantile-based estimator under a lower signal-to-noise ratio, we consider the signal-plus-noise model
-\[
-I(t)
-=
-A\exp\left(-\frac{(t-L)^2}{S^2}\right)+e(t),
-\qquad t=1,\ldots,35,
-\]
-with
-$A=1,$
-$L=22,$
-$S=10.$
+%we consider the signal-plus-noise model
+%\[
+%I(t)
+%=
+%A\exp\left(-\frac{(t-L)^2}{S^2}\right)+e(t),
+%\qquad t=1,\ldots,35,
+%\]
+%with
+%$A=1,$
+%$L=22,$
+%$S=10.$
 The noise $e(t)$ follows the $\tau$-aligned asymmetric Laplace distribution introduced in Section~\ref{sec:general_AL_intro}, with density~\eqref{eq:AL_density}.
 For each
 \(
