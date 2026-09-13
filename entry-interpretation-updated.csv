@@ -1,0 +1,4 @@
+"tau","SNR","k","tau_prime","T_exit","T_star","tau_entry","T_entry","w_star","L","peak.in.window","relation","interpretation"
+0.5,1000,0,0,30,29,0,22,8,22,TRUE,"T_entry <= L <= T_exit","Peak-containing candidate"
+0.5,100,0,0,30,29,0,22,8,22,TRUE,"T_entry <= L <= T_exit","Peak-containing candidate"
+0.5,1,2,5,27,20,7,17,10,22,TRUE,"T_entry <= L <= T_exit","Peak-containing candidate"
