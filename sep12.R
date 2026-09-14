@@ -33,11 +33,39 @@
 ## Weighted tau-quantile
 ###############################################################
 
-weighted_quantile <- function(
-    x,
-    w,
-    tau
-) {
+# weighted_quantile <- function(
+#     x,
+#     w,
+#     tau
+# ) {
+#   
+#   if (length(x) != length(w)) {
+#     stop("x and w must have the same length.")
+#   }
+#   
+#   if (tau <= 0 || tau >= 1) {
+#     stop("tau must belong to (0,1).")
+#   }
+#   
+#   if (any(!is.finite(x)) || any(!is.finite(w))) {
+#     stop("x and w must be finite.")
+#   }
+#   
+#   if (any(w < 0) || sum(w) <= 0) {
+#     stop("Weights must be non-negative and have positive sum.")
+#   }
+#   
+#   o <- order(x)
+#   
+#   x <- x[o]
+#   w <- w[o]
+#   
+#   w <- w / sum(w)
+#   
+#   x[which(cumsum(w) >= tau)[1]]
+# }
+
+weighted_quantile <- function(x, w, tau) {
   
   if (length(x) != length(w)) {
     stop("x and w must have the same length.")
@@ -47,25 +75,29 @@ weighted_quantile <- function(
     stop("tau must belong to (0,1).")
   }
   
-  if (any(!is.finite(x)) || any(!is.finite(w))) {
-    stop("x and w must be finite.")
+  # Drop numerically-overflowed entries. These arise when l is far
+  # outside 1:T; they carry weight exp(-large) ~ 0 and therefore do
+  # not affect the weighted quantile.
+  finite <- is.finite(x) & is.finite(w)
+  
+  if (!any(finite)) {
+    return(NA_real_)
   }
+  
+  x <- x[finite]
+  w <- w[finite]
   
   if (any(w < 0) || sum(w) <= 0) {
     stop("Weights must be non-negative and have positive sum.")
   }
   
   o <- order(x)
-  
   x <- x[o]
   w <- w[o]
-  
   w <- w / sum(w)
   
   x[which(cumsum(w) >= tau)[1]]
 }
-
-
 
 ###############################################################
 ## Quantile check loss
@@ -387,7 +419,7 @@ estimate_peak_curves <- function(
     out <-
       matrix(
         NA_real_,
-        nrow = T,
+        nrow = h,
         ncol = 3
       )
     
@@ -399,7 +431,7 @@ estimate_peak_curves <- function(
       )
     
     
-    for (l in 1:T) {
+    for (l in 1:h) {
       
       f <- function(s) {
         
@@ -648,16 +680,30 @@ tau <- 0.5
 ## SNR = 1000, h = 30
 ###############################################################
 
-postscript(
-  "sec24_large_snr.eps",
-  onefile = FALSE,
-  paper = "special",
-  horizontal = FALSE,
+# postscript(
+#   "sec24_large_snr.eps",
+#   onefile = FALSE,
+#   paper = "special",
+#   horizontal = FALSE,
+#   width = 8,
+#   height = 7,
+#   family = "Helvetica",
+#   pointsize = 11,
+#   colormodel = "srgb"
+# )
+# 
+# par(
+#   mfrow = c(3,2),
+#   mar = c(4,4,3,1),
+#   mgp = c(2.2,0.6,0)
+# )
+
+png(
+  "sec24_large_snr.png",
   width = 8,
   height = 7,
-  family = "Helvetica",
-  pointsize = 11,
-  colormodel = "srgb"
+  units = "in",
+  res = 300
 )
 
 par(
@@ -729,16 +775,30 @@ dev.off()
 ## SNR = 100, h = 30
 ###############################################################
 
-postscript(
-  "sec24_medium_snr.eps",
-  onefile = FALSE,
-  paper = "special",
-  horizontal = FALSE,
+# postscript(
+#   "sec24_medium_snr.eps",
+#   onefile = FALSE,
+#   paper = "special",
+#   horizontal = FALSE,
+#   width = 8,
+#   height = 7,
+#   family = "Helvetica",
+#   pointsize = 11,
+#   colormodel = "srgb"
+# )
+# 
+# par(
+#   mfrow = c(3,2),
+#   mar = c(4,4,3,1),
+#   mgp = c(2.2,0.6,0)
+# )
+
+png(
+  "sec24_medium_snr.png",
   width = 8,
   height = 7,
-  family = "Helvetica",
-  pointsize = 11,
-  colormodel = "srgb"
+  units = "in",
+  res = 300
 )
 
 par(
@@ -810,16 +870,30 @@ dev.off()
 ## SNR = 40, h = 30
 ###############################################################
 
-postscript(
-  "sec25_small_snr_h30.eps",
-  onefile = FALSE,
-  paper = "special",
-  horizontal = FALSE,
+# postscript(
+#   "sec25_small_snr_h30.eps",
+#   onefile = FALSE,
+#   paper = "special",
+#   horizontal = FALSE,
+#   width = 8,
+#   height = 7,
+#   family = "Helvetica",
+#   pointsize = 11,
+#   colormodel = "srgb"
+# )
+# 
+# par(
+#   mfrow = c(3,2),
+#   mar = c(4,4,3,1),
+#   mgp = c(2.2,0.6,0)
+# )
+
+png(
+  "sec25_small_snr_h30.png",
   width = 8,
   height = 7,
-  family = "Helvetica",
-  pointsize = 11,
-  colormodel = "srgb"
+  units = "in",
+  res = 300
 )
 
 par(
