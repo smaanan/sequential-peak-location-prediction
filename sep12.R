@@ -33,38 +33,6 @@
 ## Weighted tau-quantile
 ###############################################################
 
-# weighted_quantile <- function(
-#     x,
-#     w,
-#     tau
-# ) {
-#   
-#   if (length(x) != length(w)) {
-#     stop("x and w must have the same length.")
-#   }
-#   
-#   if (tau <= 0 || tau >= 1) {
-#     stop("tau must belong to (0,1).")
-#   }
-#   
-#   if (any(!is.finite(x)) || any(!is.finite(w))) {
-#     stop("x and w must be finite.")
-#   }
-#   
-#   if (any(w < 0) || sum(w) <= 0) {
-#     stop("Weights must be non-negative and have positive sum.")
-#   }
-#   
-#   o <- order(x)
-#   
-#   x <- x[o]
-#   w <- w[o]
-#   
-#   w <- w / sum(w)
-#   
-#   x[which(cumsum(w) >= tau)[1]]
-# }
-
 weighted_quantile <- function(x, w, tau) {
   
   if (length(x) != length(w)) {
