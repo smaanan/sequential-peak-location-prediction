@@ -805,22 +805,37 @@ We then consider all observation times $T<T_{\mathrm{exit}}^{(k)}$ for which
 \varepsilon_3,
 \)
 where $\varepsilon_3$ is the numerical tolerance used for equality in Stage 2. The entry time is defined as the first such observation horizon:
-\begin{equation}
-	T_{\mathrm{entry}}^{(k)}
-	=
-	\min
-	\left\{
-	T<T_{\mathrm{exit}}^{(k)}:
-	\left|
-	\omega_l(T,T_{\mathrm{exit}}^{(k)})
-	-
-	\tau_k
-	\right|
-	\leq
-	\varepsilon_3
-	\right\},
-	\label{eq:Tentry_definition}
-\end{equation}
+%\begin{equation}
+%	T_{\mathrm{entry}}^{(k)}
+%	=
+%	\min
+%	\left\{
+%	T<T_{\mathrm{exit}}^{(k)}:
+%	\left|
+%	\omega_l(T,T_{\mathrm{exit}}^{(k)})
+%	-
+%	\tau_k
+%	\right|
+%	\leq
+%	\varepsilon_3
+%	\right\},
+%	\label{eq:Tentry_definition}
+%\end{equation}
+\[
+T_{\mathrm{entry}}^{(k)}
+=
+\min
+\left\{
+T<T_{\mathrm{exit}}^{(k)}:
+\left|
+\omega_l(T,T_{\mathrm{exit}}^{(k)})
+-
+\tau_k
+\right|
+\leq
+\varepsilon_3
+\right\},
+\]
 provided that such an observation time exists.
 The width associated with the candidate is
 \begin{equation}
