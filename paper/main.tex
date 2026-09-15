@@ -742,17 +742,27 @@ where each pair consists of a candidate exit time and the corresponding future-t
 \label{subsec:entry-time}
 
 For a given candidate exit time $T_{\mathrm{exit}}^{(k)}$, we first consider all observation times strictly before the candidate exit time. The set
-\begin{equation}
-	E_k
-	=
-	\left\{
-	T<T_{\mathrm{exit}}^{(k)}:
-	\omega_l(T,T_{\mathrm{exit}}^{(k)})
-	\geq
-	\tau'_k-\varepsilon_2
-	\right\},
-	\label{eq:Ek_definition}
-\end{equation}
+%\begin{equation}
+%	E_k
+%	=
+%	\left\{
+%	T<T_{\mathrm{exit}}^{(k)}:
+%	\omega_l(T,T_{\mathrm{exit}}^{(k)})
+%	\geq
+%	\tau'_k-\varepsilon_2
+%	\right\},
+%	\label{eq:Ek_definition}
+%\end{equation}
+\[
+E_k
+=
+\left\{
+T<T_{\mathrm{exit}}^{(k)}:
+\omega_l(T,T_{\mathrm{exit}}^{(k)})
+\geq
+\tau'_k-\varepsilon_2
+\right\},
+\]
 is the numerical implementation of the Stage-2 set, where $\varepsilon_2$ is a numerical tolerance.
 If $E_k$ is empty, the candidate does not yield a valid entry time. Otherwise, we define
 \begin{equation}
