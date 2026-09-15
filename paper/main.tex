@@ -682,12 +682,17 @@ The new boundary is set to
 B_{k+1}=T'_k.
 \)
 If no observation time satisfying~\eqref{eq:stage1_equality} exists before the current boundary, the recursion does not terminate immediately. Instead, the observation horizon immediately preceding the current boundary is taken as the next candidate exit time:
-\begin{equation}
-	T_{\mathrm{exit}}^{(k+1)}
-	=
-	\max\{T<B_k\},
-	\label{eq:recursive_exit_no_match}
-\end{equation}
+%\begin{equation}
+%	T_{\mathrm{exit}}^{(k+1)}
+%	=
+%	\max\{T<B_k\},
+%	\label{eq:recursive_exit_no_match}
+%\end{equation}
+\[
+T_{\mathrm{exit}}^{(k+1)}
+=
+\max\{T<B_k\},
+\]
 with corresponding oscillation level
 \begin{equation}
 	\tau'_{k+1}
