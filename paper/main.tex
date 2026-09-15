@@ -674,10 +674,13 @@ T_{\mathrm{prev}}^{(k)},h
 \right).
 \]
 The new boundary is set to
-\begin{equation}
-	B_{k+1}=T'_k.
-	\label{eq:recursive_boundary}
-\end{equation}
+%\begin{equation}
+%	B_{k+1}=T'_k.
+%	\label{eq:recursive_boundary}
+%\end{equation}
+\[
+B_{k+1}=T'_k.
+\]
 If no observation time satisfying~\eqref{eq:stage1_equality} exists before the current boundary, the recursion does not terminate immediately. Instead, the observation horizon immediately preceding the current boundary is taken as the next candidate exit time:
 \begin{equation}
 	T_{\mathrm{exit}}^{(k+1)}
