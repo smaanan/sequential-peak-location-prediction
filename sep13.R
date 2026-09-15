@@ -24,11 +24,6 @@
 ############################################################
 # TOLERANCES
 ############################################################
-#
-# These tolerances are used for numerical equality in the
-# recursive construction and in the definition of E_k.
-#
-############################################################
 
 STAGE1_TOLERANCE <- 1e-10
 E_TOLERANCE      <- 1e-10
@@ -38,14 +33,6 @@ STAGE2_TOLERANCE <- 1e-10
 ############################################################
 # 1. INTERVAL OSCILLATION
 ############################################################
-#
-# Computes
-#
-#   omega_l(T1,T2)
-#     = max_{T1 <= s,t <= T2}
-#         |\hat l(s)-\hat l(t)|.
-#
-############################################################
 
 interval_oscillation <- function(
     T.values,
@@ -53,10 +40,6 @@ interval_oscillation <- function(
     T1,
     T2
 ) {
-  
-  ##########################################################
-  # Basic validity checks
-  ##########################################################
   
   if (length(T.values) != length(hat.l)) {
     
@@ -72,19 +55,11 @@ interval_oscillation <- function(
   }
   
   
-  ##########################################################
-  # Observations belonging to [T1,T2]
-  ##########################################################
-  
   idx <- which(
     T.values >= T1 &
       T.values <= T2
   )
   
-  
-  ##########################################################
-  # No observations
-  ##########################################################
   
   if (length(idx) == 0) {
     
@@ -92,19 +67,11 @@ interval_oscillation <- function(
   }
   
   
-  ##########################################################
-  # One observation
-  ##########################################################
-  
   if (length(idx) == 1) {
     
     return(0)
   }
   
-  
-  ##########################################################
-  # Maximum pairwise absolute difference
-  ##########################################################
   
   max(
     abs(
@@ -121,35 +88,19 @@ interval_oscillation <- function(
 ############################################################
 # 2. COMPUTE COMPLETE TAIL-OSCILLATION TABLE
 ############################################################
-#
-# Computes omega_l(T,h) for every available T.
-#
-############################################################
 
 compute_tail_oscillation <- function(
     T.values,
     hat.l
 ) {
   
-  ##########################################################
-  # Final observation
-  ##########################################################
-  
   h <- max(T.values)
   
-  
-  ##########################################################
-  # Available T-grid
-  ##########################################################
   
   T.grid <- sort(
     unique(T.values)
   )
   
-  
-  ##########################################################
-  # Compute omega_l(T,h)
-  ##########################################################
   
   omega <- sapply(
     
@@ -169,10 +120,6 @@ compute_tail_oscillation <- function(
   )
   
   
-  ##########################################################
-  # Return
-  ##########################################################
-  
   data.frame(
     
     T = T.grid,
@@ -189,24 +136,6 @@ compute_tail_oscillation <- function(
 #
 # CORRECTED RECURSIVE CONSTRUCTION OF tau'
 ############################################################
-#
-# Initial candidate:
-#
-#   tau'_0 = 0
-#   T_exit(0) = h
-#
-# At each step, search for the earliest T' before the
-# current boundary such that
-#
-#   omega_l(T',h) = tau'_current.
-#
-# If such a T' exists, the observation immediately preceding
-# T' becomes the next exit time.
-#
-# If no such T' exists, the observation immediately preceding
-# the current boundary becomes the next exit time.
-#
-############################################################
 
 stage1_tau_prime <- function(
     T.values,
@@ -215,20 +144,12 @@ stage1_tau_prime <- function(
 ) {
   
   
-  ##########################################################
-  # Basic quantities
-  ##########################################################
-  
   h <- max(T.values)
   
   T.grid <- sort(
     unique(T.values)
   )
   
-  
-  ##########################################################
-  # Compute complete tail-oscillation table once
-  ##########################################################
   
   tail.table <- compute_tail_oscillation(
     
@@ -237,13 +158,6 @@ stage1_tau_prime <- function(
     hat.l = hat.l
   )
   
-  
-  ##########################################################
-  # Initial candidate
-  #
-  # tau'_0 = 0
-  # T_exit(0) = h
-  ##########################################################
   
   candidates <- data.frame(
     
@@ -259,55 +173,27 @@ stage1_tau_prime <- function(
   )
   
   
-  ##########################################################
-  # Current recursive state
-  ##########################################################
-  
   tau.current <- 0
   
   boundary.current <- h
   
   
-  ##########################################################
-  # Safety limit
-  ##########################################################
-  
   max.iterations <- length(T.grid) + 1
   
   
-  ##########################################################
-  # Recursive construction
-  ##########################################################
-  
   for (step in seq_len(max.iterations)) {
     
-    
-    ########################################################
-    # Observations strictly before current boundary
-    ########################################################
     
     earlier.T <- T.grid[
       T.grid < boundary.current
     ]
     
     
-    ########################################################
-    # If no earlier observation exists, stop.
-    ########################################################
-    
     if (length(earlier.T) == 0) {
       
       break
     }
     
-    
-    ########################################################
-    # Find T' < current boundary such that
-    #
-    # omega_l(T',h) = tau'_current
-    #
-    # Equality is implemented numerically with tolerance.
-    ########################################################
     
     possible.T <- tail.table$T[
       
@@ -332,18 +218,10 @@ stage1_tau_prime <- function(
     if (length(possible.T) > 0) {
       
       
-      ######################################################
-      # Choose the SMALLEST such T'
-      ######################################################
-      
       T.prime <- min(
         possible.T
       )
       
-      
-      ######################################################
-      # Previous available observation before T'
-      ######################################################
       
       previous.T <- T.grid[
         T.grid < T.prime
@@ -361,10 +239,6 @@ stage1_tau_prime <- function(
       )
       
       
-      ######################################################
-      # Construct next tau'
-      ######################################################
-      
       tau.next <- interval_oscillation(
         
         T.values = T.values,
@@ -376,10 +250,6 @@ stage1_tau_prime <- function(
         T2 = h
       )
       
-      
-      ######################################################
-      # New exit time and new boundary
-      ######################################################
       
       T.exit.next <- T.previous
       
@@ -394,11 +264,6 @@ stage1_tau_prime <- function(
       # No earlier T' satisfies
       #
       # omega_l(T',h) = tau'_current.
-      #
-      # The recursion does NOT stop.
-      #
-      # Instead take the observation immediately preceding
-      # the current boundary.
       ######################################################
       
       T.previous <- max(
@@ -406,16 +271,8 @@ stage1_tau_prime <- function(
       )
       
       
-      ######################################################
-      # This becomes the next exit time
-      ######################################################
-      
       T.exit.next <- T.previous
       
-      
-      ######################################################
-      # Define next tau'
-      ######################################################
       
       tau.next <- interval_oscillation(
         
@@ -429,27 +286,15 @@ stage1_tau_prime <- function(
       )
       
       
-      ######################################################
-      # New boundary
-      ######################################################
-      
       T.boundary.next <- T.previous
     }
     
-    
-    ########################################################
-    # Safety check
-    ########################################################
     
     if (is.na(tau.next)) {
       
       break
     }
     
-    
-    ########################################################
-    # tau' should increase
-    ########################################################
     
     if (
       tau.next <=
@@ -472,10 +317,6 @@ stage1_tau_prime <- function(
     }
     
     
-    ########################################################
-    # Store new candidate
-    ########################################################
-    
     candidates <- rbind(
       
       candidates,
@@ -495,10 +336,6 @@ stage1_tau_prime <- function(
     )
     
     
-    ########################################################
-    # Update recursive state
-    ########################################################
-    
     tau.current <- tau.next
     
     boundary.current <- T.boundary.next
@@ -508,9 +345,7 @@ stage1_tau_prime <- function(
   ##########################################################
   # Diagnostic:
   #
-  # Verify
-  #
-  # tau' = omega_l(T_exit,h)
+  # Verify tau' = omega_l(T_exit,h)
   ##########################################################
   
   candidates$omega_at_exit <- sapply(
@@ -533,10 +368,6 @@ stage1_tau_prime <- function(
   )
   
   
-  ##########################################################
-  # Definition check
-  ##########################################################
-  
   candidates$definition_check <-
     
     abs(
@@ -544,10 +375,6 @@ stage1_tau_prime <- function(
         candidates$omega_at_exit
     ) <= tolerance
   
-  
-  ##########################################################
-  # Return
-  ##########################################################
   
   list(
     
@@ -563,16 +390,6 @@ stage1_tau_prime <- function(
 ############################################################
 # 4. COMPUTE E_k FOR ONE STAGE-1 CANDIDATE
 ############################################################
-#
-# For a Stage-1 candidate (tau',T_exit):
-#
-# E_k =
-# {
-#     T < T_exit :
-#     omega_l(T,T_exit) >= tau'
-# }.
-#
-############################################################
 
 compute_E_for_candidate <- function(
     T.values,
@@ -583,10 +400,6 @@ compute_E_for_candidate <- function(
 ) {
   
   
-  ##########################################################
-  # Candidate T values strictly before T_exit
-  ##########################################################
-  
   candidate.T <- sort(
     unique(
       T.values[
@@ -595,10 +408,6 @@ compute_E_for_candidate <- function(
     )
   )
   
-  
-  ##########################################################
-  # No T < T_exit
-  ##########################################################
   
   if (length(candidate.T) == 0) {
     
@@ -621,10 +430,6 @@ compute_E_for_candidate <- function(
   }
   
   
-  ##########################################################
-  # Compute omega_l(T,T_exit)
-  ##########################################################
-  
   omega.values <- sapply(
     
     candidate.T,
@@ -644,10 +449,6 @@ compute_E_for_candidate <- function(
     }
   )
   
-  
-  ##########################################################
-  # Keep valid omega values
-  ##########################################################
   
   valid <- !is.na(
     omega.values
@@ -675,10 +476,6 @@ compute_E_for_candidate <- function(
   }
   
   
-  ##########################################################
-  # Construct E_k
-  ##########################################################
-  
   in.set <-
     
     valid &
@@ -694,20 +491,12 @@ compute_E_for_candidate <- function(
     ]
   
   
-  ##########################################################
-  # Check whether E_k is empty
-  ##########################################################
-  
   empty.set <-
     
     length(
       T.values.in.set
     ) == 0
   
-  
-  ##########################################################
-  # Summary
-  ##########################################################
   
   if (empty.set) {
     
@@ -732,10 +521,6 @@ compute_E_for_candidate <- function(
     )
   }
   
-  
-  ##########################################################
-  # Return
-  ##########################################################
   
   list(
     
@@ -774,27 +559,15 @@ stage1_E_sets <- function(
 ) {
   
   
-  ##########################################################
-  # Stage-1 candidate table
-  ##########################################################
-  
   tau.prime.table <-
     stage1.result$tau.prime.table
   
-  
-  ##########################################################
-  # Number of candidates
-  ##########################################################
   
   n.candidates <-
     nrow(
       tau.prime.table
     )
   
-  
-  ##########################################################
-  # Storage
-  ##########################################################
   
   results <-
     vector(
@@ -803,16 +576,8 @@ stage1_E_sets <- function(
     )
   
   
-  ##########################################################
-  # Loop over all candidates
-  ##########################################################
-  
   for (i in seq_len(n.candidates)) {
     
-    
-    ########################################################
-    # Stage-1 quantities
-    ########################################################
     
     step <-
       tau.prime.table$step[i]
@@ -823,10 +588,6 @@ stage1_E_sets <- function(
     T.exit <-
       tau.prime.table$T_exit[i]
     
-    
-    ########################################################
-    # Compute E_k
-    ########################################################
     
     E.result <-
       
@@ -850,13 +611,9 @@ stage1_E_sets <- function(
     
     
     ########################################################
-    # Check whether true peak L belongs to E_k
+    # EX-POST diagnostic only.
     #
-    # IMPORTANT:
-    #
-    # E_k contains ENTRY TIMES T, not the complete window.
-    #
-    # This is an EX-POST diagnostic only.
+    # L is NOT used to construct E_k.
     ########################################################
     
     peak.in.set <-
@@ -866,10 +623,6 @@ stage1_E_sets <- function(
       L %in%
       E.result$T_values_in_set
     
-    
-    ########################################################
-    # Store
-    ########################################################
     
     results[[i]] <-
       
@@ -889,7 +642,7 @@ stage1_E_sets <- function(
         
         T_values_in_set =
           paste(
-            E.result$T_values_in_set,
+            E.result$T_values_in.set,
             collapse = ", "
           ),
         
@@ -917,10 +670,6 @@ stage1_E_sets <- function(
   }
   
   
-  ##########################################################
-  # Combine
-  ##########################################################
-  
   do.call(
     rbind,
     results
@@ -930,18 +679,6 @@ stage1_E_sets <- function(
 
 ############################################################
 # 6. UPDATED STAGE 2 FOR ONE CANDIDATE
-############################################################
-#
-# E_k is first constructed.
-#
-# If E_k != empty:
-#
-#   T_star = max E_k
-#
-#   tau = omega_l(T_star,T_exit)
-#
-#   T_entry = first T attaining tau
-#
 ############################################################
 
 stage2_one_candidate <- function(
@@ -954,10 +691,6 @@ stage2_one_candidate <- function(
 ) {
   
   
-  ##########################################################
-  # Candidate entry times
-  ##########################################################
-  
   candidate.T <- sort(
     unique(
       T.values[
@@ -966,11 +699,6 @@ stage2_one_candidate <- function(
     )
   )
   
-  
-  ##########################################################
-  # CASE 1:
-  # No candidate entry time
-  ##########################################################
   
   if (length(candidate.T) == 0) {
     
@@ -1014,10 +742,6 @@ stage2_one_candidate <- function(
   }
   
   
-  ##########################################################
-  # Compute omega_l(T,T_exit)
-  ##########################################################
-  
   omega.values <- sapply(
     
     candidate.T,
@@ -1042,10 +766,6 @@ stage2_one_candidate <- function(
   )
   
   
-  ##########################################################
-  # Keep valid omega values
-  ##########################################################
-  
   valid <-
     !is.na(
       omega.values
@@ -1063,11 +783,6 @@ stage2_one_candidate <- function(
       valid
     ]
   
-  
-  ##########################################################
-  # CASE 2:
-  # No valid omega values
-  ##########################################################
   
   if (length(T.valid) == 0) {
     
@@ -1112,9 +827,7 @@ stage2_one_candidate <- function(
   
   
   ##########################################################
-  # STEP A
-  #
-  # Construct E_k
+  # STEP A: Construct E_k
   ##########################################################
   
   in.E <-
@@ -1129,11 +842,6 @@ stage2_one_candidate <- function(
       in.E
     ]
   
-  
-  ##########################################################
-  # CASE 3:
-  # E_k is empty
-  ##########################################################
   
   if (length(E.k) == 0) {
     
@@ -1178,9 +886,7 @@ stage2_one_candidate <- function(
   
   
   ##########################################################
-  # STEP B
-  #
-  # T_star = max E_k
+  # STEP B: T_star = max E_k
   ##########################################################
   
   T.star <-
@@ -1191,9 +897,7 @@ stage2_one_candidate <- function(
   
   
   ##########################################################
-  # STEP C
-  #
-  # tau = omega_l(T_star,T_exit)
+  # STEP C: tau = omega_l(T_star,T_exit)
   ##########################################################
   
   index.star <-
@@ -1212,13 +916,7 @@ stage2_one_candidate <- function(
   
   
   ##########################################################
-  # STEP D
-  #
-  # Find all T for which omega(T,T_exit) = tau
-  #
-  # Numerically:
-  #
-  # abs(omega - tau) <= tolerance
+  # STEP D: Find all T for which omega(T,T_exit) = tau
   ##########################################################
   
   equal.tau <-
@@ -1236,11 +934,6 @@ stage2_one_candidate <- function(
       equal.tau
     ]
   
-  
-  ##########################################################
-  # CASE 4:
-  # Numerical equality not found
-  ##########################################################
   
   if (length(T.equal) == 0) {
     
@@ -1285,9 +978,7 @@ stage2_one_candidate <- function(
   
   
   ##########################################################
-  # STEP E
-  #
-  # T_entry = FIRST occurrence of tau
+  # STEP E: T_entry = FIRST occurrence of tau
   ##########################################################
   
   T.entry <-
@@ -1298,9 +989,7 @@ stage2_one_candidate <- function(
   
   
   ##########################################################
-  # STEP F
-  #
-  # Window width
+  # STEP F: Window width
   ##########################################################
   
   w.star <-
@@ -1310,13 +999,7 @@ stage2_one_candidate <- function(
   
   
   ##########################################################
-  # STEP G
-  #
-  # True peak contained in the window:
-  #
-  # T_entry <= L <= T_exit
-  #
-  # This is an EX-POST diagnostic only.
+  # STEP G: EX-POST peak containment
   ##########################################################
   
   peak.in.window <-
@@ -1329,9 +1012,7 @@ stage2_one_candidate <- function(
   
   
   ##########################################################
-  # STEP H
-  #
-  # Return
+  # STEP H: Return
   ##########################################################
   
   list(
@@ -1386,27 +1067,15 @@ stage2_all_candidates <- function(
 ) {
   
   
-  ##########################################################
-  # Stage-1 candidate table
-  ##########################################################
-  
   tau.prime.table <-
     stage1.result$tau.prime.table
   
-  
-  ##########################################################
-  # Number of candidates
-  ##########################################################
   
   n.candidates <-
     nrow(
       tau.prime.table
     )
   
-  
-  ##########################################################
-  # Storage
-  ##########################################################
   
   results <-
     vector(
@@ -1415,16 +1084,8 @@ stage2_all_candidates <- function(
     )
   
   
-  ##########################################################
-  # Loop
-  ##########################################################
-  
   for (i in seq_len(n.candidates)) {
     
-    
-    ########################################################
-    # Stage-1 quantities
-    ########################################################
     
     step <-
       tau.prime.table$step[i]
@@ -1435,10 +1096,6 @@ stage2_all_candidates <- function(
     T.exit <-
       tau.prime.table$T_exit[i]
     
-    
-    ########################################################
-    # Run updated Stage 2
-    ########################################################
     
     S2 <-
       
@@ -1463,10 +1120,6 @@ stage2_all_candidates <- function(
           tolerance
       )
     
-    
-    ########################################################
-    # Store
-    ########################################################
     
     results[[i]] <-
       
@@ -1534,10 +1187,6 @@ stage2_all_candidates <- function(
   }
   
   
-  ##########################################################
-  # Combine
-  ##########################################################
-  
   do.call(
     rbind,
     results
@@ -1547,20 +1196,6 @@ stage2_all_candidates <- function(
 
 ############################################################
 # 8. COMPLETE STAGE 1 + STAGE 2 PROCEDURE
-############################################################
-#
-# IMPORTANT:
-#
-# L is NOT used by Stage 1.
-#
-# L is passed to Stage 2 only so that the returned table can
-# contain the EX-POST diagnostic
-#
-#   T_entry <= L <= T_exit.
-#
-# It does not affect the construction of E_k, T_star,
-# tau, or T_entry.
-#
 ############################################################
 
 run_updated_entry_exit <- function(
@@ -1573,10 +1208,6 @@ run_updated_entry_exit <- function(
     tolerance.stage2 = STAGE2_TOLERANCE
 ) {
   
-  
-  ##########################################################
-  # Stage 1
-  ##########################################################
   
   S1 <-
     stage1_tau_prime(
@@ -1591,13 +1222,6 @@ run_updated_entry_exit <- function(
         tolerance.stage1
     )
   
-  
-  ##########################################################
-  # Stage 1: E_k sets
-  #
-  # This is retained as a diagnostic representation of
-  # the sets E_k.
-  ##########################################################
   
   E.table <-
     
@@ -1622,10 +1246,6 @@ run_updated_entry_exit <- function(
         tolerance.E
     )
   
-  
-  ##########################################################
-  # Stage 2
-  ##########################################################
   
   S2 <-
     
@@ -1668,29 +1288,12 @@ run_updated_entry_exit <- function(
 ############################################################
 # 9. EX-POST SIMULATION SELECTION
 ############################################################
-#
-# Among valid Stage-2 candidates:
-#
-#   T_entry <= L <= T_exit
-#
-# select the candidate having the smallest width
-#
-#   w_star = T_exit - T_entry.
-#
-# This function MUST NOT be used operationally when L is
-# unknown.
-#
-############################################################
 
 select_final_candidate <- function(
     stage2.table,
     L
 ) {
   
-  
-  ##########################################################
-  # Empty result
-  ##########################################################
   
   if (
     is.null(stage2.table) ||
@@ -1734,18 +1337,6 @@ select_final_candidate <- function(
   }
   
   
-  ##########################################################
-  # Valid Stage-2 candidates
-  #
-  # The peak-containment condition has already been computed
-  # by stage2_one_candidate() and stored in
-  #
-  #   peak.in.window
-  #
-  # We use this indicator directly rather than recomputing
-  # the condition here.
-  ##########################################################
-  
   valid <-
     
     !is.na(stage2.table$T_entry) &
@@ -1758,10 +1349,6 @@ select_final_candidate <- function(
     
     stage2.table$peak.in.window
   
-  
-  ##########################################################
-  # No valid peak-containing candidate
-  ##########################################################
   
   if (!any(valid)) {
     
@@ -1802,10 +1389,6 @@ select_final_candidate <- function(
   }
   
   
-  ##########################################################
-  # Keep valid peak-containing candidates
-  ##########################################################
-  
   candidates <-
     
     stage2.table[
@@ -1814,13 +1397,6 @@ select_final_candidate <- function(
       drop = FALSE
     ]
   
-  
-  ##########################################################
-  # Order by window width.
-  #
-  # In case of a tie, use the earliest entry time and then
-  # the earliest exit time as secondary criteria.
-  ##########################################################
   
   candidates <-
     
@@ -1835,10 +1411,6 @@ select_final_candidate <- function(
     ]
   
   
-  ##########################################################
-  # Select narrowest peak-containing candidate
-  ##########################################################
-  
   selected <-
     
     candidates[
@@ -1847,10 +1419,6 @@ select_final_candidate <- function(
       drop = FALSE
     ]
   
-  
-  ##########################################################
-  # Preserve the true simulation peak location
-  ##########################################################
   
   selected$L <-
     L
@@ -1876,17 +1444,23 @@ seed <- 280
 
 
 ############################################################
-# CURRENT QUANTILE LEVEL
+# QUANTILE LEVELS
 ############################################################
 #
-# tau = 0.5 reproduces the symmetric case.
+# We now reproduce the simulation study for all four
+# quantile levels used in the manuscript:
 #
-# Change to 0.25, 0.75, or 0.95 to study the asymmetric
-# quantile-specific formulation.
+#   tau = 0.25, 0.50, 0.75, 0.95
 #
 ############################################################
 
-tau <- 0.5
+tau.values <-
+  c(
+    0.25,
+    0.50,
+    0.75,
+    0.95
+  )
 
 
 ############################################################
@@ -1902,241 +1476,289 @@ SNR.values <-
 
 
 ############################################################
-# 11. RUN COMPLETE PROCEDURE FOR EACH SNR
+# 11. RUN COMPLETE PROCEDURE FOR EACH TAU AND EACH SNR
+############################################################
+#
+# There are now
+#
+#   4 tau values x 3 SNR values = 12 cases.
+#
+# For each case:
+#
+#   1. Estimate the sequential peak trajectory.
+#   2. Compute Stage 1.
+#   3. Compute the E_k sets.
+#   4. Compute Stage 2.
+#   5. Select the narrowest peak-containing candidate
+#      EX POST using the known simulation value L.
+#
 ############################################################
 
 final.rows <-
   vector(
     "list",
-    length(SNR.values)
+    length(tau.values) *
+      length(SNR.values)
   )
 
 
-for (i in seq_along(SNR.values)) {
+counter <- 1
+
+
+for (tau.index in seq_along(tau.values)) {
   
   
-  SNR <-
-    SNR.values[i]
+  tau <-
+    tau.values[tau.index]
   
+  
+  ##########################################################
+  # Header for current tau
+  ##########################################################
   
   cat(
-    "\n========================================\n"
+    "\n\n##################################################\n"
   )
   
   cat(
-    "tau =",
+    "# tau =",
     tau,
     "\n"
   )
   
   cat(
-    "SNR =",
-    SNR,
-    "\n"
-  )
-  
-  cat(
-    "========================================\n"
+    "##################################################\n"
   )
   
   
-  ##########################################################
-  # Estimate sequential trajectory
-  ##########################################################
-  
-  res <-
-    estimate_peak_curves(
-      
-      A =
-        A,
-      
-      L =
-        L,
-      
-      S =
-        S,
-      
-      h =
-        h,
-      
-      SNR =
-        SNR,
-      
-      tau =
-        tau,
-      
-      seed =
-        seed
-    )
-  
-  
-  ##########################################################
-  # Extract T-grid and location estimates
-  ##########################################################
-  
-  T.values <-
-    res$T
-  
-  hat.l <-
-    res$hat.l
-  
-  
-  ##########################################################
-  # Run complete operational Stage 1 + Stage 2 procedure
-  #
-  # L is NOT used to construct the operational entry/exit
-  # quantities.
-  #
-  # It is used only for EX-POST diagnostics.
-  ##########################################################
-  
-  result <-
+  for (SNR.index in seq_along(SNR.values)) {
     
-    run_updated_entry_exit(
-      
-      T.values =
-        T.values,
-      
-      hat.l =
-        hat.l,
-      
-      Data =
-        SNR,
-      
-      L =
-        L,
-      
-      tolerance.stage1 =
-        STAGE1_TOLERANCE,
-      
-      tolerance.E =
-        E_TOLERANCE,
-      
-      tolerance.stage2 =
-        STAGE2_TOLERANCE
-    )
-  
-  
-  ##########################################################
-  # Extract Stage-2 table
-  ##########################################################
-  
-  stage2.table <-
-    result$stage2
-  
-  
-  ##########################################################
-  # EX-POST selection using the known simulation L
-  ##########################################################
-  
-  selected <-
     
-    select_final_candidate(
-      
-      stage2.table =
-        stage2.table,
-      
-      L =
-        L
-    )
-  
-  
-  ##########################################################
-  # Print Stage-1 candidates
-  ##########################################################
-  
-  cat(
-    "\nStage-1 candidates:\n"
-  )
-  
-  print(
-    result$stage1$tau.prime.table
-  )
-  
-  
-  ##########################################################
-  # Print E_k sets
-  ##########################################################
-  
-  cat(
-    "\nE_k sets:\n"
-  )
-  
-  print(
-    result$E_sets
-  )
-  
-  
-  ##########################################################
-  # Print Stage-2 candidates
-  ##########################################################
-  
-  cat(
-    "\nStage-2 candidates:\n"
-  )
-  
-  print(
-    stage2.table
-  )
-  
-  
-  ##########################################################
-  # Print selected candidate
-  ##########################################################
-  
-  cat(
-    "\nSelected candidate:\n"
-  )
-  
-  print(
-    selected
-  )
-  
-  
-  ##########################################################
-  # Store result
-  ##########################################################
-  
-  final.rows[[i]] <-
+    SNR <-
+      SNR.values[SNR.index]
     
-    data.frame(
-      
-      tau =
-        tau,
-      
-      SNR =
-        SNR,
-      
-      k =
-        selected$step,
-      
-      tau_prime =
-        selected$tau_prime,
-      
-      T_exit =
-        selected$T_exit,
-      
-      T_star =
-        selected$T_star,
-      
-      tau_entry =
-        selected$tau,
-      
-      T_entry =
-        selected$T_entry,
-      
-      w_star =
-        selected$w_star,
-      
-      L =
-        L,
-      
-      peak.in.window =
-        selected$peak.in.window,
-      
-      stringsAsFactors =
-        FALSE
+    
+    cat(
+      "\n========================================\n"
     )
+    
+    cat(
+      "tau =",
+      tau,
+      "\n"
+    )
+    
+    cat(
+      "SNR =",
+      SNR,
+      "\n"
+    )
+    
+    cat(
+      "========================================\n"
+    )
+    
+    
+    ########################################################
+    # Estimate sequential trajectory
+    ########################################################
+    
+    res <-
+      estimate_peak_curves(
+        
+        A =
+          A,
+        
+        L =
+          L,
+        
+        S =
+          S,
+        
+        h =
+          h,
+        
+        SNR =
+          SNR,
+        
+        tau =
+          tau,
+        
+        seed =
+          seed
+      )
+    
+    
+    ########################################################
+    # Extract T-grid and location estimates
+    ########################################################
+    
+    T.values <-
+      res$T
+    
+    hat.l <-
+      res$hat.l
+    
+    
+    ########################################################
+    # Run complete operational Stage 1 + Stage 2
+    ########################################################
+    
+    result <-
+      
+      run_updated_entry_exit(
+        
+        T.values =
+          T.values,
+        
+        hat.l =
+          hat.l,
+        
+        Data =
+          SNR,
+        
+        L =
+          L,
+        
+        tolerance.stage1 =
+          STAGE1_TOLERANCE,
+        
+        tolerance.E =
+          E_TOLERANCE,
+        
+        tolerance.stage2 =
+          STAGE2_TOLERANCE
+      )
+    
+    
+    ########################################################
+    # Extract Stage-2 table
+    ########################################################
+    
+    stage2.table <-
+      result$stage2
+    
+    
+    ########################################################
+    # EX-POST selection
+    ########################################################
+    
+    selected <-
+      
+      select_final_candidate(
+        
+        stage2.table =
+          stage2.table,
+        
+        L =
+          L
+      )
+    
+    
+    ########################################################
+    # Print Stage-1 candidates
+    ########################################################
+    
+    cat(
+      "\nStage-1 candidates:\n"
+    )
+    
+    print(
+      result$stage1$tau.prime.table
+    )
+    
+    
+    ########################################################
+    # Print E_k sets
+    ########################################################
+    
+    cat(
+      "\nE_k sets:\n"
+    )
+    
+    print(
+      result$E_sets
+    )
+    
+    
+    ########################################################
+    # Print Stage-2 candidates
+    ########################################################
+    
+    cat(
+      "\nStage-2 candidates:\n"
+    )
+    
+    print(
+      stage2.table
+    )
+    
+    
+    ########################################################
+    # Print selected candidate
+    ########################################################
+    
+    cat(
+      "\nSelected candidate:\n"
+    )
+    
+    print(
+      selected
+    )
+    
+    
+    ########################################################
+    # Store result
+    ########################################################
+    
+    final.rows[[counter]] <-
+      
+      data.frame(
+        
+        tau =
+          tau,
+        
+        SNR =
+          SNR,
+        
+        k =
+          selected$step,
+        
+        tau_prime =
+          selected$tau_prime,
+        
+        T_exit =
+          selected$T_exit,
+        
+        T_star =
+          selected$T_star,
+        
+        tau_entry =
+          selected$tau,
+        
+        T_entry =
+          selected$T_entry,
+        
+        w_star =
+          selected$w_star,
+        
+        L =
+          L,
+        
+        peak.in.window =
+          selected$peak.in.window,
+        
+        stringsAsFactors =
+          FALSE
+      )
+    
+    
+    ########################################################
+    # Increment global result counter
+    ########################################################
+    
+    counter <- counter + 1
+  }
 }
 
 
@@ -2260,7 +1882,7 @@ print(
 
 
 ############################################################
-# 16. SAVE CSV
+# 16. SAVE COMBINED CSV
 ############################################################
 
 write.csv(
@@ -2268,7 +1890,7 @@ write.csv(
   table.entry.interpretation,
   
   file =
-    "entry-interpretation-updated.csv",
+    "entry-interpretation-updated-all-tau.csv",
   
   row.names =
     FALSE
@@ -2276,7 +1898,7 @@ write.csv(
 
 
 ############################################################
-# 17. LATEX-READY TABLE
+# 17. LATEX-READY COMBINED TABLE
 ############################################################
 
 cat(
@@ -2284,7 +1906,7 @@ cat(
 )
 
 cat(
-  "LATEX TABLE\n"
+  "LATEX TABLE — ALL TAU VALUES\n"
 )
 
 cat(
@@ -2307,3 +1929,76 @@ print(
       6
   )
 )
+
+
+############################################################
+# 18. OPTIONAL: DISPLAY ONE TABLE PER TAU
+############################################################
+#
+# The combined table above is the main output.
+#
+# The following section also prints four separate tables,
+# one for each tau, which may be more convenient when
+# reproducing the tables of the accepted paper.
+#
+############################################################
+
+for (tau in tau.values) {
+  
+  cat(
+    "\n\n========================================\n"
+  )
+  
+  cat(
+    "FINAL TABLE FOR tau =",
+    tau,
+    "\n"
+  )
+  
+  cat(
+    "========================================\n\n"
+  )
+  
+  
+  tau.table <-
+    
+    table.entry.interpretation[
+      
+      table.entry.interpretation$tau ==
+        tau,
+      
+      ,
+      
+      drop = FALSE
+    ]
+  
+  
+  print(
+    tau.table
+  )
+  
+  
+  cat(
+    "\nLaTeX table for tau =",
+    tau,
+    ":\n\n"
+  )
+  
+  
+  print(
+    
+    knitr::kable(
+      
+      tau.table,
+      
+      format =
+        "latex",
+      
+      booktabs =
+        TRUE,
+      
+      digits =
+        6
+    )
+  )
+}
