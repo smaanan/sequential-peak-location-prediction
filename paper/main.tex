@@ -556,15 +556,23 @@ Thus, $\omega_l(T,T')$ measures the largest variation of the estimated peak loca
 \)
 if and only if $\hat{l}(t)$ is constant over the observation horizons contained in $[T,T']$.
 A particular case of~\eqref{eq:local_oscillation} is the future-tail oscillation
-\begin{equation}
-	\omega_l(T,h)
-	=
-	\max_{T\leq t_1,t_2\leq h}
-	\left|
-	\hat{l}(t_1)-\hat{l}(t_2)
-	\right|.
-	\label{eq:future_tail_oscillation}
-\end{equation}
+%\begin{equation}
+%	\omega_l(T,h)
+%	=
+%	\max_{T\leq t_1,t_2\leq h}
+%	\left|
+%	\hat{l}(t_1)-\hat{l}(t_2)
+%	\right|.
+%	\label{eq:future_tail_oscillation}
+%\end{equation}
+\[
+\omega_l(T,h)
+=
+\max_{T\leq t_1,t_2\leq h}
+\left|
+\hat{l}(t_1)-\hat{l}(t_2)
+\right|.
+\]
 This quantity measures the largest variation that can still occur in the estimated peak location after observation time $T$.
 The future-tail oscillation is nonincreasing with $T$. Indeed, if
 \(
