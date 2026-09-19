@@ -875,21 +875,6 @@ We analyze the first wave of the COVID-19 epidemic in China, using the first 60 
 	\end{table}
 \end{landscape}
 
-%The estimated peak-location trajectories exhibit different stabilization patterns across the quantile levels. The corresponding stabilization times are $T_{\mathrm{stab}}=13$, $15$, $22$, and $28$ for $\tau=0.25$, $0.5$, $0.75$, and $0.95$, respectively. These values are obtained from the criterion based on the future range of the estimated peak-location trajectory and should therefore be interpreted as stabilization times of the estimation path.
-%
-%The stabilization criterion characterizes the temporal behavior of the estimation path and does not require knowledge of the true peak location. It is distinct from the entry--exit construction introduced in Section~\ref{sec:entry-exit}, which uses the oscillations of the estimated peak location to construct candidate time windows for the peak region. Thus, $T_{\mathrm{stab}}$ in Table~\ref{tab:china_tau} is not an entry time into a peak region and is not associated with an exit time.
-%
-%For the present real-data application, the observed peak location is known retrospectively from the complete infection trajectory. We therefore apply the two-stage entry--exit construction introduced in Section~\ref{sec:entry-exit} to the estimated peak-location trajectories. In accordance with the ex-post criterion introduced in that section, among the Stage-2 candidates whose windows strictly contain the observed peak,
-%\[
-%T_{\mathrm{entry}}^{(k)}<L<T_{\mathrm{exit}}^{(k)},
-%\]
-%we retain the candidate with the smallest window width
-%\[
-%w_k=T_{\mathrm{exit}}^{(k)}-T_{\mathrm{entry}}^{(k)}.
-%\]
-%This minimum-width selection is used only for the retrospective evaluation of the real-data example; it is not part of the operational two-stage procedure when the peak location is unknown.
-
-{\color{red}
 The corresponding stabilization times are $T_{\mathrm{stab}}=13$, $15$, $22$, and $28$ for $\tau=0.25$, $0.5$, $0.75$, and $0.95$, respectively. The stabilization criterion characterizes the temporal behavior of the estimated peak-location path and is distinct from the entry--exit construction introduced in Section~\ref{sec:entry-exit}. For the present real-data application, where the observed peak location is known retrospectively, we apply the latter construction and, among the Stage-2 candidates satisfying
 \(
 T_{\mathrm{entry}}^{(k)}<L<T_{\mathrm{exit}}^{(k)},
@@ -898,7 +883,7 @@ retain the one with the smallest width
 \(
 w_k=T_{\mathrm{exit}}^{(k)}-T_{\mathrm{entry}}^{(k)}.
 \)
-This minimum-width selection is used only for retrospective evaluation and is not part of the operational procedure when the peak location is unknown.}
+This minimum-width selection is used only for retrospective evaluation and is not part of the operational procedure when the peak location is unknown.
 
 For China, the observed peak location is $L=22$. The resulting retrospective selection for the four quantile levels is reported in Table~\ref{tab:china_entry_exit}. For $\tau=0.25$, the selected candidate corresponds to $\tau'_k=1$, with $T_{\mathrm{exit}}=26$, $T^*=14$, $\tau=1$, and $T_{\mathrm{entry}}=14$, giving a window width $w^*=12$. For $\tau=0.5$, the selected candidate corresponds to $\tau'_k=2$, with $T_{\mathrm{exit}}=24$, $T^*=14$, $\tau=2$, and $T_{\mathrm{entry}}=14$, giving $w^*=10$. For $\tau=0.95$, the selected candidate corresponds to $\tau'_k=6$, with $T_{\mathrm{exit}}=27$, $T^*=21$, $\tau=12$, and $T_{\mathrm{entry}}=14$, giving $w^*=13$. For $\tau=0.75$, no Stage-2 candidate satisfies the strict containment condition $T_{\mathrm{entry}}^{(k)}<22<T_{\mathrm{exit}}^{(k)}$, and consequently no retrospective candidate is selected.
 
