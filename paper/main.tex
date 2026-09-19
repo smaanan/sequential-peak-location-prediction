@@ -826,6 +826,66 @@ We analyze the first wave of the COVID-19 epidemic in China, using the first 60 
 	\end{table}
 \end{landscape}
 
+{\color{red}
+We next apply the two-stage entry--exit construction introduced in Section~\ref{sec:entry-exit} to the estimated peak-location trajectories. To illustrate the construction without introducing an additional table for every quantile level, we consider the central quantile level $\tau=0.5$.
+
+For $\tau=0.5$, the Stage-1 construction generates a sequence of candidate exit times and corresponding oscillation levels. Among the resulting Stage-2 candidates, the candidate with
+\[
+\tau'_k=2,
+\qquad
+T_{\mathrm{exit}}^{(k)}=24
+\]
+provides the peak-containing window selected by the ex-post criterion. The corresponding admissible set is
+\[
+E_k
+=
+\left\{
+T<T_{\mathrm{exit}}^{(k)}:
+\omega_l(T,T_{\mathrm{exit}}^{(k)})\geq\tau'_k
+\right\}
+=
+\{4,5,\ldots,14\}.
+\]
+Hence,
+\[
+T^*=14.
+\]
+The associated Stage-2 oscillation level is
+\[
+\tau_k
+=
+\omega_l(14,24)
+=
+2.
+\]
+The first occurrence of this selected oscillation level is also at
+\[
+T_{\mathrm{entry}}^{(k)}=14.
+\]
+Consequently, the corresponding window width is
+\[
+w_k
+=
+T_{\mathrm{exit}}^{(k)}
+-
+T_{\mathrm{entry}}^{(k)}
+=
+24-14
+=
+10.
+\]
+
+For the Chinese data, the observed peak occurs at $L=22$. Therefore,
+\[
+14<22<24,
+\]
+so that the resulting window
+\[
+(14,24)
+\]
+strictly contains the observed peak. Among the Stage-2 candidates generated for $\tau=0.5$, this is the peak-containing candidate with the smallest window width. It is therefore selected by the ex-post evaluation criterion.
+}
+
 \subsection{France}
 \label{subsec:france}
 
