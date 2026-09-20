@@ -989,6 +989,129 @@ The results show that the retrospective peak-region candidate depends on the qua
 			\bottomrule
 		\end{tabular*}
 	\end{table}
+\end{landscape}
+
+\subsection{Germany}
+\label{subsec:germany}
+
+Finally, we consider COVID-19 daily cases in Germany from January 28 to
+July 5, 2020. To align the peak location with day $t=61$, we index the
+data starting on January 28. We analyze observation horizons
+$T=40,\ldots,75$. For each quantile level
+$\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the estimation path
+$T\mapsto\hat{l}(T)$, with candidate peak locations ranging over
+$l\in\{1,\ldots,h\}$ with $h=75$. Temporal stabilization is assessed
+using the criterion introduced in Section~\ref{sec:stability-analysis},
+with tolerance $\varepsilon=15$. The resulting estimation paths are
+reported in Table~\ref{tab:germany_tau}.
+
+The corresponding stabilization times are $T_{\mathrm{stab}}=60$, $59$,
+$56$, and $57$ for $\tau=0.25$, $0.5$, $0.75$, and $0.95$,
+respectively. The stabilization criterion characterizes the temporal
+behavior of the estimated peak-location path and is distinct from the
+entry--exit construction introduced in Section~\ref{sec:entry-exit}. For
+the present real-data application, where the observed peak location is
+known retrospectively, we apply the latter construction and, among the
+Stage-2 candidates satisfying
+\(
+T_{\mathrm{entry}}^{(k)}<L<T_{\mathrm{exit}}^{(k)},
+\)
+retain the one with the smallest width
+\(
+w_k=T_{\mathrm{exit}}^{(k)}-T_{\mathrm{entry}}^{(k)}.
+\)
+This minimum-width selection is used only for retrospective evaluation
+and is not part of the operational procedure when the peak location is
+unknown.
+
+For Germany, the observed peak location is $L=61$. The resulting
+retrospective selection for the four quantile levels is reported in
+Table~\ref{tab:germany_entry_exit}. For $\tau=0.25$, the selected
+candidate corresponds to $\tau'_k=15$, with $T_{\mathrm{exit}}=62$,
+$T^*=60$, $\tau=15$, and $T_{\mathrm{entry}}=60$, giving a window width
+$w^*=2$. For $\tau=0.95$, the selected candidate corresponds to
+$\tau'_k=9$, with $T_{\mathrm{exit}}=63$, $T^*=56$, $\tau=18$, and
+$T_{\mathrm{entry}}=56$, giving $w^*=7$. For $\tau=0.5$ and
+$\tau=0.75$, no Stage-2 candidate satisfies the strict containment
+condition $T_{\mathrm{entry}}^{(k)}<61<T_{\mathrm{exit}}^{(k)}$, and
+consequently no retrospective candidate is selected.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Retrospective selection of the peak-region candidate for
+		COVID-19 in Germany.}
+	\label{tab:germany_entry_exit}
+	\begin{tabular}{c|cccccccc}
+		\toprule
+		$\tau$ &
+		$k$ &
+		$\tau'_k$ &
+		$T_{\mathrm{exit}}$ &
+		$T^*$ &
+		$\tau$ &
+		$T_{\mathrm{entry}}$ &
+		$w^*$ &
+		$L$ \\
+		\midrule
+		$0.25$ & 7 & 15 & 62 & 60 & 15 & 60 & 2 & 61 \\
+		$0.50$ & -- & -- & -- & -- & -- & -- & -- & 61 \\
+		$0.75$ & -- & -- & -- & -- & -- & -- & -- & 61 \\
+		$0.95$ & 6 & 9 & 63 & 56 & 18 & 56 & 7 & 61 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+The results show that the retrospective peak-region candidate depends on
+the quantile level. The selected windows are $(60,62)$ for $\tau=0.25$,
+and $(56,63)$ for $\tau=0.95$. For $\tau=0.5$ and $\tau=0.75$, the
+two-stage construction does not produce a candidate whose window strictly
+contains the observed peak location $L=61$. These results complement the
+stabilization analysis in Table~\ref{tab:germany_tau}: the stabilization
+time describes the temporal stabilization of the estimated peak-location
+path, whereas the two-stage construction uses its oscillations to
+identify candidate windows for the peak region.
+
+\begin{landscape}
+	\begin{table}[htbp]
+		\caption{Estimated peak location $\hat{l}(T)$ for COVID-19 in Germany using quantile levels $\tau\in\{0.25,0.5,0.75,0.95\}$.}
+		\label{tab:germany_tau}
+		\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrrrrrrrrrrrrrrrrr}
+			\toprule
+			\addlinespace[2.5pt]
+			\multicolumn{19}{c}{\textbf{$\tau=0.25,\ T_{\mathrm{stab}}=60,\ \varepsilon=15$}} \\
+			\addlinespace[2.5pt]
+			\midrule
+			$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+			$\hat{l}(T)$ & 75 & 45 & 42 & 41 & 44 & 47 & 70 & 75 & 48 & 75 & 54 & 52 & 51 & 51 & 75 & 75 & 75 & 75 \\
+			$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+			$\hat{l}(T)$ & 56 & 56 & 75 & 71 & 60 & 61 & 62 & 62 & 68 & 75 & 72 & 70 & 65 & 65 & 65 & 66 & 66 & 66 \\
+			\midrule\addlinespace[2.5pt]
+			\multicolumn{19}{c}{\textbf{$\tau=0.5,\ T_{\mathrm{stab}}=59,\ \varepsilon=15$}} \\
+			\addlinespace[2.5pt]
+			\midrule
+			$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+			$\hat{l}(T)$ & 75 & 40 & 40 & 46 & 42 & 46 & 75 & 75 & 64 & 74 & 68 & 58 & 51 & 75 & 75 & 75 & 73 & 72 \\
+			$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+			$\hat{l}(T)$ & 56 & 63 & 74 & 71 & 62 & 61 & 61 & 61 & 63 & 65 & 66 & 66 & 66 & 64 & 64 & 65 & 66 & 66 \\
+			\midrule\addlinespace[2.5pt]
+			\multicolumn{19}{c}{\textbf{$\tau=0.75,\ T_{\mathrm{stab}}=56,\ \varepsilon=15$}} \\
+			\addlinespace[2.5pt]
+			\midrule
+			$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+			$\hat{l}(T)$ & 75 & 40 & 40 & 44 & 42 & 47 & 75 & 75 & 54 & 75 & 60 & 57 & 52 & 75 & 75 & 75 & 55 & 56 \\
+			$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+			$\hat{l}(T)$ & 56 & 61 & 66 & 67 & 66 & 64 & 60 & 62 & 64 & 64 & 65 & 65 & 65 & 65 & 64 & 65 & 66 & 66 \\
+			\midrule\addlinespace[2.5pt]
+			\multicolumn{19}{c}{\textbf{$\tau=0.95,\ T_{\mathrm{stab}}=57,\ \varepsilon=15$}} \\
+			\addlinespace[2.5pt]
+			\midrule
+			$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+			$\hat{l}(T)$ & 74 & 50 & 43 & 41 & 41 & 43 & 53 & 53 & 53 & 53 & 54 & 54 & 54 & 75 & 75 & 75 & 71 & 55 \\
+			$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+			$\hat{l}(T)$ & 53 & 55 & 57 & 58 & 58 & 57 & 58 & 59 & 60 & 61 & 61 & 61 & 61 & 61 & 61 & 64 & 66 & 66 \\
+			\bottomrule
+		\end{tabular*}
+	\end{table}
 \end{landscape}}
 
 \subsection{Germany}
