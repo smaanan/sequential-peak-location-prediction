@@ -863,10 +863,52 @@ stabilization of the estimated peak-location path, whereas the two-stage
 construction uses its oscillations to identify candidate windows for the
 peak region.
 
+%\subsection{France}
+%\label{subsec:france}
+%
+%Next, we apply the estimation method to daily COVID-19 cases in France, using ECDC data from January 15 to May 31, 2020. The analysis covers observation horizons $T=50,\ldots,89$. For each quantile level $\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the corresponding estimation path $T\mapsto\hat{l}(T)$, with candidate peak locations ranging over $l\in\{1,\ldots,h\}$ with $h=120$. Temporal stabilization is assessed using the criterion introduced in Section~\ref{sec:stability-analysis}, with tolerance $\varepsilon=5$. The estimated peak-location sequences are reported in Table~\ref{tab:france_tau}.
+%
+%The corresponding stabilization times are $T_{\mathrm{stab}}=85$, $82$, $80$, and $85$ for $\tau=0.25$, $0.5$, $0.75$, and $0.95$, respectively. The stabilization criterion characterizes the temporal behavior of the estimated peak-location path and is distinct from the entry--exit construction introduced in Section~\ref{sec:entry-exit}. For the present real-data application, where the observed peak location is known retrospectively, we apply the latter construction and, among the Stage-2 candidates satisfying
+%\(
+%T_{\mathrm{entry}}^{(k)}<L<T_{\mathrm{exit}}^{(k)},
+%\)
+%retain the one with the smallest width
+%\(
+%w_k=T_{\mathrm{exit}}^{(k)}-T_{\mathrm{entry}}^{(k)}.
+%\)
+%This minimum-width selection is used only for retrospective evaluation and is not part of the operational procedure when the peak location is unknown.
+%
+%For France, the observed peak location is $L=78$. The resulting retrospective selection for the four quantile levels is reported in Table~\ref{tab:france_entry_exit}. For $\tau=0.25$, the selected candidate corresponds to $\tau'_k=13$, with $T_{\mathrm{exit}}=79$, $T^*=76$, $\tau=13$, and $T_{\mathrm{entry}}=76$, giving a window width $w^*=3$. For $\tau=0.5$, the selected candidate corresponds to $\tau'_k=7$, with $T_{\mathrm{exit}}=81$, $T^*=73$, $\tau=7$, and $T_{\mathrm{entry}}=73$, giving $w^*=8$. For $\tau=0.95$, the selected candidate corresponds to $\tau'_k=11$, with $T_{\mathrm{exit}}=80$, $T^*=77$, $\tau=13$, and $T_{\mathrm{entry}}=74$, giving $w^*=6$. For $\tau=0.75$, no Stage-2 candidate satisfies the strict containment condition $T_{\mathrm{entry}}^{(k)}<78<T_{\mathrm{exit}}^{(k)}$, and consequently no retrospective candidate is selected.
+%
+%\begin{table}[htbp]
+%	\centering
+%	\caption{Retrospective selection of the peak-region candidate for COVID-19 in France.}
+%	\label{tab:france_entry_exit}
+%	\begin{tabular}{c|cccccccc}
+%		\toprule
+%		$\tau$ &
+%		$k$ &
+%		$\tau'_k$ &
+%		$T_{\mathrm{exit}}$ &
+%		$T^*$ &
+%		$\tau$ &
+%		$T_{\mathrm{entry}}$ &
+%		$w^*$ &
+%		$L$ \\
+%		\midrule
+%		$0.25$ & 5 & 13 & 79 & 76 & 13 & 76 & 3 & 78 \\
+%		$0.50$ & 4 & 7 & 81 & 73 & 7 & 73 & 8 & 78 \\
+%		$0.75$ & -- & -- & -- & -- & -- & -- & -- & 78 \\
+%		$0.95$ & 6 & 11 & 80 & 77 & 13 & 74 & 6 & 78 \\
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+%The results show that the retrospective peak-region candidate depends on the quantile level. The selected windows are $(76,79)$ for $\tau=0.25$, $(73,81)$ for $\tau=0.5$, and $(74,80)$ for $\tau=0.95$. For $\tau=0.75$, the two-stage construction does not produce a candidate whose window strictly contains the observed peak location $L=78$. These results complement the stabilization analysis in Table~\ref{tab:france_tau}: the stabilization time describes the temporal stabilization of the estimated peak-location path, whereas the two-stage construction uses its oscillations to identify candidate windows for the peak region.
+
 \subsection{France}
 \label{subsec:france}
 
-Next, we apply the estimation method to daily COVID-19 cases in France, using ECDC data from January 15 to May 31, 2020. The analysis covers observation horizons $T=50,\ldots,89$. For each quantile level $\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the corresponding estimation path $T\mapsto\hat{l}(T)$, with candidate peak locations ranging over $l\in\{1,\ldots,h\}$ with $h=120$. Temporal stabilization is assessed using the criterion introduced in Section~\ref{sec:stability-analysis}, with tolerance $\varepsilon=5$. The estimated peak-location sequences are reported in Table~\ref{tab:france_tau}.
+Next, we apply the estimation method to daily COVID-19 cases in France, using ECDC data from January 15 to May 31, 2020. The analysis covers observation horizons $T=50,\ldots,89$. For each quantile level $\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the corresponding estimation path $T\mapsto\hat{l}(T)$, with candidate peak locations ranging over $l\in\{1,\ldots,h\}$ with $h=\max(T)=89$. Temporal stabilization is assessed using the criterion introduced in Section~\ref{sec:stability-analysis}, with tolerance $\varepsilon=5$. The estimated peak-location sequences are reported in Table~\ref{tab:france_tau}.
 
 The corresponding stabilization times are $T_{\mathrm{stab}}=85$, $82$, $80$, and $85$ for $\tau=0.25$, $0.5$, $0.75$, and $0.95$, respectively. The stabilization criterion characterizes the temporal behavior of the estimated peak-location path and is distinct from the entry--exit construction introduced in Section~\ref{sec:entry-exit}. For the present real-data application, where the observed peak location is known retrospectively, we apply the latter construction and, among the Stage-2 candidates satisfying
 \(
@@ -878,7 +920,7 @@ w_k=T_{\mathrm{exit}}^{(k)}-T_{\mathrm{entry}}^{(k)}.
 \)
 This minimum-width selection is used only for retrospective evaluation and is not part of the operational procedure when the peak location is unknown.
 
-For France, the observed peak location is $L=78$. The resulting retrospective selection for the four quantile levels is reported in Table~\ref{tab:france_entry_exit}. For $\tau=0.25$, the selected candidate corresponds to $\tau'_k=13$, with $T_{\mathrm{exit}}=79$, $T^*=76$, $\tau=13$, and $T_{\mathrm{entry}}=76$, giving a window width $w^*=3$. For $\tau=0.5$, the selected candidate corresponds to $\tau'_k=7$, with $T_{\mathrm{exit}}=81$, $T^*=73$, $\tau=7$, and $T_{\mathrm{entry}}=73$, giving $w^*=8$. For $\tau=0.95$, the selected candidate corresponds to $\tau'_k=11$, with $T_{\mathrm{exit}}=80$, $T^*=77$, $\tau=13$, and $T_{\mathrm{entry}}=74$, giving $w^*=6$. For $\tau=0.75$, no Stage-2 candidate satisfies the strict containment condition $T_{\mathrm{entry}}^{(k)}<78<T_{\mathrm{exit}}^{(k)}$, and consequently no retrospective candidate is selected.
+For France, the observed peak location is $L=78$. The resulting retrospective selection for the four quantile levels is reported in Table~\ref{tab:france_entry_exit}. For $\tau=0.25$, the selected candidate corresponds to $\tau'_k=13$, with $T_{\mathrm{exit}}=79$, $T^*=76$, $\tau=13$, and $T_{\mathrm{entry}}=72$, giving a window width $w^*=7$. For $\tau=0.5$, the selected candidate corresponds to $\tau'_k=4$, with $T_{\mathrm{exit}}=82$, $T^*=78$, $\tau=6$, and $T_{\mathrm{entry}}=73$, giving $w^*=9$. For $\tau=0.75$, the selected candidate corresponds to $\tau'_k=8$, with $T_{\mathrm{exit}}=79$, $T^*=72$, $\tau=11$, and $T_{\mathrm{entry}}=70$, giving $w^*=9$. For $\tau=0.95$, the selected candidate corresponds to $\tau'_k=11$, with $T_{\mathrm{exit}}=80$, $T^*=77$, $\tau=13$, and $T_{\mathrm{entry}}=70$, giving $w^*=10$.
 
 \begin{table}[htbp]
 	\centering
@@ -896,14 +938,15 @@ For France, the observed peak location is $L=78$. The resulting retrospective se
 		$w^*$ &
 		$L$ \\
 		\midrule
-		$0.25$ & 5 & 13 & 79 & 76 & 13 & 76 & 3 & 78 \\
-		$0.50$ & 4 & 7 & 81 & 73 & 7 & 73 & 8 & 78 \\
-		$0.75$ & -- & -- & -- & -- & -- & -- & -- & 78 \\
-		$0.95$ & 6 & 11 & 80 & 77 & 13 & 74 & 6 & 78 \\
+		$0.25$ & 5 & 13 & 79 & 76 & 13 & 72 & 7 & 78 \\
+		$0.50$ & 3 & 4 & 82 & 78 & 6 & 73 & 9 & 78 \\
+		$0.75$ & 3 & 8 & 79 & 72 & 11 & 70 & 9 & 78 \\
+		$0.95$ & 6 & 11 & 80 & 77 & 13 & 70 & 10 & 78 \\
 		\bottomrule
 	\end{tabular}
 \end{table}
-The results show that the retrospective peak-region candidate depends on the quantile level. The selected windows are $(76,79)$ for $\tau=0.25$, $(73,81)$ for $\tau=0.5$, and $(74,80)$ for $\tau=0.95$. For $\tau=0.75$, the two-stage construction does not produce a candidate whose window strictly contains the observed peak location $L=78$. These results complement the stabilization analysis in Table~\ref{tab:france_tau}: the stabilization time describes the temporal stabilization of the estimated peak-location path, whereas the two-stage construction uses its oscillations to identify candidate windows for the peak region.
+
+The results show that the retrospective peak-region candidate depends on the quantile level. The selected windows are $(72,79)$ for $\tau=0.25$, $(73,82)$ for $\tau=0.5$, $(70,79)$ for $\tau=0.75$, and $(70,80)$ for $\tau=0.95$. All four windows strictly contain the observed peak location $L=78$, so a retrospective candidate is selected for every quantile level; the widths vary between 7 and 10 across the four quantile specifications. These results complement the stabilization analysis in Table~\ref{tab:france_tau}: the stabilization time describes the temporal stabilization of the estimated peak-location path, whereas the two-stage construction uses its oscillations to identify candidate windows for the peak region.
 
 \subsection{Germany}
 \label{subsec:germany}
@@ -1079,6 +1122,49 @@ Novoselac, V. (2020).
 	\end{table}
 \end{landscape}
 
+%\begin{landscape}
+%	\begin{table}[htbp]
+%		\caption{Estimated peak location $\hat{l}(T)$ for COVID-19 in France using quantile levels $\tau\in\{0.25,0.5,0.75,0.95\}$.}
+%		\label{tab:france_tau}
+%		\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrrrrrrrrrrrrrrrrrrr}
+%			\toprule
+%			\addlinespace[2.5pt]
+%			\multicolumn{21}{c}{\textbf{$\tau=0.25,\ T_{\mathrm{stab}}=85,\ \varepsilon=5$}} \\
+%			\addlinespace[2.5pt]
+%			\midrule
+%			$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+%			$\hat{l}(T)$ & 63 & 61 & 120 & 120 & 56 & 119 & 96 & 71 & 83 & 71 & 72 & 67 & 65 & 66 & 66 & 66 & 74 & 72 & 72 & 69 \\
+%			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
+%			$\hat{l}(T)$ & 69 & 72 & 81 & 82 & 90 & 92 & 76 & 80 & 89 & 88 & 75 & 79 & 83 & 76 & 76 & 80 & 82 & 82 & 82 & 82 \\
+%			\midrule\addlinespace[2.5pt]
+%			\multicolumn{21}{c}{\textbf{$\tau=0.5,\ T_{\mathrm{stab}}=82,\ \varepsilon=5$}} \\
+%			\addlinespace[2.5pt]
+%			\midrule
+%			$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+%			$\hat{l}(T)$ & 49 & 54 & 88 & 72 & 54 & 120 & 58 & 60 & 120 & 87 & 108 & 71 & 69 & 77 & 67 & 72 & 73 & 71 & 73 & 70 \\
+%			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
+%			$\hat{l}(T)$ & 74 & 78 & 78 & 83 & 88 & 90 & 88 & 85 & 90 & 86 & 85 & 86 & 83 & 80 & 79 & 79 & 80 & 80 & 81 & 80 \\
+%			\midrule\addlinespace[2.5pt]
+%			\multicolumn{21}{c}{\textbf{$\tau=0.75,\ T_{\mathrm{stab}}=80,\ \varepsilon=5$}} \\
+%			\addlinespace[2.5pt]
+%			\midrule
+%			$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+%			$\hat{l}(T)$ & 48 & 51 & 120 & 120 & 120 & 120 & 120 & 59 & 64 & 65 & 87 & 68 & 66 & 81 & 73 & 70 & 83 & 83 & 72 & 72 \\
+%			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
+%			$\hat{l}(T)$ & 120 & 89 & 78 & 84 & 84 & 86 & 85 & 83 & 120 & 87 & 83 & 81 & 81 & 81 & 80 & 79 & 79 & 81 & 81 & 81 \\
+%			\midrule\addlinespace[2.5pt]
+%			\multicolumn{21}{c}{\textbf{$\tau=0.95,\ T_{\mathrm{stab}}=85,\ \varepsilon=5$}} \\
+%			\addlinespace[2.5pt]
+%			\midrule
+%			$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+%			$\hat{l}(T)$ & 48 & 51 & 56 & 106 & 59 & 120 & 120 & 69 & 59 & 60 & 63 & 63 & 64 & 67 & 67 & 70 & 94 & 87 & 77 & 70 \\
+%			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
+%			$\hat{l}(T)$ & 120 & 120 & 120 & 120 & 79 & 76 & 76 & 76 & 89 & 89 & 89 & 86 & 86 & 86 & 85 & 83 & 80 & 78 & 79 & 79 \\
+%			\bottomrule
+%		\end{tabular*}
+%	\end{table}
+%\end{landscape}
+
 \begin{landscape}
 	\begin{table}[htbp]
 		\caption{Estimated peak location $\hat{l}(T)$ for COVID-19 in France using quantile levels $\tau\in\{0.25,0.5,0.75,0.95\}$.}
@@ -1090,33 +1176,33 @@ Novoselac, V. (2020).
 			\addlinespace[2.5pt]
 			\midrule
 			$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
-			$\hat{l}(T)$ & 63 & 61 & 120 & 120 & 56 & 119 & 96 & 71 & 83 & 71 & 72 & 67 & 65 & 66 & 66 & 66 & 74 & 72 & 72 & 69 \\
+			$\hat{l}(T)$ & 63 & 61 & 89 & 89 & 56 & 55 & 89 & 71 & 83 & 71 & 72 & 67 & 65 & 66 & 66 & 66 & 74 & 72 & 72 & 69 \\
 			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
-			$\hat{l}(T)$ & 69 & 72 & 81 & 82 & 90 & 92 & 76 & 80 & 89 & 88 & 75 & 79 & 83 & 76 & 76 & 80 & 82 & 82 & 82 & 82 \\
+			$\hat{l}(T)$ & 69 & 72 & 81 & 82 & 89 & 89 & 76 & 80 & 89 & 88 & 75 & 79 & 83 & 76 & 76 & 80 & 82 & 82 & 82 & 82 \\
 			\midrule\addlinespace[2.5pt]
 			\multicolumn{21}{c}{\textbf{$\tau=0.5,\ T_{\mathrm{stab}}=82,\ \varepsilon=5$}} \\
 			\addlinespace[2.5pt]
 			\midrule
 			$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
-			$\hat{l}(T)$ & 49 & 54 & 88 & 72 & 54 & 120 & 58 & 60 & 120 & 87 & 108 & 71 & 69 & 77 & 67 & 72 & 73 & 71 & 73 & 70 \\
+			$\hat{l}(T)$ & 49 & 54 & 88 & 72 & 54 & 89 & 58 & 60 & 89 & 87 & 89 & 71 & 69 & 77 & 67 & 72 & 73 & 71 & 73 & 70 \\
 			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
-			$\hat{l}(T)$ & 74 & 78 & 78 & 83 & 88 & 90 & 88 & 85 & 90 & 86 & 85 & 86 & 83 & 80 & 79 & 79 & 80 & 80 & 81 & 80 \\
+			$\hat{l}(T)$ & 74 & 78 & 78 & 83 & 88 & 89 & 88 & 85 & 89 & 86 & 85 & 86 & 83 & 80 & 79 & 79 & 80 & 80 & 81 & 80 \\
 			\midrule\addlinespace[2.5pt]
 			\multicolumn{21}{c}{\textbf{$\tau=0.75,\ T_{\mathrm{stab}}=80,\ \varepsilon=5$}} \\
 			\addlinespace[2.5pt]
 			\midrule
 			$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
-			$\hat{l}(T)$ & 48 & 51 & 120 & 120 & 120 & 120 & 120 & 59 & 64 & 65 & 87 & 68 & 66 & 81 & 73 & 70 & 83 & 83 & 72 & 72 \\
+			$\hat{l}(T)$ & 48 & 51 & 89 & 89 & 89 & 89 & 89 & 59 & 64 & 65 & 87 & 68 & 66 & 81 & 73 & 70 & 83 & 83 & 72 & 72 \\
 			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
-			$\hat{l}(T)$ & 120 & 89 & 78 & 84 & 84 & 86 & 85 & 83 & 120 & 87 & 83 & 81 & 81 & 81 & 80 & 79 & 79 & 81 & 81 & 81 \\
+			$\hat{l}(T)$ & 89 & 89 & 78 & 84 & 84 & 86 & 85 & 83 & 89 & 87 & 83 & 81 & 81 & 81 & 80 & 79 & 79 & 81 & 81 & 81 \\
 			\midrule\addlinespace[2.5pt]
 			\multicolumn{21}{c}{\textbf{$\tau=0.95,\ T_{\mathrm{stab}}=85,\ \varepsilon=5$}} \\
 			\addlinespace[2.5pt]
 			\midrule
 			$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
-			$\hat{l}(T)$ & 48 & 51 & 56 & 106 & 59 & 120 & 120 & 69 & 59 & 60 & 63 & 63 & 64 & 67 & 67 & 70 & 94 & 87 & 77 & 70 \\
+			$\hat{l}(T)$ & 48 & 51 & 56 & 89 & 59 & 89 & 89 & 69 & 59 & 60 & 63 & 63 & 64 & 67 & 67 & 70 & 89 & 87 & 77 & 70 \\
 			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
-			$\hat{l}(T)$ & 120 & 120 & 120 & 120 & 79 & 76 & 76 & 76 & 89 & 89 & 89 & 86 & 86 & 86 & 85 & 83 & 80 & 78 & 79 & 79 \\
+			$\hat{l}(T)$ & 89 & 89 & 89 & 89 & 79 & 76 & 76 & 76 & 89 & 89 & 89 & 86 & 86 & 86 & 85 & 83 & 80 & 78 & 79 & 79 \\
 			\bottomrule
 		\end{tabular*}
 	\end{table}
