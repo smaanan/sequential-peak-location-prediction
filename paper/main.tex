@@ -778,6 +778,48 @@ We now demonstrate the application of our quantile-based peak estimation framewo
 	\label{fig:covid-1x3}
 \end{figure}
 
+{\color{red}
+\section{Real-World Application: COVID-19 Case Study}
+\label{sec:covid-real-data}
+
+We now demonstrate the application of our quantile-based peak estimation
+framework to real-world data. We focus on the daily confirmed COVID-19
+cases in China, France, and Germany. Figure~\ref{fig:covid-1x3} displays
+the daily case series for these three countries. For each country, we
+analyze the sequence $T \mapsto \hat{l}(T)$ for the quantile levels
+$\tau \in \{0.25,0.5,0.75,0.95\}$, using quantile-loss minimization over
+the Gaussian-shaped parametric peak model. Following Algorithm~1 of the
+manuscript, the candidate peak location ranges over the analysis horizon
+$h = \max(T)$, so that for each country the search set is
+$\{1,\ldots,h\}$. We then assess the temporal stabilization of the
+estimated peak-location path using the retrospective stabilization
+criterion introduced in Section~\ref{sec:stability-analysis}, applied
+separately to each country and quantile level; the resulting
+stabilization time is denoted $T_{\mathrm{stab}}$. For each country we
+additionally apply the operational two-stage entry--exit construction of
+Section~\ref{sec:entry-exit}, which uses the oscillations of the
+estimated peak-location path to identify a candidate peak-region window
+$(T_{\mathrm{entry}}^{(k)},T_{\mathrm{exit}}^{(k)})$ and whose width is
+denoted $w_k = T_{\mathrm{exit}}^{(k)} - T_{\mathrm{entry}}^{(k)}$.
+Because the observed peak location $L$ is known for each of the three
+country-level trajectories used here, the resulting Stage-2 candidates
+can be evaluated retrospectively, and the narrowest candidate satisfying
+the strict containment criterion
+\(
+T_{\mathrm{entry}}^{(k)} < L < T_{\mathrm{exit}}^{(k)}
+\)
+is reported for each country and quantile level. This minimum-width
+selection is used only for retrospective evaluation and is not part of
+the operational procedure when $L$ is unknown.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{covid_series_1x3.pdf}
+	\caption{Daily confirmed COVID-19 cases in China, France, and Germany (left to right).}
+	\label{fig:covid-1x3}
+\end{figure}
+}
+
 {\color{blue}
 \subsection{China}
 \label{subsec:china}
