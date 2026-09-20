@@ -4,7 +4,7 @@
 #
 # Data:
 #   ECDC daily COVID-19 cases
-#   January 15 to May 31, 2020 (first 120 days used)
+#   January 15 to May 31, 2020
 #
 # Quantile levels:
 #   tau = 0.25, 0.50, 0.75, 0.95
@@ -63,10 +63,10 @@ taus <- c(
 # Observation horizons used in the sequential analysis
 T_vals <- 50:89
 
-# Analysis horizon: the search range for l is {1,...,h}.
-# The France analysis uses h = 120, matching the paper's
-# description of the France trajectory t in [1,120].
-h <- 120
+# Analysis horizon: the search range for l is {1,...,h},
+# with h = max(T_vals) = 89, matching the Section 7
+# convention and the China and Germany scripts.
+h <- max(T_vals)
 
 # Numerical tolerances used in Section 7
 STAGE1_TOLERANCE <- 1e-10
@@ -130,12 +130,11 @@ get_france_cases_ecdc <- function(
 
 france <- get_france_cases_ecdc()
 
-# Raw daily new cases, truncated to the first 120 days
-# so that the analysis horizon h = 120 matches the
-# length of the input used by the estimator.
-I_full <- france$daily_cases[1:h]
+# Raw daily cases. Only the first h = 89 days are ever used
+# by the estimator, since T ranges over T_vals = 50:89.
+I_full <- france$daily_cases
 
-stopifnot(length(I_full) == h)
+stopifnot(length(I_full) >= h)
 
 
 ############################################################
@@ -303,7 +302,7 @@ search_best_s <- function(
 #
 #     l in {1,...,h}
 #
-# where h is the analysis horizon (h = 120 for France).
+# where h = max(T_vals) = 89.
 ############################################################
 
 estimate_params <- function(

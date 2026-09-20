@@ -3,14 +3,15 @@
 #
 # Updated version:
 # - Candidate peak locations range over l = 1,...,h with
-#   h = 120 (the analysis horizon), matching Algorithm 1
-#   of the manuscript and the France entry/exit script.
+#   h = max(T_vals) = 89, matching Algorithm 1 of the
+#   manuscript and the Section 7 convention used for China
+#   and Germany.
 # - Only the stabilization/entry time T_entry is computed.
 # - T_exit and threshold_prime have been removed.
 #
 # Data:
 #   ECDC daily COVID-19 cases
-#   January 15 to May 31, 2020 (first 120 days used)
+#   January 15 to May 31, 2020
 #
 # Observation horizons:
 #   T = 50,...,89
@@ -44,11 +45,10 @@ threshold <- 5
 # Observation horizons used in the sequential analysis
 T_vals <- 50:89
 
-# Analysis horizon: the search range for l is {1,...,h}.
-# The France analysis uses h = 120, matching Algorithm 1 of
-# the manuscript, the France entry/exit script, and the
-# description of the France trajectory t in [1,120].
-h <- 120
+# Analysis horizon: the search range for l is {1,...,h},
+# with h = max(T_vals) = 89, matching the Section 7
+# convention and the China and Germany scripts.
+h <- max(T_vals)
 
 # Store objective values at T_max
 min_objectives <- list()
@@ -110,13 +110,11 @@ get_france_cases_ecdc <- function(
 
 france <- get_france_cases_ecdc()
 
-# Raw daily cases, truncated to the first h days so that the
-# analysis horizon h = 120 matches the length of the input
-# used by the estimator. This is the same truncation used by
-# the France entry/exit script.
-I_full <- france$daily_cases[1:h]
+# Raw daily cases. The estimator only uses I_full[1:T] for
+# T in T_vals, so only the first h = 89 days are ever used.
+I_full <- france$daily_cases
 
-stopifnot(length(I_full) == h)
+stopifnot(length(I_full) >= h)
 
 
 # --- Quantile Loss ----------------------------------------------------------
@@ -222,12 +220,10 @@ search_best_s <- function(I, l, tau) {
 # At each observation horizon T, the candidate peak location
 # ranges over the full analysis horizon:
 #
-#       l in {1,...,h}      with h = 120
+#       l in {1,...,h}      with h = 89
 #
-# This matches Algorithm 1 of the manuscript, in which the
-# minimization is over l in [1,h], and it is the same
-# convention used by the China and Germany scripts and by the
-# France entry/exit script.
+# This matches Algorithm 1 of the manuscript and the
+# Section 7 convention used for China and Germany.
 # ---------------------------------------------------------------------------
 
 estimate_params <- function(I, tau, h) {
