@@ -766,19 +766,19 @@ The endpoints are determined entirely from the sequential estimation trajectory 
 
 %\end{document}
 
-\section{Real-World Application: COVID-19 Case Study}
-\label{sec:covid-real-data}
+%\section{Real-World Application: COVID-19 Case Study}
+%\label{sec:covid-real-data}
+%
+%We now demonstrate the application of our quantile-based peak estimation framework to real-world data. We focus on the daily confirmed COVID-19 cases in China, France, and Germany. Figure~\ref{fig:covid-1x3} displays the daily case series for these three countries. For each country, we analyze the sequence $T \mapsto \hat{l}(T)$ for the quantile levels $\tau \in \{0.25,0.5,0.75,0.95\}$, using quantile-loss minimization over the Gaussian-shaped parametric peak model. The candidate peak location is restricted to the currently observed range, $l\in\{1,\ldots,T\}$. We then assess the temporal stabilization of the estimated peak location using the retrospective stabilization criterion introduced in Section~\ref{sec:stability-analysis}. The corresponding stabilization time $T_{\mathrm{entry}}$ is determined separately for each country and quantile level.
+%
+%\begin{figure}[htbp]
+%	\centering
+%	\includegraphics[width=\textwidth]{covid_series_1x3.pdf}
+%	\caption{Daily confirmed COVID-19 cases in China, France, and Germany (left to right).}
+%	\label{fig:covid-1x3}
+%\end{figure}
 
-We now demonstrate the application of our quantile-based peak estimation framework to real-world data. We focus on the daily confirmed COVID-19 cases in China, France, and Germany. Figure~\ref{fig:covid-1x3} displays the daily case series for these three countries. For each country, we analyze the sequence $T \mapsto \hat{l}(T)$ for the quantile levels $\tau \in \{0.25,0.5,0.75,0.95\}$, using quantile-loss minimization over the Gaussian-shaped parametric peak model. The candidate peak location is restricted to the currently observed range, $l\in\{1,\ldots,T\}$. We then assess the temporal stabilization of the estimated peak location using the retrospective stabilization criterion introduced in Section~\ref{sec:stability-analysis}. The corresponding stabilization time $T_{\mathrm{entry}}$ is determined separately for each country and quantile level.
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=\textwidth]{covid_series_1x3.pdf}
-	\caption{Daily confirmed COVID-19 cases in China, France, and Germany (left to right).}
-	\label{fig:covid-1x3}
-\end{figure}
-
-{\color{red}
+{\color{blue}
 \section{Real-World Application: COVID-19 Case Study}
 \label{sec:covid-real-data}
 
