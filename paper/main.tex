@@ -1071,48 +1071,49 @@ time describes the temporal stabilization of the estimated peak-location
 path, whereas the two-stage construction uses its oscillations to
 identify candidate windows for the peak region.
 
-\begin{landscape}
-	\begin{table}[htbp]
-		\caption{Estimated peak location $\hat{l}(T)$ for COVID-19 in Germany using quantile levels $\tau\in\{0.25,0.5,0.75,0.95\}$.}
-		\label{tab:germany_tau}
-		\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrrrrrrrrrrrrrrrrr}
-			\toprule
-			\addlinespace[2.5pt]
-			\multicolumn{19}{c}{\textbf{$\tau=0.25,\ T_{\mathrm{stab}}=60,\ \varepsilon=15$}} \\
-			\addlinespace[2.5pt]
-			\midrule
-			$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
-			$\hat{l}(T)$ & 75 & 45 & 42 & 41 & 44 & 47 & 70 & 75 & 48 & 75 & 54 & 52 & 51 & 51 & 75 & 75 & 75 & 75 \\
-			$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
-			$\hat{l}(T)$ & 56 & 56 & 75 & 71 & 60 & 61 & 62 & 62 & 68 & 75 & 72 & 70 & 65 & 65 & 65 & 66 & 66 & 66 \\
-			\midrule\addlinespace[2.5pt]
-			\multicolumn{19}{c}{\textbf{$\tau=0.5,\ T_{\mathrm{stab}}=59,\ \varepsilon=15$}} \\
-			\addlinespace[2.5pt]
-			\midrule
-			$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
-			$\hat{l}(T)$ & 75 & 40 & 40 & 46 & 42 & 46 & 75 & 75 & 64 & 74 & 68 & 58 & 51 & 75 & 75 & 75 & 73 & 72 \\
-			$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
-			$\hat{l}(T)$ & 56 & 63 & 74 & 71 & 62 & 61 & 61 & 61 & 63 & 65 & 66 & 66 & 66 & 64 & 64 & 65 & 66 & 66 \\
-			\midrule\addlinespace[2.5pt]
-			\multicolumn{19}{c}{\textbf{$\tau=0.75,\ T_{\mathrm{stab}}=56,\ \varepsilon=15$}} \\
-			\addlinespace[2.5pt]
-			\midrule
-			$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
-			$\hat{l}(T)$ & 75 & 40 & 40 & 44 & 42 & 47 & 75 & 75 & 54 & 75 & 60 & 57 & 52 & 75 & 75 & 75 & 55 & 56 \\
-			$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
-			$\hat{l}(T)$ & 56 & 61 & 66 & 67 & 66 & 64 & 60 & 62 & 64 & 64 & 65 & 65 & 65 & 65 & 64 & 65 & 66 & 66 \\
-			\midrule\addlinespace[2.5pt]
-			\multicolumn{19}{c}{\textbf{$\tau=0.95,\ T_{\mathrm{stab}}=57,\ \varepsilon=15$}} \\
-			\addlinespace[2.5pt]
-			\midrule
-			$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
-			$\hat{l}(T)$ & 74 & 50 & 43 & 41 & 41 & 43 & 53 & 53 & 53 & 53 & 54 & 54 & 54 & 75 & 75 & 75 & 71 & 55 \\
-			$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
-			$\hat{l}(T)$ & 53 & 55 & 57 & 58 & 58 & 57 & 58 & 59 & 60 & 61 & 61 & 61 & 61 & 61 & 61 & 64 & 66 & 66 \\
-			\bottomrule
-		\end{tabular*}
-	\end{table}
-\end{landscape}}
+%\begin{landscape}
+%	\begin{table}[htbp]
+%		\caption{Estimated peak location $\hat{l}(T)$ for COVID-19 in Germany using quantile levels $\tau\in\{0.25,0.5,0.75,0.95\}$.}
+%		\label{tab:germany_tau}
+%		\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrrrrrrrrrrrrrrrrr}
+%			\toprule
+%			\addlinespace[2.5pt]
+%			\multicolumn{19}{c}{\textbf{$\tau=0.25,\ T_{\mathrm{stab}}=60,\ \varepsilon=15$}} \\
+%			\addlinespace[2.5pt]
+%			\midrule
+%			$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+%			$\hat{l}(T)$ & 75 & 45 & 42 & 41 & 44 & 47 & 70 & 75 & 48 & 75 & 54 & 52 & 51 & 51 & 75 & 75 & 75 & 75 \\
+%			$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+%			$\hat{l}(T)$ & 56 & 56 & 75 & 71 & 60 & 61 & 62 & 62 & 68 & 75 & 72 & 70 & 65 & 65 & 65 & 66 & 66 & 66 \\
+%			\midrule\addlinespace[2.5pt]
+%			\multicolumn{19}{c}{\textbf{$\tau=0.5,\ T_{\mathrm{stab}}=59,\ \varepsilon=15$}} \\
+%			\addlinespace[2.5pt]
+%			\midrule
+%			$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+%			$\hat{l}(T)$ & 75 & 40 & 40 & 46 & 42 & 46 & 75 & 75 & 64 & 74 & 68 & 58 & 51 & 75 & 75 & 75 & 73 & 72 \\
+%			$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+%			$\hat{l}(T)$ & 56 & 63 & 74 & 71 & 62 & 61 & 61 & 61 & 63 & 65 & 66 & 66 & 66 & 64 & 64 & 65 & 66 & 66 \\
+%			\midrule\addlinespace[2.5pt]
+%			\multicolumn{19}{c}{\textbf{$\tau=0.75,\ T_{\mathrm{stab}}=56,\ \varepsilon=15$}} \\
+%			\addlinespace[2.5pt]
+%			\midrule
+%			$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+%			$\hat{l}(T)$ & 75 & 40 & 40 & 44 & 42 & 47 & 75 & 75 & 54 & 75 & 60 & 57 & 52 & 75 & 75 & 75 & 55 & 56 \\
+%			$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+%			$\hat{l}(T)$ & 56 & 61 & 66 & 67 & 66 & 64 & 60 & 62 & 64 & 64 & 65 & 65 & 65 & 65 & 64 & 65 & 66 & 66 \\
+%			\midrule\addlinespace[2.5pt]
+%			\multicolumn{19}{c}{\textbf{$\tau=0.95,\ T_{\mathrm{stab}}=57,\ \varepsilon=15$}} \\
+%			\addlinespace[2.5pt]
+%			\midrule
+%			$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+%			$\hat{l}(T)$ & 74 & 50 & 43 & 41 & 41 & 43 & 53 & 53 & 53 & 53 & 54 & 54 & 54 & 75 & 75 & 75 & 71 & 55 \\
+%			$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+%			$\hat{l}(T)$ & 53 & 55 & 57 & 58 & 58 & 57 & 58 & 59 & 60 & 61 & 61 & 61 & 61 & 61 & 61 & 64 & 66 & 66 \\
+%			\bottomrule
+%		\end{tabular*}
+%	\end{table}
+%\end{landscape}
+}
 
 \subsection{Comparison Across Quantile Levels}
 
@@ -1247,6 +1248,49 @@ Novoselac, V. (2020).
 			$\hat{l}(T)$ & 48 & 51 & 56 & 106 & 59 & 120 & 120 & 69 & 59 & 60 & 63 & 63 & 64 & 67 & 67 & 70 & 94 & 87 & 77 & 70 \\
 			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
 			$\hat{l}(T)$ & 120 & 120 & 120 & 120 & 79 & 76 & 76 & 76 & 89 & 89 & 89 & 86 & 86 & 86 & 85 & 83 & 80 & 78 & 79 & 79 \\
+			\bottomrule
+		\end{tabular*}
+	\end{table}
+\end{landscape}
+
+\begin{landscape}
+	\begin{table}[htbp]
+		\caption{Estimated peak location $\hat{l}(T)$ for COVID-19 in Germany using quantile levels $\tau\in\{0.25,0.5,0.75,0.95\}$.}
+		\label{tab:germany_tau}
+		\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrrrrrrrrrrrrrrrrr}
+			\toprule
+			\addlinespace[2.5pt]
+			\multicolumn{19}{c}{\textbf{$\tau=0.25,\ T_{\mathrm{stab}}=60,\ \varepsilon=15$}} \\
+			\addlinespace[2.5pt]
+			\midrule
+			$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+			$\hat{l}(T)$ & 75 & 45 & 42 & 41 & 44 & 47 & 70 & 75 & 48 & 75 & 54 & 52 & 51 & 51 & 75 & 75 & 75 & 75 \\
+			$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+			$\hat{l}(T)$ & 56 & 56 & 75 & 71 & 60 & 61 & 62 & 62 & 68 & 75 & 72 & 70 & 65 & 65 & 65 & 66 & 66 & 66 \\
+			\midrule\addlinespace[2.5pt]
+			\multicolumn{19}{c}{\textbf{$\tau=0.5,\ T_{\mathrm{stab}}=59,\ \varepsilon=15$}} \\
+			\addlinespace[2.5pt]
+			\midrule
+			$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+			$\hat{l}(T)$ & 75 & 40 & 40 & 46 & 42 & 46 & 75 & 75 & 64 & 74 & 68 & 58 & 51 & 75 & 75 & 75 & 73 & 72 \\
+			$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+			$\hat{l}(T)$ & 56 & 63 & 74 & 71 & 62 & 61 & 61 & 61 & 63 & 65 & 66 & 66 & 66 & 64 & 64 & 65 & 66 & 66 \\
+			\midrule\addlinespace[2.5pt]
+			\multicolumn{19}{c}{\textbf{$\tau=0.75,\ T_{\mathrm{stab}}=56,\ \varepsilon=15$}} \\
+			\addlinespace[2.5pt]
+			\midrule
+			$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+			$\hat{l}(T)$ & 75 & 40 & 40 & 44 & 42 & 47 & 75 & 75 & 54 & 75 & 60 & 57 & 52 & 75 & 75 & 75 & 55 & 56 \\
+			$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+			$\hat{l}(T)$ & 56 & 61 & 66 & 67 & 66 & 64 & 60 & 62 & 64 & 64 & 65 & 65 & 65 & 65 & 64 & 65 & 66 & 66 \\
+			\midrule\addlinespace[2.5pt]
+			\multicolumn{19}{c}{\textbf{$\tau=0.95,\ T_{\mathrm{stab}}=57,\ \varepsilon=15$}} \\
+			\addlinespace[2.5pt]
+			\midrule
+			$T$ & 40 & 41 & 42 & 43 & 44 & 45 & 46 & 47 & 48 & 49 & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 \\
+			$\hat{l}(T)$ & 74 & 50 & 43 & 41 & 41 & 43 & 53 & 53 & 53 & 53 & 54 & 54 & 54 & 75 & 75 & 75 & 71 & 55 \\
+			$T$ & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 & 70 & 71 & 72 & 73 & 74 & 75 \\
+			$\hat{l}(T)$ & 53 & 55 & 57 & 58 & 58 & 57 & 58 & 59 & 60 & 61 & 61 & 61 & 61 & 61 & 61 & 64 & 66 & 66 \\
 			\bottomrule
 		\end{tabular*}
 	\end{table}
