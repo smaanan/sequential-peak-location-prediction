@@ -999,53 +999,53 @@ The results show that the retrospective peak-region candidate depends on the qua
 	\end{table}
 \end{landscape}}
 
-\subsection{France}
-\label{subsec:france}
-
-Next, we apply the estimation method to daily COVID-19 cases in France, using ECDC data from January 15 to May 31, 2020. The analysis covers observation horizons $T=50,\ldots,89$. For each quantile level $\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the corresponding estimation path $T\mapsto\hat{l}(T)$, with candidate peak locations restricted to $l\in\{1,\ldots,T\}$. Temporal stabilization is assessed using the criterion introduced in Section~\ref{sec:stability-analysis}, with tolerance $\varepsilon=5$. The estimated peak-location sequences are reported in Table~\ref{tab:france_tau}.
-
-\begin{landscape}
-	\begin{table}[htbp]
-		\caption{Estimated peak location $\hat{l}(T)$ for COVID-19 in France using quantile levels $\tau\in\{0.25,0.5,0.75,0.95\}$.}
-		\label{tab:france_tau}
-		\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrrrrrrrrrrrrrrrrrrr}
-			\toprule
-			\addlinespace[2.5pt]
-			\multicolumn{21}{c}{\textbf{$\tau=0.25,\ T_{\mathrm{entry}}=85,\ \varepsilon=5$}} \\
-			\addlinespace[2.5pt]
-			\midrule
-			$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
-			$\hat{l}(T)$ & 1 & 1 & 1 & 1 & 1 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
-			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
-			$\hat{l}(T)$ & 69 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 75 & 79 & 82 & 76 & 76 & 80 & 82 & 82 & 82 & 82 \\
-			\midrule\addlinespace[2.5pt]
-			\multicolumn{21}{c}{\textbf{$\tau=0.5,\ T_{\mathrm{entry}}=77,\ \varepsilon=5$}} \\
-			\addlinespace[2.5pt]
-			\midrule
-			$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
-			$\hat{l}(T)$ & 49 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
-			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
-			$\hat{l}(T)$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 80 & 79 & 79 & 80 & 80 & 81 & 80 \\
-			\midrule\addlinespace[2.5pt]
-			\multicolumn{21}{c}{\textbf{$\tau=0.75,\ T_{\mathrm{entry}}=76,\ \varepsilon=5$}} \\
-			\addlinespace[2.5pt]
-			\midrule
-			$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
-			$\hat{l}(T)$ & 48 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
-			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
-			$\hat{l}(T)$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 81 & 81 & 80 & 79 & 79 & 81 & 81 & 81 \\
-			\midrule\addlinespace[2.5pt]
-			\multicolumn{21}{c}{\textbf{$\tau=0.95,\ T_{\mathrm{entry}}=85,\ \varepsilon=5$}} \\
-			\addlinespace[2.5pt]
-			\midrule
-			$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
-			$\hat{l}(T)$ & 48 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
-			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
-			$\hat{l}(T)$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 76 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 83 & 80 & 78 & 79 & 79 \\
-			\bottomrule
-		\end{tabular*}
-	\end{table}
-\end{landscape}
+%\subsection{France}
+%\label{subsec:france}
+%
+%Next, we apply the estimation method to daily COVID-19 cases in France, using ECDC data from January 15 to May 31, 2020. The analysis covers observation horizons $T=50,\ldots,89$. For each quantile level $\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the corresponding estimation path $T\mapsto\hat{l}(T)$, with candidate peak locations restricted to $l\in\{1,\ldots,T\}$. Temporal stabilization is assessed using the criterion introduced in Section~\ref{sec:stability-analysis}, with tolerance $\varepsilon=5$. The estimated peak-location sequences are reported in Table~\ref{tab:france_tau}.
+%
+%\begin{landscape}
+%	\begin{table}[htbp]
+%		\caption{Estimated peak location $\hat{l}(T)$ for COVID-19 in France using quantile levels $\tau\in\{0.25,0.5,0.75,0.95\}$.}
+%		\label{tab:france_tau}
+%		\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lrrrrrrrrrrrrrrrrrrrr}
+%			\toprule
+%			\addlinespace[2.5pt]
+%			\multicolumn{21}{c}{\textbf{$\tau=0.25,\ T_{\mathrm{entry}}=85,\ \varepsilon=5$}} \\
+%			\addlinespace[2.5pt]
+%			\midrule
+%			$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+%			$\hat{l}(T)$ & 1 & 1 & 1 & 1 & 1 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+%			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
+%			$\hat{l}(T)$ & 69 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 75 & 79 & 82 & 76 & 76 & 80 & 82 & 82 & 82 & 82 \\
+%			\midrule\addlinespace[2.5pt]
+%			\multicolumn{21}{c}{\textbf{$\tau=0.5,\ T_{\mathrm{entry}}=77,\ \varepsilon=5$}} \\
+%			\addlinespace[2.5pt]
+%			\midrule
+%			$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+%			$\hat{l}(T)$ & 49 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+%			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
+%			$\hat{l}(T)$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 80 & 79 & 79 & 80 & 80 & 81 & 80 \\
+%			\midrule\addlinespace[2.5pt]
+%			\multicolumn{21}{c}{\textbf{$\tau=0.75,\ T_{\mathrm{entry}}=76,\ \varepsilon=5$}} \\
+%			\addlinespace[2.5pt]
+%			\midrule
+%			$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+%			$\hat{l}(T)$ & 48 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+%			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
+%			$\hat{l}(T)$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 81 & 81 & 80 & 79 & 79 & 81 & 81 & 81 \\
+%			\midrule\addlinespace[2.5pt]
+%			\multicolumn{21}{c}{\textbf{$\tau=0.95,\ T_{\mathrm{entry}}=85,\ \varepsilon=5$}} \\
+%			\addlinespace[2.5pt]
+%			\midrule
+%			$T$ & 50 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+%			$\hat{l}(T)$ & 48 & 51 & 52 & 53 & 54 & 55 & 56 & 57 & 58 & 59 & 60 & 61 & 62 & 63 & 64 & 65 & 66 & 67 & 68 & 69 \\
+%			$T$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 77 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 85 & 86 & 87 & 88 & 89 \\
+%			$\hat{l}(T)$ & 70 & 71 & 72 & 73 & 74 & 75 & 76 & 76 & 78 & 79 & 80 & 81 & 82 & 83 & 84 & 83 & 80 & 78 & 79 & 79 \\
+%			\bottomrule
+%		\end{tabular*}
+%	\end{table}
+%\end{landscape}
 
 {\color{blue}
 \subsection{France}
