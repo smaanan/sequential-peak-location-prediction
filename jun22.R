@@ -2,8 +2,9 @@
 # COVID-19 CHINA — QUANTILE PEAK-LOCATION ESTIMATION
 #
 # Updated version:
-# - Candidate peak locations are restricted to l = 1,...,T
-#   at each observation horizon T.
+# - Candidate peak locations range over l = 1,...,h with
+#   h = 35 (the analysis horizon), matching Algorithm 1
+#   of the manuscript and the entry/exit script.
 # - Only the stabilization/entry time T_entry is computed.
 # - T_exit and threshold_prime have been removed.
 #
@@ -35,8 +36,13 @@ taus <- c(0.25, 0.50, 0.75, 0.95)
 # Stabilization tolerance
 threshold <- 3
 
-# Observation horizons
+# Observation horizons used in the sequential analysis
 T_vals <- 4:35
+
+# Analysis horizon: the search range for l is {1,...,h}.
+# China uses h = 35, matching the manuscript's description
+# of Algorithm 1.
+h <- max(T_vals)
 
 # Store objective values at T_max
 min_objectives <- list()
@@ -80,6 +86,23 @@ med_weighted_tau <- function(I, l, s, tau) {
   x <- I * exp(((1:T) - l)^2 / s^2)
   
   w <- exp(-((1:T) - l)^2 / s^2)
+  
+  # When l is far outside {1,...,T} and s is small, x may
+  # overflow to Inf. Those entries carry numerically-zero
+  # weight and do not affect the weighted quantile. Drop
+  # them before ordering.
+  finite <- is.finite(x) & is.finite(w)
+  
+  if (!any(finite)) {
+    return(NA_real_)
+  }
+  
+  x <- x[finite]
+  w <- w[finite]
+  
+  if (any(w < 0) || sum(w) <= 0) {
+    return(NA_real_)
+  }
   
   o <- order(x)
   
@@ -146,20 +169,22 @@ search_best_s <- function(I, l, tau) {
 # --- Estimate Peak Location -------------------------------------------------
 #
 # IMPORTANT:
-# At observation horizon T, the candidate peak location is restricted
-# to the observed time interval:
+# At each observation horizon T, the candidate peak location
+# ranges over the full analysis horizon:
 #
-#       l in {1,...,T}
+#       l in {1,...,h}      with h = 35
 #
-# This removes artificial boundary estimates such as l = h when h > T.
+# This matches Algorithm 1 of the manuscript, in which the
+# minimization is over l in [1,h], and it is the same
+# convention used by the entry/exit script.
 # ---------------------------------------------------------------------------
 
-estimate_params <- function(I, tau) {
+estimate_params <- function(I, tau, h) {
   
   T <- length(I)
   
   losses <- sapply(
-    1:T,
+    1:h,
     function(l) {
       
       s <- search_best_s(
@@ -188,7 +213,8 @@ estimate_params <- function(I, tau) {
   l_hat <- which.min(losses)
   
   list(
-    l_hat = l_hat
+    l_hat = l_hat,
+    loss = min(losses)
   )
 }
 
@@ -244,7 +270,8 @@ for (tau in taus) {
       
       estimate_params(
         I,
-        tau
+        tau,
+        h = h
       )$l_hat
     }
   )
@@ -260,7 +287,8 @@ for (tau in taus) {
   
   res <- estimate_params(
     I_Tmax,
-    tau
+    tau,
+    h = h
   )
   
   l_hat_Tmax <- res$l_hat
@@ -330,14 +358,21 @@ for (tau in taus) {
         "\\varepsilon = {threshold}"
       )
       
-      all_blocks[[length(all_blocks)+1]] <- list(Label = title,is_title = TRUE)
+      all_blocks[[length(all_blocks)+1]] <- list(Label = title, is_title = TRUE)
     }
     
     
-    all_blocks[[length(all_blocks)+1]] <- list(Label = "T", is_title = FALSE, values = T_chunks[[i]])
+    all_blocks[[length(all_blocks)+1]] <- list(
+      Label  = "T",
+      is_title = FALSE,
+      values = T_chunks[[i]]
+    )
     
-    
-    all_blocks[[length(all_blocks)+1]] <- list(Label = "\\hat{l}(T)",is_title = FALSE, values = l_chunks[[i]])
+    all_blocks[[length(all_blocks)+1]] <- list(
+      Label  = "\\hat{l}(T)",
+      is_title = FALSE,
+      values = l_chunks[[i]]
+    )
   }
 }
 
@@ -444,7 +479,6 @@ latex_lines <- c(
   "\\begin{table}[t]",
   
   "\\caption*{",
-  
   "{\\large \\textbf{Combined Table: ",
   "Sequence T → \\( \\hat{l}(T) \\)}} \\\\",
   

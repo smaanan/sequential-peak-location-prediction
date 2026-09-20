@@ -2,14 +2,15 @@
 # COVID-19 FRANCE — QUANTILE PEAK-LOCATION ESTIMATION
 #
 # Updated version:
-# - Candidate peak locations are restricted to l = 1,...,T
-#   at each observation horizon T.
+# - Candidate peak locations range over l = 1,...,h with
+#   h = 120 (the analysis horizon), matching Algorithm 1
+#   of the manuscript and the France entry/exit script.
 # - Only the stabilization/entry time T_entry is computed.
 # - T_exit and threshold_prime have been removed.
 #
 # Data:
 #   ECDC daily COVID-19 cases
-#   January 15 to May 31, 2020
+#   January 15 to May 31, 2020 (first 120 days used)
 #
 # Observation horizons:
 #   T = 50,...,89
@@ -40,8 +41,14 @@ taus <- c(0.25, 0.50, 0.75, 0.95)
 # Stabilization tolerance
 threshold <- 5
 
-# Observation horizons
+# Observation horizons used in the sequential analysis
 T_vals <- 50:89
+
+# Analysis horizon: the search range for l is {1,...,h}.
+# The France analysis uses h = 120, matching Algorithm 1 of
+# the manuscript, the France entry/exit script, and the
+# description of the France trajectory t in [1,120].
+h <- 120
 
 # Store objective values at T_max
 min_objectives <- list()
@@ -99,10 +106,17 @@ get_france_cases_ecdc <- function(
 }
 
 
+# --- Load Data --------------------------------------------------------------
+
 france <- get_france_cases_ecdc()
 
-# Raw daily cases
-I_full <- france$daily_cases
+# Raw daily cases, truncated to the first h days so that the
+# analysis horizon h = 120 matches the length of the input
+# used by the estimator. This is the same truncation used by
+# the France entry/exit script.
+I_full <- france$daily_cases[1:h]
+
+stopifnot(length(I_full) == h)
 
 
 # --- Quantile Loss ----------------------------------------------------------
@@ -118,58 +132,49 @@ med_weighted_tau <- function(I, l, s, tau) {
   
   T <- length(I)
   
-  x <- I * exp(
-    ((1:T) - l)^2 / s^2
-  )
+  x <- I * exp(((1:T) - l)^2 / s^2)
   
-  w <- exp(
-    -((1:T) - l)^2 / s^2
-  )
+  w <- exp(-((1:T) - l)^2 / s^2)
+  
+  # When l is far outside {1,...,T} and s is small, x may
+  # overflow to Inf. Those entries carry numerically-zero
+  # weight and do not affect the weighted quantile. Drop
+  # them before ordering.
+  finite <- is.finite(x) & is.finite(w)
+  
+  if (!any(finite)) {
+    return(NA_real_)
+  }
+  
+  x <- x[finite]
+  w <- w[finite]
+  
+  if (any(w < 0) || sum(w) <= 0) {
+    return(NA_real_)
+  }
   
   o <- order(x)
   
-  cum_w <- cumsum(
-    w[o]
-  )
+  cum_w <- cumsum(w[o])
   
   cutoff <- tau * sum(w)
   
-  x[o][
-    min(
-      which(
-        cum_w >= cutoff
-      )
-    )
-  ]
+  x[o][min(which(cum_w >= cutoff))]
 }
 
 
 compute_a <- function(I, l, s, tau) {
-  
-  med_weighted_tau(
-    I,
-    l,
-    s,
-    tau
-  )
+  med_weighted_tau(I, l, s, tau)
 }
 
 
 # --- Quantile-Loss Objective ------------------------------------------------
 
-objective_function <- function(
-    I,
-    a,
-    l,
-    s,
-    tau
-) {
+objective_function <- function(I, a, l, s, tau) {
   
   t <- seq_along(I)
   
-  fitted <- a * exp(
-    -((t - l)^2) / s^2
-  )
+  fitted <- a * exp(-((t - l)^2) / s^2)
   
   mean(
     quantile_loss(
@@ -182,11 +187,7 @@ objective_function <- function(
 
 # --- Optimization over the Width -------------------------------------------
 
-search_best_s <- function(
-    I,
-    l,
-    tau
-) {
+search_best_s <- function(I, l, tau) {
   
   f <- function(s) {
     
@@ -206,6 +207,7 @@ search_best_s <- function(
     )
   }
   
+  # France uses s in [1,40].
   optimize(
     f,
     c(1, 40),
@@ -216,19 +218,24 @@ search_best_s <- function(
 
 # --- Estimate Peak Location -------------------------------------------------
 #
-# At each observation horizon T, only the currently observed locations
-# l = 1,...,T are considered.
+# IMPORTANT:
+# At each observation horizon T, the candidate peak location
+# ranges over the full analysis horizon:
+#
+#       l in {1,...,h}      with h = 120
+#
+# This matches Algorithm 1 of the manuscript, in which the
+# minimization is over l in [1,h], and it is the same
+# convention used by the China and Germany scripts and by the
+# France entry/exit script.
 # ---------------------------------------------------------------------------
 
-estimate_params <- function(
-    I,
-    tau
-) {
+estimate_params <- function(I, tau, h) {
   
   T <- length(I)
   
   losses <- sapply(
-    1:T,
+    1:h,
     function(l) {
       
       s <- search_best_s(
@@ -254,38 +261,40 @@ estimate_params <- function(
     }
   )
   
-  l_hat <- which.min(
-    losses
-  )
+  l_hat <- which.min(losses)
   
   list(
-    l_hat = l_hat
+    l_hat = l_hat,
+    loss = min(losses)
   )
 }
 
 
 # --- Stabilization Time -----------------------------------------------------
+#
+# Retrospective stabilization criterion:
+#
+# T_entry = min{ T :
+#   max_{u >= T} l_hat(u) -
+#   min_{u >= T} l_hat(u) <= epsilon
+# }
+#
+# This measures temporal stabilization of the estimation path.
+# It is not an accuracy criterion relative to the true peak.
+# ---------------------------------------------------------------------------
 
-find_stable_time <- function(
-    l_path,
-    T_vals,
-    tol
-) {
+find_stable_time <- function(l_path, T_vals, tol) {
   
   for (i in seq_along(T_vals)) {
     
-    future_vals <- l_path[
-      i:length(l_path)
-    ]
+    future_vals <- l_path[i:length(l_path)]
     
     if (
       max(future_vals) -
       min(future_vals) <= tol
     ) {
       
-      return(
-        T_vals[i]
-      )
+      return(T_vals[i])
     }
   }
   
@@ -301,38 +310,36 @@ all_blocks <- list()
 for (tau in taus) {
   
   # ---------------------------------------------------------
-  # Estimation path
+  # Estimation path T -> l_hat(T)
   # ---------------------------------------------------------
   
   l_path <- sapply(
     T_vals,
     function(T) {
       
-      I <- I_full[
-        1:T
-      ]
+      I <- I_full[1:T]
       
       estimate_params(
         I,
-        tau
+        tau,
+        h = h
       )$l_hat
     }
   )
   
   
   # ---------------------------------------------------------
-  # Objective at T_max
+  # Objective value at the final observation horizon
   # ---------------------------------------------------------
   
   T_max <- max(T_vals)
   
-  I_Tmax <- I_full[
-    1:T_max
-  ]
+  I_Tmax <- I_full[1:T_max]
   
   res <- estimate_params(
     I_Tmax,
-    tau
+    tau,
+    h = h
   )
   
   l_hat_Tmax <- res$l_hat
@@ -373,21 +380,18 @@ for (tau in taus) {
   
   
   # ---------------------------------------------------------
-  # Split rows into chunks of 20
+  # Split T and l_hat(T) into chunks of 20
+  # France: 40 values = 2 chunks
   # ---------------------------------------------------------
   
   T_chunks <- split(
     T_vals,
-    ceiling(
-      seq_along(T_vals) / 20
-    )
+    ceiling(seq_along(T_vals) / 20)
   )
   
   l_chunks <- split(
     l_path,
-    ceiling(
-      seq_along(l_path) / 20
-    )
+    ceiling(seq_along(l_path) / 20)
   )
   
   
@@ -405,18 +409,26 @@ for (tau in taus) {
         "\\varepsilon = {threshold}"
       )
       
-      all_blocks[[length(all_blocks)+1]] <- list(Label = title,is_title = TRUE)
+      all_blocks[[length(all_blocks)+1]] <- list(Label = title, is_title = TRUE)
     }
     
     
-    all_blocks[[length(all_blocks)+1]] <- list(Label = "T",is_title = FALSE,values = T_chunks[[i]])
+    all_blocks[[length(all_blocks)+1]] <- list(
+      Label  = "T",
+      is_title = FALSE,
+      values = T_chunks[[i]]
+    )
     
-    all_blocks[[length(all_blocks)+1]] <- list(Label = "\\hat{l}(T)",is_title = FALSE,values = l_chunks[[i]])
+    all_blocks[[length(all_blocks)+1]] <- list(
+      Label  = "\\hat{l}(T)",
+      is_title = FALSE,
+      values = l_chunks[[i]]
+    )
   }
 }
 
 
-# --- Format as Tibble -------------------------------------------------------
+# --- Format as Tibble for gt -----------------------------------------------
 
 max_cols <- max(
   sapply(
@@ -448,11 +460,8 @@ for (i in 1:max_cols) {
         !row$is_title &&
         length(row$values) >= i
       ) {
-        
         row$values[i]
-        
       } else {
-        
         ""
       }
     }
@@ -460,7 +469,7 @@ for (i in 1:max_cols) {
 }
 
 
-# --- Save PNG ---------------------------------------------------------------
+# --- Save PNG using gt ------------------------------------------------------
 
 gt_table <- table_df %>%
   gt() %>%
@@ -521,7 +530,6 @@ latex_lines <- c(
   "\\begin{table}[t]",
   
   "\\caption*{",
-  
   "{\\large \\textbf{Combined Table: ",
   "Sequence T → \\( \\hat{l}(T) \\)}} \\\\",
   
