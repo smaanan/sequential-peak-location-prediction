@@ -49,6 +49,161 @@
 
 \noindent
 \textbf{Mathematics subject classification:} 62M10, 62G35, 60G35.
+
+\clearpage
+{\color{red}
+\section{Introduction}
+\label{section:1}
+
+Predicting peaks in time series data is important across a wide range of
+applications involving proactive decision-making, risk management,
+resource allocation, and disaster preparedness. The ability to anticipate
+spikes in a time series can provide an early warning of events such as
+disease outbreaks in epidemiology, allowing public health officials to
+allocate resources and implement preventive measures. In energy
+management, predicting peak electricity demand enables utility companies
+to adjust generation and distribution schedules. Similar considerations
+arise in financial applications, environmental monitoring, and the
+analysis of other systems in which the timing and magnitude of a peak are
+of practical interest.
+
+Peak prediction is challenging because observations are affected by
+noise and variability, while the underlying signal may exhibit
+nonlinear or otherwise complex behavior. Measurement errors and random
+fluctuations can make the location and amplitude of a peak difficult to
+identify from partial observations. In addition, real-world time series
+may contain multiple peaks, irregular peak shapes, or other temporal
+structures that are not adequately described by simple forecasting
+models. Existing approaches to peak prediction often rely on assumptions
+about the distribution of the observations or the shape of the peak,
+which may not be appropriate in all applications; see, for example,
+\cite{See17} and \cite{Tuc20}.
+
+Popular forecasting approaches such as Autoregressive Integrated Moving
+Average (ARIMA) models and Recurrent Neural Networks (RNNs) can be
+effective for describing temporal dependence and forecasting general
+patterns. However, forecasting the timing and magnitude of a peak from
+partial observations is a more specific problem. A model that provides a
+good overall forecast may not necessarily provide an accurate estimate
+of the location of a future peak. This motivates the development of
+methods specifically designed to estimate the parameters governing a peak
+from an evolving sequence of observations.
+
+There has been comparatively little theoretical work devoted specifically
+to peak prediction in time series. One contribution in this direction is
+the thesis of Tucker~\cite{Tuc20}, which investigates the interaction
+between trend, seasonality, and noise in the prediction of peaks. Drawing
+on previous work such as~\cite{YuB2019}, Tucker considers both general
+prediction techniques and methods specifically designed for identifying
+peak events. Such work illustrates the difficulty of predicting peaks
+when only part of the underlying time series is available.
+
+Our approach builds on the framework developed in~\cite{Der25}. We
+consider a peak region represented by the interval $[T,h]$, where $T$
+denotes the current observation horizon and $h>T$ is a prescribed future
+horizon. The observations available at time $T$ are modeled as
+\begin{equation}
+	I(t)
+	=
+	A\exp\left(-\frac{(t-L)^2}{S^2}\right)+e(t),
+	\qquad t=1,\ldots,T,
+\end{equation}
+where $A>0$ is the amplitude of the underlying Gaussian trend, $L$ is
+its peak location, $S>0$ is its spread, and $e(t)$ denotes additive noise.
+The objective is to estimate $(A,L,S)$ from the observations available up
+to time $T$ and, in particular, to predict the location $L$ of the peak
+before it is fully observed.
+
+In contrast to the least absolute deviation criterion used in the
+symmetric case, we consider a general quantile regression criterion
+indexed by $\tau\in(0,1)$. The resulting objective is based on the
+quantile check loss
+\[
+\rho_\tau(u)
+=
+u\left(\tau-\mathbf{1}_{\{u<0\}}\right).
+\]
+For fixed candidate values of the peak location and spread, the amplitude
+minimizing this criterion is a weighted $\tau$-quantile of a transformed
+version of the observations. Thus, the weighted median appearing in the
+special case $\tau=1/2$ is naturally generalized to a weighted
+$\tau$-quantile.
+
+The choice of the quantile level is connected to the noise distribution.
+We introduce a $\tau$-aligned asymmetric Laplace distribution for which
+\[
+\mathbb{P}(e(t)<0)=\tau.
+\]
+Its density can be written in terms of the quantile check loss, so that,
+for fixed noise parameters, its negative log-likelihood differs from the
+quantile loss only by an additive and multiplicative constant. This
+establishes a direct probabilistic interpretation of the proposed
+quantile-based estimation criterion. The symmetric Laplace model is
+recovered as the special case $\tau=1/2$.
+
+We first investigate the behavior of the proposed estimator in a
+noise-free setting and then under $\tau$-aligned asymmetric Laplace
+noise. In particular, we study the evolution of the estimated location,
+amplitude, and spread as the observation horizon increases. We also
+examine the effect of the signal-to-noise ratio on the accuracy and
+temporal stability of the estimated peak location. The numerical
+experiments are performed for several quantile levels, including
+$\tau\in\{0.25,0.5,0.75,0.95\}$, in order to assess how the choice of
+the quantile level affects the estimation procedure.
+
+When the signal-to-noise ratio is sufficiently high, the sequential
+estimation procedure can provide an accurate prediction of the peak
+location from a limited number of observations. As the noise level
+increases, however, the estimated peak-location trajectory can exhibit
+substantial temporal variation and may fail to provide a reliable point
+prediction at an early observation horizon. Rather than restricting the
+analysis to a single point estimate in this situation, we introduce a
+two-stage construction based on the oscillations of the sequential
+estimates
+\[
+T\longmapsto\hat l(T).
+\]
+The first stage recursively identifies candidate exit times from the
+evolving peak region, while the second stage determines corresponding
+entry times. Each pair of entry and exit times defines a candidate peak
+region and an associated width. Importantly, this construction depends
+only on the sequential estimated peak-location trajectory and therefore
+does not require knowledge of the true peak location.
+
+The true peak location can nevertheless be used for retrospective
+evaluation when it is known, as is the case in simulations and in the
+real-data examples considered here. In such settings, candidate regions
+can be assessed according to whether they contain the observed peak.
+This retrospective use of the peak location is distinct from the
+operational construction of the entry and exit times, which is based
+solely on the estimated trajectory.
+
+The methodology is finally applied to daily COVID-19 case counts during
+the first wave of the pandemic in China~\cite{Bar20}, France, and
+Germany. For each country, we compute the sequential peak-location
+estimates for several quantile levels and analyze both their temporal
+stabilization and the candidate peak regions obtained from the
+two-stage entry--exit construction. The real-data analysis also
+illustrates how the choice of the quantile level can affect the resulting
+peak-location trajectories and candidate regions.
+
+The remainder of this paper is organized as follows. In
+Section~\ref{section:quantile_amplitude}, we introduce the Gaussian peak
+model and the quantile-based estimation procedure, including the
+weighted $\tau$-quantile characterization of the amplitude estimator.
+Section~3 studies the behavior of the quantile-based objective in the
+noise-free setting. Section~\ref{sec:symmetric_laplace_estimation}
+introduces the $\tau$-aligned asymmetric Laplace noise model and
+establishes its connection with the quantile loss. Section~\ref{sec:parameter_estimation_paths}
+investigates the trajectories of the estimated peak parameters under
+high signal-to-noise ratio. Section~\ref{sec:stability-analysis}
+examines the temporal stability of the estimated peak location when the
+signal-to-noise ratio is reduced. Section~\ref{sec:entry-exit} introduces
+the two-stage construction of candidate entry and exit times and the
+associated peak regions. Finally,
+Section~\ref{sec:covid-real-data} applies the proposed methodology to
+daily COVID-19 case data from China, France, and Germany.}
+\clearpage
 \section{Introduction} \label{section:1}
 Predicting peaks in time series data is crucial across various domains for proactive decision-making, risk management, resource allocation, and disaster preparedness. The ability to anticipate spikes in data can serve as an early warning system for events such as disease outbreaks in epidemiology, allowing public health officials to allocate resources and implement preventive measures effectively. In energy management, predicting peak electricity demand enables utility companies to adjust generation and distribution schedules, ensuring a reliable power supply and preventing shortages. Financial analysts use peak prediction to manage investment risks by anticipating fluctuations in stock prices or market volatility. Additionally, environmental scientists rely on peak prediction to monitor pollution levels and natural disasters, facilitating disaster preparedness and response efforts. The examples justifying the usefulness of locating, measuring, and understanding these peaks are numerous.
 
