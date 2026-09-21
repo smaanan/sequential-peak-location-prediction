@@ -101,15 +101,18 @@ when only part of the underlying time series is available.
 Our approach builds on the framework developed in~\cite{Der25}. We
 consider a peak region represented by the interval $[T,h]$, where $T$
 denotes the current observation horizon and $h>T$ is a prescribed future
-horizon. The observations available at time $T$ are modeled as
-\begin{equation}
-	I(t)
-	=
-	A\exp\left(-\frac{(t-L)^2}{S^2}\right)+e(t),
-	\qquad t=1,\ldots,T,
-\end{equation}
-where $A>0$ is the amplitude of the underlying Gaussian trend, $L$ is
-its peak location, $S>0$ is its spread, and $e(t)$ denotes additive noise.
+horizon. 
+%The observations available at time $T$ are modeled as
+%\begin{equation}
+%	I(t)
+%	=
+%	A\exp\left(-\frac{(t-L)^2}{S^2}\right)+e(t),
+%	\qquad t=1,\ldots,T,
+%\end{equation}
+%where $A>0$ is the amplitude of the underlying Gaussian trend, $L$ is
+%its peak location, $S>0$ is its spread, and $e(t)$ denotes additive noise.
+The observations are modeled, as in Section~\ref{section:quantile_amplitude}, as a Gaussian trend of amplitude $A>0$, peak location $L$, and spread $S>0$, corrupted by additive noise.
+
 The objective is to estimate $(A,L,S)$ from the observations available up
 to time $T$ and, in particular, to predict the location $L$ of the peak
 before it is fully observed.
