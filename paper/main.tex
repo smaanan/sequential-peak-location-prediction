@@ -196,32 +196,6 @@ the two-stage construction of candidate entry and exit times and the
 associated peak regions. Finally,
 Section~\ref{sec:covid-real-data} applies the proposed methodology to
 daily COVID-19 case data from China, France, and Germany.}
-\clearpage
-\section{Introduction} \label{section:1}
-Predicting peaks in time series data is crucial across various domains for proactive decision-making, risk management, resource allocation, and disaster preparedness. The ability to anticipate spikes in data can serve as an early warning system for events such as disease outbreaks in epidemiology, allowing public health officials to allocate resources and implement preventive measures effectively. In energy management, predicting peak electricity demand enables utility companies to adjust generation and distribution schedules, ensuring a reliable power supply and preventing shortages. Financial analysts use peak prediction to manage investment risks by anticipating fluctuations in stock prices or market volatility. Additionally, environmental scientists rely on peak prediction to monitor pollution levels and natural disasters, facilitating disaster preparedness and response efforts. The examples justifying the usefulness of locating, measuring, and understanding these peaks are numerous.
-
-Predicting peaks in time series data is a complex task due to several reasons. Firstly, the presence of noise and variability in the data makes it difficult to accurately identify and predict peaks. This noise can originate from various sources, such as measurement errors or random fluctuations in the data. Additionally, many real-world systems exhibit nonlinear dynamics, meaning that the relationship between variables is not strictly linear. Nonlinearities can lead to unexpected behaviors in the data, further complicating peak prediction. Moreover, time series data often contain complex patterns, such as multiple overlapping peaks or irregular intervals between peaks, making it challenging to develop accurate prediction models. In the literature, existing peak prediction methods often rely on specific assumptions about the data distribution or peak characteristics, which may not always hold true in practice, leading to inaccurate predictions (see for instance,~\cite{See17} and~\cite{Tuc20}).\\
-
-Popular forecasting models such as Autoregressive Integrated Moving Average (ARIMA) and Recurrent Neural Networks (RNN) often struggle to accurately define or forecast peak values in time series data. Despite their effectiveness in capturing general trends and patterns, these models may overlook or underestimate the occurrence of peaks due to their complexity and the inherent variability of peak events.\\
-
-In the realm of peak prediction, there has been relatively little theoretical work compared to more generalized forecasting approaches. One notable contribution in this area is Tucker thesis \cite{Tuc20}, which delved into the dynamics of trend, seasonality, and noise in time series data to predict peaks. Tucker research explored how the interplay between these components could be leveraged to identify and forecast peak events accurately. Inspired by previous studies \cite{YuB2019}, Tucker applied a combination of general prediction techniques and specialized peak prediction methods. He utilized the Peaks function available in Scipy's Signal module, which offers tools for detecting and analyzing peak values in data. Tucker thesis represents a significant step forward in the field of peak prediction, offering insights into the complex dynamics underlying peak events and proposing practical methods for their prediction. By building on existing theoretical frameworks and leveraging advanced computational tools, Tucker work contributes to the growing body of research aimed at improving the accuracy and reliability of peak forecasting in time series data.\\
-
-We adopt in this work the same approach as in \cite{Der25} 
-. We assume that the peak region is equal to $[T,h]$, where $T$ represents the current date and $h$ a specific time horizon. To model this hypothesis effectively, we consider our time series over the interval $[1,T]$ as a composite of a Gaussian trend and noise.
-Our primary objective is to forecast the amplitude $A$, location $L$, and width $S$ of the Gaussian trend based on observed data from the interval $[1,T]$. We introduce a criterion based on the weighted quantile technique, which enables us to determine the optimal number of observations required for accurately predicting the location $L$ of the peak. Additionally, we conduct an analysis to assess the impact of the signal-to-noise ratio on our predictive accuracy. We show that in case of low signal-to-noise ratios, prediction accuracy diminishes. To address this challenge, we propose 
-as in \cite{Der25}
-a novel concept termed the "peak region entry and exit times".\\
-
-The aim of our study is to extend the work of \cite{Der25} 
-to the quantile regression. First, we introduce our approach to selecting the 
-minimization of the quantile regression and demonstrate, using simulated data, the number of observations required to accurately predict the location of the peak. This approach is based on the concept of the weighted quantile. Secondly, we establish that for high signal-to-noise ratios, the peak location prediction is correct. However, in cases of low \texttt{SNR} (indicating high noise levels), the accuracy of the prediction deteriorates. In these cases, we propose a new concept called "peak region entry time" and "peak region exit time". We illustrate this concept by
-parameterizing the entry time in the peak region and the exit time from the peak region by 
-the tau-quantile when the data are 
-the daily COVID-19 infections during the first wave in China \cite{Bar20}, France and Germany.
-
-The remainder of this paper is organized as follows. In Section~\ref{section:quantile_amplitude} we present our proposed model. More
-precisely, we consider Gaussian trend with additive generalized Laplace noise. 
-Section~\ref{sec:covid-real-data} is dedicated to application results to forecast the peak incidence of daily COVID-19 infections during the initial wave in China, France, and Germany.
 
 \section{Quantile-Based Estimation Methodology}
 \label{section:quantile_amplitude}
