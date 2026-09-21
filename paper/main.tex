@@ -842,52 +842,6 @@ T_{\mathrm{exit}}^{(k)}
 \)
 The endpoints are determined entirely from the sequential estimation trajectory and the oscillation construction.}
 
-%\subsection{Interpretation and simulation assessment}
-%\label{subsec:entry-exit-interpretation}
-%
-%The construction above is entirely based on the sequential estimates $\hat{l}(T)$. In particular, the true peak location $L$ does not affect the construction of $E_k$, $T_k^*$, $\tau_k$, or $T_{\mathrm{entry}}^{(k)}$. In the implementation, $L$ is passed only to compute an ex post diagnostic indicating whether the resulting candidate interval contains the true peak. Thus, knowledge of $L$ is not required by the operational entry--exit procedure.
-%
-%In simulations, however, the true peak location $L$ is known and can therefore be used to assess the candidate peak region. Consistently with the implementation, we say that the $k$th candidate contains the true peak if
-%\begin{equation}
-%	T_{\mathrm{entry}}^{(k)}
-%	\leq
-%	L
-%	\leq
-%	T_{\mathrm{exit}}^{(k)}.
-%	\label{eq:peak_in_window}
-%\end{equation}
-%This criterion is used only for ex post evaluation and does not enter the construction of the entry and exit times.
-%
-%When several candidate regions contain the true peak, their widths can be compared through~\eqref{eq:peak_region_width}. In the simulation analysis, the candidate with the smallest width can then be selected among the peak-containing candidates. This selection is an ex post simulation criterion and is not part of the operational procedure when $L$ is unknown.
-%
-%The proposed procedure can therefore be summarized as follows:
-%\begin{enumerate}
-%	\item compute the sequential peak-location estimates
-%	$\hat{l}(T)$;
-%	\item compute the future-tail oscillation
-%	$\omega_l(T,h)$;
-%	\item initialize the recursive Stage-1 construction with
-%	$\tau'_0=0$ and $T_{\mathrm{exit}}^{(0)}=h$;
-%	\item recursively determine the candidate exit times
-%	$T_{\mathrm{exit}}^{(k)}$ and the corresponding oscillation levels
-%	$\tau'_k$;
-%	\item for each candidate exit time, construct the set $E_k$;
-%	\item if $E_k$ is nonempty, determine
-%	$T_k^*=\max E_k$ and
-%	$\tau_k=\omega_l(T_k^*,T_{\mathrm{exit}}^{(k)})$;
-%	\item determine the entry time
-%	$T_{\mathrm{entry}}^{(k)}$ as the first observation horizon at which
-%	the oscillation level $\tau_k$ is attained within numerical tolerance;
-%	\item construct the candidate peak region
-%	$\mathcal{R}_k$ and its width $w_k$;
-%	\item in simulations, assess whether the candidate region contains the
-%	true peak using~\eqref{eq:peak_in_window}.
-%\end{enumerate}
-%
-%The resulting entry and exit times provide a complementary characterization of temporal stability. Whereas the stabilization criterion of Section~\ref{sec:stability-analysis} identifies a single observation horizon after which the estimated peak location remains within a prescribed tolerance, the present construction produces candidate intervals associated with the evolution of the estimator's oscillations.
-
-%\end{document}
-
 {\color{blue}
 \section{Real-World Application: COVID-19 Case Study}
 \label{sec:covid-real-data}
