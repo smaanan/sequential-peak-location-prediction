@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.7.29)  21 SEP 2026 09:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.7.29)  21 SEP 2026 11:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -421,47 +421,55 @@ Package: multirow 2024/11/12 v2.9 Span multiple rows of a table
 \c@theorem=\count331
 \c@lemma=\count332
 
+(/usr/share/texlive/texmf-dist/tex/latex/preprint/authblk.sty
+Package: authblk 2001/02/27 1.3 (PWD)
+\affilsep=\skip64
+\@affilsep=\skip65
+\c@Maxaffil=\count333
+\c@authors=\count334
+\c@affil=\count335
+)
 (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2026-02-18 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count333
+\l__color_backend_stack_int=\count336
 )
 (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: End \AtBeginDocument code.
  (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count334
+\scratchcounter=\count337
 \scratchdimen=\dimen196
 \scratchbox=\box57
-\nofMPsegments=\count335
-\nofMParguments=\count336
+\nofMPsegments=\count338
+\nofMParguments=\count339
 \everyMPshowfont=\toks33
-\MPscratchCnt=\count337
+\MPscratchCnt=\count340
 \MPscratchDim=\dimen197
-\MPnumerator=\count338
-\makeMPintoPDFobject=\count339
+\MPnumerator=\count341
+\makeMPintoPDFobject=\count342
 \everyMPtoPDFconversion=\toks34
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
@@ -472,7 +480,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring ON on input line 26.
+Package hyperref Info: Link coloring ON on input line 38.
 
 (./main.out) (./main.out)
 \@outlinefile=\write3
@@ -513,94 +521,94 @@ Package hyperref Info: Link coloring ON on input line 26.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 28.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 42.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 28.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 42.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Overfull \hbox (1.83308pt too wide) in paragraph at lines 32--33
+Overfull \hbox (1.83308pt too wide) in paragraph at lines 44--45
 []\OT1/cmr/m/n/10.95 We in-tro-duce a $\OML/cmm/m/it/10.95 ^^\$\OT1/cmr/m/n/10.
 95 -aligned asym-met-ric Laplace noise model whose neg-a-tive log-likelihood
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 39--41
+Underfull \hbox (badness 10000) in paragraph at lines 51--53
 
  []
 
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (0.36063pt too wide) in paragraph at lines 72--81
+Overfull \hbox (0.36063pt too wide) in paragraph at lines 84--93
 []\OT1/cmr/m/n/12 Popular fore-cast-ing ap-proaches such as Au-tore-gres-sive I
 n-te-grated Mov-ing Av-er-age (ARIMA)
  []
 
 [2] [3] [4]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 259.
+put line 271.
  [5]
 <../plot_quantile_all.pdf, id=171, 722.7pt x 903.375pt>
 File: ../plot_quantile_all.pdf Graphic file (type pdf)
 <use ../plot_quantile_all.pdf>
-Package pdftex.def Info: ../plot_quantile_all.pdf  used on input line 289.
+Package pdftex.def Info: ../plot_quantile_all.pdf  used on input line 301.
 (pdftex.def)             Requested size: 483.69687pt x 604.62404pt.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 301.
+(hyperref)                removing `math shift' on input line 313.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\tau' on input line 301.
+(hyperref)                removing `\tau' on input line 313.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 301.
+(hyperref)                removing `math shift' on input line 313.
 
 [6] [7 <../plot_quantile_all.pdf>] [8]
 <../figure2_asymmetric_laplace_all_tau_T.pdf, id=207, 578.16pt x 433.62pt>
 File: ../figure2_asymmetric_laplace_all_tau_T.pdf Graphic file (type pdf)
 <use ../figure2_asymmetric_laplace_all_tau_T.pdf>
 Package pdftex.def Info: ../figure2_asymmetric_laplace_all_tau_T.pdf  used on i
-nput line 484.
+nput line 496.
 (pdftex.def)             Requested size: 483.69687pt x 362.76945pt.
  [9] [10 <../figure2_asymmetric_laplace_all_tau_T.pdf>]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 502.
+(hyperref)                removing `math shift' on input line 514.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\tau' on input line 502.
+(hyperref)                removing `\tau' on input line 514.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 502.
+(hyperref)                removing `math shift' on input line 514.
 
 <../fig3_4a_4b_combined.pdf, id=240, 578.16pt x 578.16pt>
 File: ../fig3_4a_4b_combined.pdf Graphic file (type pdf)
 <use ../fig3_4a_4b_combined.pdf>
-Package pdftex.def Info: ../fig3_4a_4b_combined.pdf  used on input line 533.
+Package pdftex.def Info: ../fig3_4a_4b_combined.pdf  used on input line 545.
 (pdftex.def)             Requested size: 459.51054pt x 459.5115pt.
 [11] [12 <../fig3_4a_4b_combined.pdf>]
 <../fig_lhat_paths_snr40_tau.pdf, id=266, 614.295pt x 469.755pt>
 File: ../fig_lhat_paths_snr40_tau.pdf Graphic file (type pdf)
 <use ../fig_lhat_paths_snr40_tau.pdf>
-Package pdftex.def Info: ../fig_lhat_paths_snr40_tau.pdf  used on input line 59
-3.
+Package pdftex.def Info: ../fig_lhat_paths_snr40_tau.pdf  used on input line 60
+5.
 (pdftex.def)             Requested size: 483.69687pt x 369.89102pt.
  [13] [14 <../fig_lhat_paths_snr40_tau.pdf>] [15] [16]
 <../covid_series_1x3.pdf, id=304, 867.24pt x 289.08pt>
 File: ../covid_series_1x3.pdf Graphic file (type pdf)
 <use ../covid_series_1x3.pdf>
-Package pdftex.def Info: ../covid_series_1x3.pdf  used on input line 880.
+Package pdftex.def Info: ../covid_series_1x3.pdf  used on input line 892.
 (pdftex.def)             Requested size: 483.69687pt x 161.23528pt.
  [17 <../covid_series_1x3.pdf>] [18] [19] [20{/usr/share/texlive/texmf-dist/fon
 ts/enc/dvips/cm-super/cm-super-ts1.enc}] [21
@@ -615,10 +623,10 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 0B60FEAC897F46C200F100514B606FC2;5128.
  ) 
 Here is how much of TeX's memory you used:
- 13529 strings out of 469296
- 212430 string characters out of 5465561
- 649849 words of memory out of 6000000
- 42095 multiletter control sequences out of 15000+600000
+ 13614 strings out of 469296
+ 213573 string characters out of 5465561
+ 650689 words of memory out of 6000000
+ 42176 multiletter control sequences out of 15000+600000
  642518 words of font info for 95 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  75i,11n,84p,869b,622s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -637,7 +645,7 @@ y10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb
 share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/
 texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/t
 exlive/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on main.pdf (24 pages, 321937 bytes).
+Output written on main.pdf (24 pages, 321853 bytes).
 PDF statistics:
  458 PDF objects out of 1000 (max. 8388607)
  386 compressed objects within 4 object streams

@@ -1,11 +1,11 @@
 # .gitignore (at project root)
 
-doc/*.aux
-doc/*.log
-doc/*.out
-doc/*.toc
-doc/*.synctex.gz
-doc/*.fls
-doc/*.fdb_latexmk
-doc/*.bbl
-doc/*.blg
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
