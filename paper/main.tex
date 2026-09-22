@@ -39,14 +39,35 @@
 \maketitle
 \begin{abstract}
 	\noindent
-	Predicting the location and characteristics of peaks in time series data is important in many applications, particularly when decisions must be made before the peak is fully observed. In this work, we consider a peak model consisting of a Gaussian trend with additive noise, where the peak is defined as the maximum of the underlying Gaussian component. We develop a quantile-based estimation procedure for the amplitude, location, and spread of the Gaussian peak. For fixed location and spread parameters, the amplitude estimator is characterized as a weighted $\tau$-quantile of a transformed version of the observations.
-	
-	We introduce a $\tau$-aligned asymmetric Laplace noise model whose negative log-likelihood is proportional to the quantile check loss. This provides a probabilistic interpretation of the proposed quantile-based estimation criterion and allows the effect of the quantile level $\tau$ and the signal-to-noise ratio (SNR) to be investigated within a unified framework. Numerical experiments illustrate the behavior of the estimated peak parameters under different quantile levels and noise levels.
-	
-	When the estimated peak location does not stabilize sufficiently early to provide an accurate point prediction, we introduce a two-stage construction based on the temporal oscillations of the sequential peak-location estimates. This construction produces candidate entry and exit times and, consequently, candidate regions containing the peak. The construction itself uses only the sequential estimation trajectory and does not require knowledge of the true peak location. In real-data applications, the observed peak location can instead be used retrospectively to evaluate and select among the candidate regions.
-	
-	The proposed methodology is illustrated using daily COVID-19 case counts during the first wave of the pandemic in China, France, and Germany. We compare the behavior of the procedure across several quantile levels and analyze the resulting stabilization times and candidate peak regions.
+	Predicting the location of peaks in time series is important when
+	decisions must be made before the peak is fully observed. We model the
+	observations as a Gaussian trend with additive noise and develop a
+	quantile-based procedure for estimating its amplitude, location, and
+	spread. For fixed location and spread, the amplitude estimator is a
+	weighted $\tau$-quantile of a transformed version of the observations.
+	We introduce a $\tau$-aligned asymmetric Laplace noise model whose
+	negative log-likelihood is proportional to the quantile check loss,
+	providing a probabilistic interpretation of the criterion and allowing
+	the effects of the quantile level $\tau$ and the signal-to-noise ratio
+	to be studied in a unified framework. When the estimated peak location
+	does not stabilize early enough to yield an accurate point prediction,
+	we propose a two-stage construction based on the oscillations of the
+	sequential estimates. It produces candidate entry and exit times, and
+	hence candidate peak regions, using only the estimation trajectory and
+	not the true peak location. The observed peak can be used
+	retrospectively to evaluate the candidates. The methodology is
+	illustrated on daily COVID-19 cases in China, France, and Germany.
 \end{abstract}
+%\begin{abstract}
+%	\noindent
+%	Predicting the location and characteristics of peaks in time series data is important in many applications, particularly when decisions must be made before the peak is fully observed. In this work, we consider a peak model consisting of a Gaussian trend with additive noise, where the peak is defined as the maximum of the underlying Gaussian component. We develop a quantile-based estimation procedure for the amplitude, location, and spread of the Gaussian peak. For fixed location and spread parameters, the amplitude estimator is characterized as a weighted $\tau$-quantile of a transformed version of the observations.
+%	
+%	We introduce a $\tau$-aligned asymmetric Laplace noise model whose negative log-likelihood is proportional to the quantile check loss. This provides a probabilistic interpretation of the proposed quantile-based estimation criterion and allows the effect of the quantile level $\tau$ and the signal-to-noise ratio (SNR) to be investigated within a unified framework. Numerical experiments illustrate the behavior of the estimated peak parameters under different quantile levels and noise levels.
+%	
+%	When the estimated peak location does not stabilize sufficiently early to provide an accurate point prediction, we introduce a two-stage construction based on the temporal oscillations of the sequential peak-location estimates. This construction produces candidate entry and exit times and, consequently, candidate regions containing the peak. The construction itself uses only the sequential estimation trajectory and does not require knowledge of the true peak location. In real-data applications, the observed peak location can instead be used retrospectively to evaluate and select among the candidate regions.
+%	
+%	The proposed methodology is illustrated using daily COVID-19 case counts during the first wave of the pandemic in China, France, and Germany. We compare the behavior of the procedure across several quantile levels and analyze the resulting stabilization times and candidate peak regions.
+%\end{abstract}
 
 \noindent
 \textbf{Keywords:} Peak prediction; quantile regression; asymmetric Laplace noise; peak-region entry and exit times; time series; COVID-19.\\
