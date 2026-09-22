@@ -71,6 +71,93 @@
 
 \clearpage
 
+{\color{blue}
+\section{Introduction}
+\label{section:1}
+
+Predicting peaks in time series data is important across a wide range of
+applications involving proactive decision-making, risk management,
+resource allocation, and disaster preparedness, such as anticipating
+disease outbreaks in epidemiology or peak demand in energy management.
+Peak prediction is challenging because observations are affected by
+noise, and the underlying signal may exhibit nonlinear or otherwise
+complex behavior. Measurement errors and random fluctuations can make
+the location and amplitude of a peak difficult to identify from partial
+observations, and real-world time series may contain multiple peaks,
+irregular peak shapes, or other temporal structures that are not
+adequately described by simple forecasting models.
+
+Popular forecasting approaches such as Autoregressive Integrated Moving
+Average (ARIMA) models and Recurrent Neural Networks (RNNs) can be
+effective for describing temporal dependence and forecasting general
+patterns, but they are not specifically designed to estimate the timing
+and magnitude of a future peak. A model that provides a good overall
+forecast may not necessarily provide an accurate estimate of the
+location of a future peak. There has also been comparatively little
+theoretical work devoted specifically to peak prediction in time series;
+one contribution in this direction is the thesis of Tucker~\cite{Tuc20},
+which studies the interplay between trend, seasonality, and noise; see
+also~\cite{YuB2019,See17}.
+
+Our approach builds on the framework developed in~\cite{Der25}. We
+consider observations available at an observation horizon $T$ and a
+prescribed future horizon $h>T$. The observations are modeled, as in
+Section~\ref{section:quantile_amplitude}, as a Gaussian trend of
+amplitude $A>0$, peak location $L$, and spread $S>0$, corrupted by
+additive noise. The objective is to estimate $(A,L,S)$ from the
+observations available up to time $T$ and, in particular, to predict the
+location $L$ of the peak before it is fully observed.
+
+Our first contribution is to replace the least-absolute-deviation
+criterion used in the symmetric case by a general quantile regression
+criterion indexed by $\tau\in(0,1)$. As we show in
+Section~\ref{section:quantile_amplitude}, for fixed location and spread,
+the amplitude minimizing this criterion is a weighted $\tau$-quantile of
+a transformed version of the observations; the weighted median of the
+symmetric case is recovered at $\tau=1/2$.
+
+Our second contribution is a probabilistic interpretation of the
+criterion. In Section~\ref{sec:symmetric_laplace_estimation} we
+introduce a $\tau$-aligned asymmetric Laplace noise model whose negative
+log-likelihood is proportional to the quantile check loss. This allows
+the effects of the quantile level $\tau$ and of the signal-to-noise
+ratio to be studied within a unified framework, and it recovers the
+symmetric Laplace model at $\tau=1/2$.
+Sections~\ref{sec:parameter_estimation_paths}
+and~\ref{sec:stability-analysis} examine the resulting estimated
+peak-location trajectories under high and low signal-to-noise ratios.
+
+Our third contribution concerns the situation in which the estimated
+peak location does not stabilize early enough to yield an accurate point
+prediction. In Section~\ref{sec:entry-exit} we introduce a two-stage
+construction based on the oscillations of the sequential estimates
+$T\mapsto\hat l(T)$. It produces candidate entry and exit times, and
+hence candidate peak regions, using only the estimation trajectory;
+knowledge of the true peak location is not required operationally, and
+when it is available it is used only retrospectively to evaluate the
+candidates.
+
+The methodology is applied to daily COVID-19 case counts during the
+first wave of the pandemic in China~\cite{Bar20}, France, and Germany,
+for several quantile levels (Section~\ref{sec:covid-real-data}).
+
+The remainder of the paper is organized as follows. In
+Section~\ref{section:quantile_amplitude}, we introduce the Gaussian peak
+model and the quantile-based estimation procedure, including the
+weighted $\tau$-quantile characterization of the amplitude estimator.
+Section~3 studies the behavior of the quantile-based objective in the
+noise-free setting. Section~\ref{sec:symmetric_laplace_estimation}
+introduces the $\tau$-aligned asymmetric Laplace noise model and
+establishes its connection with the quantile loss.
+Section~\ref{sec:parameter_estimation_paths} investigates the
+trajectories of the estimated peak parameters under high signal-to-noise
+ratio. Section~\ref{sec:stability-analysis} examines the temporal
+stability of the estimated peak location when the signal-to-noise ratio
+is reduced. Section~\ref{sec:entry-exit} introduces the two-stage
+construction of candidate entry and exit times and the associated peak
+regions. Finally, Section~\ref{sec:covid-real-data} applies the proposed
+methodology to daily COVID-19 case data from China, France, and Germany.}
+
 \section{Introduction}
 \label{section:1}
 
