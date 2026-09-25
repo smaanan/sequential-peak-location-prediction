@@ -5,7 +5,16 @@
 \usepackage[dvipsnames]{xcolor}
 \usepackage{pdflscape}
 \usepackage[colorlinks=true,linkcolor=red,citecolor=red,urlcolor=blue]{hyperref}
-\usepackage[round,sort,comma]{natbib}
+%\usepackage[round,sort,comma]{natbib}
+\usepackage[
+backend = biber,
+style = authoryear,
+natbib = true,
+doi = true,
+url = true,
+giveninits = true,
+]{biblatex}
+\addbibresource{references.bib}
 \usepackage[margin=2cm]{geometry}
 \usepackage[title]{appendix}
 \usepackage{multirow}
