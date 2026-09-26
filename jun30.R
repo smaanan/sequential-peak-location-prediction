@@ -19,15 +19,15 @@
 
 rasymmetric_laplace <- function(n, tau, b) {
   u <- runif(n)
-
+  
   sgn <- ifelse(u < tau, -1, 1)
-
+  
   abs_x <- ifelse(
     sgn == -1,
     rexp(n, rate = (1 - tau) / b),
     rexp(n, rate = tau / b)
   )
-
+  
   sgn * abs_x
 }
 
@@ -40,16 +40,16 @@ quantile_loss <- function(u, tau) {
 
 
 med_weighted_tau <- function(I, l, s, tau) {
-
+  
   T <- length(I)
-
+  
   x <- I * exp(((1:T) - l)^2 / s^2)
   w <- exp(-((1:T) - l)^2 / s^2)
-
+  
   o <- order(x)
-
+  
   k <- min(which(cumsum(w[o]) >= tau * sum(w)))
-
+  
   x[o][k]
 }
 
@@ -60,17 +60,17 @@ compute_a <- function(I, l, s, tau) {
 
 
 objective_function <- function(I, a, l, s, tau) {
-
+  
   t <- seq_along(I)
-
+  
   fitted <- a * exp(-((t - l)^2) / s^2)
-
+  
   mean(quantile_loss(I - fitted, tau))
 }
 
 
 search_best_s <- function(I, l, tau) {
-
+  
   optimize(
     function(s)
       objective_function(
@@ -90,13 +90,13 @@ search_best_s <- function(I, l, tau) {
 
 simulate_asymmetric_laplace_objective <- function(
     T, A, L, S, tau, snr, seed = NULL) {
-
+  
   if (!is.null(seed))
     set.seed(seed)
-
+  
   # True Gaussian peak signal
   signal <- A * exp(-((1:T) - L)^2 / S^2)
-
+  
   # ----------------------------------------------------------------
   # Variance calibration
   #
@@ -110,38 +110,38 @@ simulate_asymmetric_laplace_objective <- function(
   #
   #   Var(e) = (A / SNR)^2.
   # ----------------------------------------------------------------
-
+  
   vtarget <- (A / snr)^2
-
+  
   b <- sqrt(
     vtarget *
       tau^2 * (1 - tau)^2 /
       (tau^2 + (1 - tau)^2)
   )
-
+  
   # Equivalent expression:
   #
   # b <- (A / snr) *
   #      tau * (1 - tau) /
   #      sqrt(tau^2 + (1 - tau)^2)
-
+  
   # Generate asymmetric Laplace noise
   noise <- rasymmetric_laplace(T, tau, b)
-
+  
   # Observed signal
   I <- signal + noise
-
+  
   # Candidate peak locations
   l_grid <- 18:25
-
+  
   data.frame(
     l = l_grid,
     loss = sapply(l_grid, function(l) {
-
+      
       s <- search_best_s(I, l, tau)
-
+      
       a <- compute_a(I, l, s, tau)
-
+      
       objective_function(
         I,
         a,
@@ -150,7 +150,7 @@ simulate_asymmetric_laplace_objective <- function(
         tau
       )
     }),
-
+    
     T = T,
     tau = tau
   )
@@ -163,39 +163,19 @@ plot_asymmetric_all_tau_T <- function(results_all, L_true) {
   Ts <- sort(unique(results_all$T))
   taus <- sort(unique(results_all$tau))
   
-  # Grayscale colors from light to dark
-  # colors <- c(
-  #   "gray90",
-  #   "gray70",
-  #   "gray50",
-  #   "gray30",
-  #   "black"
-  # )
-  
-  colors <- c(
-    "blue",
-    "lightblue",
-    "forestgreen",
-    "orange",
-    "red"
-  )
+  nrow <- length(Ts)
+  ncol <- length(taus)
   
   pdf(
     file = "figure2_asymmetric_laplace_all_tau_T.pdf",
-    width = 8,
-    height = 6
+    width = 2.5 * ncol,
+    height = 2.5 * nrow
   )
   
-  # old_par <- par(
-  #   mfrow = c(1, 4),
-  #   mar = c(4.5, 4.5, 2.5, 1),
-  #   oma = c(1, 1, 3, 1)
-  # )
-  
   old_par <- par(
-    mfrow = c(2, 2),
-    mar = c(4.5, 4.5, 2.5, 1),
-    oma = c(1, 1, 3, 1)
+    mfrow = c(nrow, ncol),
+    mar = c(2, 2, 1.5, 1),
+    oma = c(4, 4, 3, 0)
   )
   
   on.exit({
@@ -203,69 +183,54 @@ plot_asymmetric_all_tau_T <- function(results_all, L_true) {
     dev.off()
   })
   
-  for (tau_val in taus) {
-    
-    df_tau <- subset(
-      results_all,
-      tau == tau_val
-    )
-    
-    x_range <- range(df_tau$l)
-    y_range <- range(df_tau$loss)
-    
-    plot(
-      NA,
-      xlim = x_range,
-      ylim = y_range,
-      xlab = expression(l),
-      ylab = expression(f[tau](T,l)),
-      main = bquote(tau == .(tau_val)),
-      cex.lab = 1.1,
-      cex.main = 1.2
-    )
-    
-    # Grid
-    grid()
-    
-    # True peak location
-    abline(
-      v = L_true,
-      col = "gray40",
-      lty = 2,
-      lwd = 1.5
-    )
-    
-    # Plot one curve for each T
-    for (k in seq_along(Ts)) {
+  for (i in seq_along(Ts)) {
+    for (j in seq_along(taus)) {
+      T_val <- Ts[i]
+      tau_val <- taus[j]
       
-      T_val <- Ts[k]
+      subset_data <- subset(results_all, T == T_val & tau == tau_val)
       
-      df_T <- subset(
-        df_tau,
-        T == T_val
-      )
-      
-      lines(
-        df_T$l,
-        df_T$loss,
-        col = colors[k],
-        lwd = 2
-      )
-    }
-    
-    # Legend in the first panel only
-    # if (tau_val == taus[1]) {
-      
-      legend(
-        "topright",
-        legend = paste("T =", Ts),
-        col = colors,
+      plot(
+        subset_data$l,
+        subset_data$loss,
+        type = "l",
         lwd = 2,
-        cex = 0.8,
-        bty = "o",
-        bg = "white"
+        col = "blue",
+        xlab = "",
+        ylab = "",
+        main = ""
       )
-    # }
+      
+      # Grid
+      grid()
+      
+      # True peak location
+      abline(
+        v = L_true,
+        col = "red",
+        lty = 2
+      )
+      
+      # Add T label on the left (row titles)
+      if (j == 1) {
+        mtext(
+          bquote(T == .(T_val)),
+          side = 2,
+          line = 3,
+          cex = 1.1
+        )
+      }
+      
+      # Add tau label on top (column titles)
+      if (i == 1) {
+        mtext(
+          bquote(tau == .(tau_val)),
+          side = 3,
+          line = 0.5,
+          cex = 1.1
+        )
+      }
+    }
   }
 }
 
@@ -289,11 +254,11 @@ tau_vals <- c(0.25, 0.5, 0.75, 0.95)
 results_all <- do.call(
   rbind,
   lapply(tau_vals, function(tau_val) {
-
+    
     do.call(
       rbind,
       lapply(T_vals, function(T) {
-
+        
         simulate_asymmetric_laplace_objective(
           T = T,
           A = A_true,
@@ -303,7 +268,7 @@ results_all <- do.call(
           snr = snr,
           seed = seed
         )
-
+        
       })
     )
   })
