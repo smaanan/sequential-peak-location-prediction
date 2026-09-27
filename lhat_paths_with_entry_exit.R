@@ -236,7 +236,7 @@ pdf(
 
 par(
   mfrow = c(2, 2),
-  mar = c(4, 4, 3, 1),
+  mar = c(4, 4.5, 3, 1),
   bg = "white"
 )
 
@@ -330,15 +330,6 @@ for (tau in taus) {
     type = "b",
     pch = 19,
     lwd = 2
-  )
-  
-  legend(
-    "bottomright",
-    legend = expression(hat(l)(T)),
-    lwd = 2,
-    pch = 19,
-    cex = 0.8,
-    bty = "o"
   )
 }
 
