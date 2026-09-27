@@ -7,7 +7,7 @@
 \usepackage[round]{natbib} 
 \usepackage[colorlinks=true,linkcolor=red,citecolor=red,urlcolor=blue]{hyperref}
 \bibliographystyle{plainnat}
-
+\defcitealias{ecdc_covid_france_2020}{ECDC,~2020}
 \usepackage[margin=2cm]{geometry}
 \usepackage[title]{appendix}
 \usepackage{multirow}
@@ -580,7 +580,7 @@ The corresponding stabilization times are reported in Table~\ref{tab:stability_t
 		\bottomrule
 	\end{tabular*}
 \end{table}
-
+%\clearpage
 {\color{blue}
 \section{Entry and Exit Times of the Peak Region}
 \label{sec:entry-exit}
@@ -613,11 +613,7 @@ we define the oscillation of the estimated peak location over the interval $[T,T
 	\right|.
 	\label{eq:local_oscillation}
 \end{equation}
-Thus, $\omega_l(T,T')$ measures the largest variation of the estimated peak location over the interval $[T,T']$. In particular,
-\(
-\omega_l(T,T')=0
-\)
-if and only if $\hat{l}(t)$ is constant over the observation horizons contained in $[T,T']$.
+Thus, $\omega_l(T,T')$ measures the largest variation of the estimated peak location over the interval $[T,T']$. In particular, $\omega_l(T,T')=0$ if and only if $\hat{l}(t)$ is constant over the observation horizons contained in $[T,T']$.
 A particular case of~\eqref{eq:local_oscillation} is the future-tail oscillation
 \[
 \omega_l(T,h)
@@ -627,52 +623,60 @@ A particular case of~\eqref{eq:local_oscillation} is the future-tail oscillation
 \hat{l}(t_1)-\hat{l}(t_2)
 \right|.
 \]
-This quantity measures the largest variation that can still occur in the estimated peak location after observation time $T$.
-The future-tail oscillation is nonincreasing with $T$. Indeed, if
-\(
-T_1<T_2\leq h,
-\)
-then
-\(
-[T_2,h]\subset[T_1,h],
-\)
-and consequently
-\(
-\omega_l(T_2,h)
-\leq
-\omega_l(T_1,h).
-\)
-Hence, the function
+This quantity measures the largest variation that can still occur in the estimated peak location after observation time $T$. The future-tail oscillation is nonincreasing with $T$. Indeed, if $T_1<T_2\leq h$, then $[T_2,h]\subset[T_1,h]$, and consequently $\omega_l(T_2,h)\leq\omega_l(T_1,h)$. Hence, the function
 \(
 g(T)=\omega_l(T,h)
 \)
 provides a nonincreasing measure of the remaining temporal variation of the estimated peak location.
 
+\subsection{Strict-decrease points of the future-tail oscillation}
+\label{subsec:strict-decrease-points}
+
+Consider the nonincreasing sequence
+\(
+T\longmapsto\omega_l(T,h),
+\)
+for $T\in\{T_0,\ldots,h\}$. We call an observation time $T<h$ a \emph{strict-decrease point} of the future-tail oscillation if
+\begin{equation}
+	\omega_l(T,h)>\omega_l(T+1,h).
+	\label{eq:strict-decrease-point}
+\end{equation}
+By convention, we also regard $h$ as a strict-decrease point. This is the natural starting point of the recursive construction, since the interval $[h,h]$ consists of a single observation and $\omega_l(h,h)=0$, which is the smallest possible value of the future-tail oscillation.
+We enumerate the strict-decrease points in decreasing order as
+\(
+T'_1=h>T'_2>\cdots>T'_k>\cdots.
+\)
+For every $k\geq2$, $\omega_l(T'_k,h)>\omega_l(T'_k+1,h)$. Moreover, since there is no strict-decrease point between $T'_{k+1}$ and $T'_k$, the future-tail oscillation is constant on the corresponding interval:
+\begin{equation}
+	\omega_l(T,h)
+	=
+	\omega_l(T'_k,h),
+	\qquad
+	T\in\{T'_{k+1}+1,\ldots,T'_k\}.
+	\label{eq:oscillation-plateau}
+\end{equation}
+Thus, the strict-decrease points characterize the successive drops of the nonincreasing sequence $T\mapsto\omega_l(T,h)$, while the intervals between consecutive strict-decrease points correspond to its constant plateaus.
+For later use, we associate the oscillation level
+\(
+\tau'_k=\omega_l(T'_{k+1},h)
+\)
+with the strict-decrease point $T'_{k+1}$, for $k\geq0$. In particular, $\tau'_0=\omega_l(T'_1,h)=\omega_l(h,h)=0$.
+
 \subsection{Recursive construction of candidate exit times}
 \label{subsec:candidate-exit-times}
 
-The candidate exit times are constructed recursively from the future-tail oscillation. Let
+The strict-decrease points introduced above provide the structural description of the successive drops of the future-tail oscillation. The recursive construction below provides the corresponding operational procedure. Under the exact construction, it reproduces the strict-decrease points, while the numerical implementation replaces exact equalities by numerical tolerances.
+Let
 \(
-h=\max\{T:\hat{l}(T)\}
+h=\max\{T:\hat{l}(T)\text{ is available}\}.
 \)
-is available.
-The initial candidate is defined by
-\(
-\tau'_0=0,
-\)
-\(
-T_{\mathrm{exit}}^{(0)}=h.
-\)
-We also initialize the current boundary at
-\(
-B_0=h.
-\)
-Suppose that at a given step $k$ we have a current oscillation level $\tau'_k$ and a current boundary $B_k$. We consider observation times strictly before the current boundary and search for the earliest observation time $T'_k$ satisfying
+We initialize $\tau'_0=0$, $T_{\mathrm{exit}}^{(0)}=h$, and $B_0=h$. Thus, $T_{\mathrm{exit}}^{(0)}=h=T'_1$.
+Suppose that at a given step $k$ we have a current oscillation level $\tau'_k$ and a current boundary $B_k$. We consider observation times strictly before the current boundary and search for the earliest observation time $S_k$ satisfying
 \begin{equation}
-	T'_k<B_k,
+	S_k<B_k,
 	\qquad
 	\left|
-	\omega_l(T'_k,h)-\tau'_k
+	\omega_l(S_k,h)-\tau'_k
 	\right|
 	\leq\varepsilon_1,
 	\label{eq:stage1_equality}
@@ -680,62 +684,40 @@ Suppose that at a given step $k$ we have a current oscillation level $\tau'_k$ a
 where $\varepsilon_1$ is a numerical tolerance used to implement the equality in the R procedure.
 If such an observation time exists, let
 \(
-T_{\mathrm{prev}}^{(k)}
-=
-\max\{T<T'_k\}
+T_{\mathrm{prev}}^{(k)}=\max\{T<S_k\}
 \)
-be the observation horizon immediately preceding $T'_k$. The next candidate exit time and oscillation level are then defined by
+be the observation horizon immediately preceding $S_k$. The next candidate exit time and oscillation level are then defined by
 \(
-T_{\mathrm{exit}}^{(k+1)}
-=
-T_{\mathrm{prev}}^{(k)}
+T_{\mathrm{exit}}^{(k+1)}=T_{\mathrm{prev}}^{(k)}
 \)
 and
 \(
-\tau'_{k+1}
-=
-\omega_l
-\left(
-T_{\mathrm{prev}}^{(k)},h
-\right).
+\tau'_{k+1}=\omega_l(T_{\mathrm{prev}}^{(k)},h).
 \)
-The new boundary is set to
-\(
-B_{k+1}=T'_k.
-\)
+The new boundary is set to $B_{k+1}=S_k$.
+Under the exact strict-decrease-point construction, the level $\tau'_k$ is $\omega_l(T'_{k+1},h)$. By~\eqref{eq:oscillation-plateau}, the first observation belonging to the plateau at this level is $S_k=T'_{k+2}+1$. Consequently, $T_{\mathrm{prev}}^{(k)}=T'_{k+2}$ and hence $T_{\mathrm{exit}}^{(k+1)}=T'_{k+2}$. Therefore, under the exact construction, the candidate exit times generated by the recursion are precisely the strict-decrease points:
+\begin{equation}
+	T_{\mathrm{exit}}^{(k)}=T'_{k+1},
+	\qquad k\geq0.
+	\label{eq:exit-strict-decrease-correspondence}
+\end{equation}
+In the numerical implementation, the exact equality is replaced by the tolerance condition in~\eqref{eq:stage1_equality}, so the selected observation time may depend on $\varepsilon_1$.
 If no observation time satisfying~\eqref{eq:stage1_equality} exists before the current boundary, the recursion does not terminate immediately. Instead, the observation horizon immediately preceding the current boundary is taken as the next candidate exit time:
 \(
-T_{\mathrm{exit}}^{(k+1)}
-=
-\max\{T<B_k\},
+T_{\mathrm{exit}}^{(k+1)}=\max\{T<B_k\},
 \)
 with corresponding oscillation level
 \(
-\tau'_{k+1}
-=
-\omega_l
-\left(
-T_{\mathrm{exit}}^{(k+1)},h
-\right),
+\tau'_{k+1}=\omega_l(T_{\mathrm{exit}}^{(k+1)},h)
 \)
-and the new boundary is set to
+and new boundary
 \(
-B_{k+1}
-=
-T_{\mathrm{exit}}^{(k+1)}.
+B_{k+1}=T_{\mathrm{exit}}^{(k+1)}.
 \)
-The recursion is continued as long as the next oscillation level increases numerically. In the implementation, the condition
-\(
-\tau'_{k+1}>\tau'_k
-\)
-is checked up to a numerical tolerance $\varepsilon_1$.
+The recursion is continued as long as the next oscillation level increases numerically. In the implementation, the condition $\tau'_{k+1}>\tau'_k$ is checked up to a numerical tolerance $\varepsilon_1$.
 This recursive construction generates a sequence
 \(
-\left\{
-\left(
-\tau'_k,T_{\mathrm{exit}}^{(k)}
-\right)
-\right\}_{k=0}^{K},
+\{(\tau'_k,T_{\mathrm{exit}}^{(k)})\}_{k=0}^{K},
 \)
 where each pair consists of a candidate exit time and the corresponding future-tail oscillation. Importantly, the construction uses only the observed trajectory $\hat{l}(T)$ and does not require knowledge of the true peak location $L$.
 
@@ -743,58 +725,41 @@ where each pair consists of a candidate exit time and the corresponding future-t
 \label{subsec:entry-time}
 
 For a given candidate exit time $T_{\mathrm{exit}}^{(k)}$, we first consider all observation times strictly before the candidate exit time. The set
-\[
-E_k
-=
-\left\{
-T<T_{\mathrm{exit}}^{(k)}:
-\omega_l(T,T_{\mathrm{exit}}^{(k)})
-\geq
-\tau'_k-\varepsilon_2
-\right\},
-\]
-is the numerical implementation of the Stage-2 set, where $\varepsilon_2$ is a numerical tolerance.
-If $E_k$ is empty, the candidate does not yield a valid entry time. Otherwise, we define
+\begin{equation}
+	E_k
+	=
+	\left\{
+	T<T_{\mathrm{exit}}^{(k)}:
+	\omega_l(T,T_{\mathrm{exit}}^{(k)})
+	\geq
+	\tau'_k-\varepsilon_2
+	\right\},
+	\label{eq:stage2_set}
+\end{equation}
+is the numerical implementation of the Stage-2 set, where $\varepsilon_2$ is a numerical tolerance. If $E_k$ is empty, the candidate does not yield a valid entry time. Otherwise, we define $T_k^*=\max E_k$. The corresponding oscillation level is
 \(
-T_k^*
-=
-\max E_k.
-\)
-The corresponding oscillation level is
-\(
-\tau_k
-=
-\omega_l
-\left(
-T_k^*,T_{\mathrm{exit}}^{(k)}
-\right).
+\tau_k=\omega_l(T_k^*,T_{\mathrm{exit}}^{(k)}).
 \)
 We then consider all observation times $T<T_{\mathrm{exit}}^{(k)}$ for which
 \(
-\left|
-\omega_l(T,T_{\mathrm{exit}}^{(k)})
--
-\tau_k
-\right|
-\leq
-\varepsilon_3,
+|\omega_l(T,T_{\mathrm{exit}}^{(k)})-\tau_k|\leq\varepsilon_3,
 \)
 where $\varepsilon_3$ is the numerical tolerance used for equality in Stage 2. The entry time is defined as the first such observation horizon:
-\[
-T_{\mathrm{entry}}^{(k)}
-=
-\min
-\left\{
-T<T_{\mathrm{exit}}^{(k)}:
-\left|
-\omega_l(T,T_{\mathrm{exit}}^{(k)})
--
-\tau_k
-\right|
-\leq
-\varepsilon_3
-\right\},
-\]
+\begin{equation}
+	T_{\mathrm{entry}}^{(k)}
+	=
+	\min
+	\left\{
+	T<T_{\mathrm{exit}}^{(k)}:
+	\left|
+	\omega_l(T,T_{\mathrm{exit}}^{(k)})
+	-
+	\tau_k
+	\right|
+	\leq\varepsilon_3
+	\right\},
+	\label{eq:entry-time}
+\end{equation}
 provided that such an observation time exists.
 The width associated with the candidate is
 \begin{equation}
@@ -809,12 +774,244 @@ The resulting candidate peak region is therefore represented by the interval
 \(
 \mathcal{R}_k
 =
-\left[
-T_{\mathrm{entry}}^{(k)},
-T_{\mathrm{exit}}^{(k)}
-\right].
+[T_{\mathrm{entry}}^{(k)},T_{\mathrm{exit}}^{(k)}].
 \)
-The endpoints are determined entirely from the sequential estimation trajectory and the oscillation construction.
+The endpoints are determined entirely from the sequential estimation trajectory and the oscillation construction.}
+%\clearpage
+{\color{black}
+%\section{Entry and Exit Times of the Peak Region}
+%\label{sec:entry-exit}
+%
+%The sequential estimation procedure introduced in the preceding sections provides, for each observation horizon $T$, an estimate $\hat{l}(T)$ of the peak location. The stabilization criterion considered in Section~\ref{sec:stability-analysis} characterizes the point from which the future estimation path remains within a prescribed tolerance. In this section, we introduce a complementary construction based on the oscillations of the estimated peak location. This construction aims at identifying candidate time intervals describing the region in which the estimated peak location becomes stable, through a data-driven time of entry and a time of exit.
+%The operational construction is based only on the sequential estimation trajectory
+%\(
+%T\longmapsto\hat{l}(T).
+%\)
+%The true peak location $L$ is not required to construct the candidate entry and exit times. In the simulation study, where $L$ is known, it is used only for an ex post assessment of whether a candidate peak region contains the true peak.
+%
+%\subsection{Oscillations of the estimated peak location}
+%\label{subsec:oscillations}
+%
+%Let
+%\(
+%T_0<T_0+1<\cdots<h
+%\)
+%denote the observation horizons for which the sequential estimator $\hat{l}(T)$ is available. For two observation times $T$ and $T'$ satisfying
+%\(
+%T_0\leq T<T'\leq h,
+%\)
+%we define the oscillation of the estimated peak location over the interval $[T,T']$ by
+%\begin{equation}
+%	\omega_l(T,T')
+%	=
+%	\max_{T\leq t_1,t_2\leq T'}
+%	\left|
+%	\hat{l}(t_1)-\hat{l}(t_2)
+%	\right|.
+%	\label{eq:local_oscillation}
+%\end{equation}
+%Thus, $\omega_l(T,T')$ measures the largest variation of the estimated peak location over the interval $[T,T']$. In particular,
+%\(
+%\omega_l(T,T')=0
+%\)
+%if and only if $\hat{l}(t)$ is constant over the observation horizons contained in $[T,T']$.
+%A particular case of~\eqref{eq:local_oscillation} is the future-tail oscillation
+%\[
+%\omega_l(T,h)
+%=
+%\max_{T\leq t_1,t_2\leq h}
+%\left|
+%\hat{l}(t_1)-\hat{l}(t_2)
+%\right|.
+%\]
+%This quantity measures the largest variation that can still occur in the estimated peak location after observation time $T$.
+%The future-tail oscillation is nonincreasing with $T$. Indeed, if
+%\(
+%T_1<T_2\leq h,
+%\)
+%then
+%\(
+%[T_2,h]\subset[T_1,h],
+%\)
+%and consequently
+%\(
+%\omega_l(T_2,h)
+%\leq
+%\omega_l(T_1,h).
+%\)
+%Hence, the function
+%\(
+%g(T)=\omega_l(T,h)
+%\)
+%provides a nonincreasing measure of the remaining temporal variation of the estimated peak location.
+%
+%\subsection{Recursive construction of candidate exit times}
+%\label{subsec:candidate-exit-times}
+%
+%The candidate exit times are constructed recursively from the future-tail oscillation. Let
+%\(
+%h=\max\{T:\hat{l}(T)\}
+%\)
+%is available.
+%The initial candidate is defined by
+%\(
+%\tau'_0=0,
+%\)
+%\(
+%T_{\mathrm{exit}}^{(0)}=h.
+%\)
+%We also initialize the current boundary at
+%\(
+%B_0=h.
+%\)
+%Suppose that at a given step $k$ we have a current oscillation level $\tau'_k$ and a current boundary $B_k$. We consider observation times strictly before the current boundary and search for the earliest observation time $T'_k$ satisfying
+%\begin{equation}
+%	T'_k<B_k,
+%	\qquad
+%	\left|
+%	\omega_l(T'_k,h)-\tau'_k
+%	\right|
+%	\leq\varepsilon_1,
+%	\label{eq:stage1_equality}
+%\end{equation}
+%where $\varepsilon_1$ is a numerical tolerance used to implement the equality in the R procedure.
+%If such an observation time exists, let
+%\(
+%T_{\mathrm{prev}}^{(k)}
+%=
+%\max\{T<T'_k\}
+%\)
+%be the observation horizon immediately preceding $T'_k$. The next candidate exit time and oscillation level are then defined by
+%\(
+%T_{\mathrm{exit}}^{(k+1)}
+%=
+%T_{\mathrm{prev}}^{(k)}
+%\)
+%and
+%\(
+%\tau'_{k+1}
+%=
+%\omega_l
+%\left(
+%T_{\mathrm{prev}}^{(k)},h
+%\right).
+%\)
+%The new boundary is set to
+%\(
+%B_{k+1}=T'_k.
+%\)
+%If no observation time satisfying~\eqref{eq:stage1_equality} exists before the current boundary, the recursion does not terminate immediately. Instead, the observation horizon immediately preceding the current boundary is taken as the next candidate exit time:
+%\(
+%T_{\mathrm{exit}}^{(k+1)}
+%=
+%\max\{T<B_k\},
+%\)
+%with corresponding oscillation level
+%\(
+%\tau'_{k+1}
+%=
+%\omega_l
+%\left(
+%T_{\mathrm{exit}}^{(k+1)},h
+%\right),
+%\)
+%and the new boundary is set to
+%\(
+%B_{k+1}
+%=
+%T_{\mathrm{exit}}^{(k+1)}.
+%\)
+%The recursion is continued as long as the next oscillation level increases numerically. In the implementation, the condition
+%\(
+%\tau'_{k+1}>\tau'_k
+%\)
+%is checked up to a numerical tolerance $\varepsilon_1$.
+%This recursive construction generates a sequence
+%\(
+%\left\{
+%\left(
+%\tau'_k,T_{\mathrm{exit}}^{(k)}
+%\right)
+%\right\}_{k=0}^{K},
+%\)
+%where each pair consists of a candidate exit time and the corresponding future-tail oscillation. Importantly, the construction uses only the observed trajectory $\hat{l}(T)$ and does not require knowledge of the true peak location $L$.
+%
+%\subsection{Determination of the entry time}
+%\label{subsec:entry-time}
+%
+%For a given candidate exit time $T_{\mathrm{exit}}^{(k)}$, we first consider all observation times strictly before the candidate exit time. The set
+%\[
+%E_k
+%=
+%\left\{
+%T<T_{\mathrm{exit}}^{(k)}:
+%\omega_l(T,T_{\mathrm{exit}}^{(k)})
+%\geq
+%\tau'_k-\varepsilon_2
+%\right\},
+%\]
+%is the numerical implementation of the Stage-2 set, where $\varepsilon_2$ is a numerical tolerance.
+%If $E_k$ is empty, the candidate does not yield a valid entry time. Otherwise, we define
+%\(
+%T_k^*
+%=
+%\max E_k.
+%\)
+%The corresponding oscillation level is
+%\(
+%\tau_k
+%=
+%\omega_l
+%\left(
+%T_k^*,T_{\mathrm{exit}}^{(k)}
+%\right).
+%\)
+%We then consider all observation times $T<T_{\mathrm{exit}}^{(k)}$ for which
+%\(
+%\left|
+%\omega_l(T,T_{\mathrm{exit}}^{(k)})
+%-
+%\tau_k
+%\right|
+%\leq
+%\varepsilon_3,
+%\)
+%where $\varepsilon_3$ is the numerical tolerance used for equality in Stage 2. The entry time is defined as the first such observation horizon:
+%\[
+%T_{\mathrm{entry}}^{(k)}
+%=
+%\min
+%\left\{
+%T<T_{\mathrm{exit}}^{(k)}:
+%\left|
+%\omega_l(T,T_{\mathrm{exit}}^{(k)})
+%-
+%\tau_k
+%\right|
+%\leq
+%\varepsilon_3
+%\right\},
+%\]
+%provided that such an observation time exists.
+%The width associated with the candidate is
+%\begin{equation}
+%	w_k
+%	=
+%	T_{\mathrm{exit}}^{(k)}
+%	-
+%	T_{\mathrm{entry}}^{(k)}.
+%	\label{eq:peak_region_width}
+%\end{equation}
+%The resulting candidate peak region is therefore represented by the interval
+%\(
+%\mathcal{R}_k
+%=
+%\left[
+%T_{\mathrm{entry}}^{(k)},
+%T_{\mathrm{exit}}^{(k)}
+%\right].
+%\)
+%The endpoints are determined entirely from the sequential estimation trajectory and the oscillation construction.
 
 \section{Real-World Application: COVID-19 Case Study}
 \label{sec:covid-real-data}
@@ -822,7 +1019,8 @@ The endpoints are determined entirely from the sequential estimation trajectory 
 We now demonstrate the application of our quantile-based peak estimation
 framework to real-world data. We focus on the daily confirmed COVID-19
 cases in China, France, and Germany. Figure~\ref{fig:covid-1x3} displays
-the daily case series for these three countries. For each country, we
+the daily case series for these three countries. 
+The Chinese series is obtained from the Johns Hopkins University Center for Systems Science and Engineering (JHU CSSE) feed via the \texttt{COVID19} R package~\citep{Guidotti2020,Guidotti2022}, while the French and German series are obtained from the European Centre for Disease Prevention and Control (ECDC) open data portal~\citepalias{ecdc_covid_france_2020}. For each country, we
 analyze the sequence $T \mapsto \hat{l}(T)$ for the quantile levels
 $\tau \in \{0.25,0.5,0.75,0.95\}$, using quantile-loss minimization over
 the Gaussian-shaped parametric peak model. Following Algorithm~1 of the
@@ -860,7 +1058,7 @@ the operational procedure when $L$ is unknown.
 \label{subsec:china}
 
 We analyze the first wave of the COVID-19 epidemic in China, using the
-first 60 daily new case counts from January 22 to March 22, 2020. The
+first 60 daily new case counts from January 22 to March 22, 2020, obtained from the JHU CSSE feed via the \texttt{COVID19} R package \citep{Guidotti2020,Guidotti2022}. The
 estimation is performed for observation horizons $T=4,\ldots,35$. For
 each quantile level $\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the
 sequence $T\mapsto\hat{l}(T)$ by minimizing the empirical quantile loss
@@ -943,7 +1141,7 @@ peak region.
 \subsection{France}
 \label{subsec:france}
 
-Next, we apply the estimation method to daily COVID-19 cases in France, using ECDC data from January 15 to May 31, 2020. The analysis covers observation horizons $T=50,\ldots,89$. For each quantile level $\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the corresponding estimation path $T\mapsto\hat{l}(T)$, with candidate peak locations ranging over $l\in\{1,\ldots,h\}$ with $h=\max(T)=89$. Temporal stabilization is assessed using the criterion introduced in Section~\ref{sec:stability-analysis}, with tolerance $\varepsilon=5$. The estimated peak-location sequences are reported in Table~\ref{tab:france_tau}.
+Next, we apply the estimation method to daily COVID-19 cases in France, using ECDC data from January 15 to May 31, 2020 \citepalias{ecdc_covid_france_2020}. The analysis covers observation horizons $T=50,\ldots,89$. For each quantile level $\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the corresponding estimation path $T\mapsto\hat{l}(T)$, with candidate peak locations ranging over $l\in\{1,\ldots,h\}$ with $h=\max(T)=89$. Temporal stabilization is assessed using the criterion introduced in Section~\ref{sec:stability-analysis}, with tolerance $\varepsilon=5$. The estimated peak-location sequences are reported in Table~\ref{tab:france_tau}.
 
 The corresponding stabilization times are $T_{\mathrm{stab}}=85$, $82$, $80$, and $85$ for $\tau=0.25$, $0.5$, $0.75$, and $0.95$, respectively. The stabilization criterion characterizes the temporal behavior of the estimated peak-location path and is distinct from the entry--exit construction introduced in Section~\ref{sec:entry-exit}. For the present real-data application, where the observed peak location is known retrospectively, we apply the latter construction and, among the Stage-2 candidates satisfying
 \(
@@ -987,7 +1185,7 @@ The results show that the retrospective peak-region candidate depends on the qua
 \label{subsec:germany}
 
 Finally, we consider COVID-19 daily cases in Germany from January 28 to
-July 5, 2020. To align the peak location with day $t=61$, we index the
+July 5, 2020, obtained from the ECDC open data portal~\citepalias{ecdc_covid_france_2020}. To align the peak location with day $t=61$, we index the
 data starting on January 28. We analyze observation horizons
 $T=40,\ldots,75$. For each quantile level
 $\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the estimation path
