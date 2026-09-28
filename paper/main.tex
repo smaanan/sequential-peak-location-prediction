@@ -130,8 +130,7 @@ Sections~\ref{sec:parameter_estimation_paths}
 and~\ref{sec:stability-analysis} examine the resulting estimated
 peak-location trajectories under high and low signal-to-noise ratios.
 
-{\color{blue}
-Our third contribution concerns the situation in which the estimated peak location does not stabilize early enough to yield an accurate point prediction. In this work, we make precise the construction of the entry and exit times of the peak region, based on the oscillations of the sequential estimates $T\mapsto\hat l(T)$. The construction determines candidate entry and exit times, and hence candidate peak regions, using only the estimation trajectory; knowledge of the true peak location is not required operationally, and when it is available it is used only retrospectively to evaluate the candidates.}
+Our third contribution concerns the situation in which the estimated peak location does not stabilize early enough to yield an accurate point prediction. In this work, we make precise the construction of the entry and exit times of the peak region, based on the oscillations of the sequential estimates $T\mapsto\hat l(T)$. The construction determines candidate entry and exit times, and hence candidate peak regions, using only the estimation trajectory; knowledge of the true peak location is not required operationally, and when it is available it is used only retrospectively to evaluate the candidates.
 The methodology is applied to daily COVID-19 case counts during the
 first wave of the pandemic in China~\citep{Bar20}, France, and Germany,
 for several quantile levels (Section~\ref{sec:covid-real-data}).
@@ -146,9 +145,7 @@ introduces the $\tau$-aligned asymmetric Laplace noise model and
 establishes its connection with the quantile loss.
 Section~\ref{sec:parameter_estimation_paths} investigates the
 trajectories of the estimated peak parameters under high signal-to-noise
-ratio. 
-{\color{blue}
-Section~\ref{sec:stability-analysis} examines the temporal stability of the estimated peak location when the signal-to-noise ratio is reduced. Section~\ref{sec:entry-exit} makes explicit the construction of the candidate entry and exit times based on the oscillations of the sequential peak-location estimates, and defines the associated candidate peak regions. Finally, Section~\ref{sec:covid-real-data} applies the proposed methodology to daily COVID-19 case data from China, France, and Germany.}
+ratio. Section~\ref{sec:stability-analysis} examines the temporal stability of the estimated peak location when the signal-to-noise ratio is reduced. Section~\ref{sec:entry-exit} makes explicit the construction of the candidate entry and exit times based on the oscillations of the sequential peak-location estimates, and defines the associated candidate peak regions. Finally, Section~\ref{sec:covid-real-data} applies the proposed methodology to daily COVID-19 case data from China, France, and Germany.
 
 \section{Quantile-Based Estimation Methodology}
 \label{section:quantile_amplitude}
@@ -617,7 +614,6 @@ g(T)=\omega_l(T,h)
 \)
 provides a nonincreasing measure of the remaining temporal variation of the estimated peak location.
 
-{\color{blue}
 	\subsection{Strict-decrease points of the future-tail oscillation}
 	\label{subsec:strict-decrease-points}
 	
@@ -663,7 +659,8 @@ provides a nonincreasing measure of the remaining temporal variation of the esti
 	\subsection{Determination of the entry time}
 	\label{subsec:entry-time}
 	
-	For a given candidate exit time $T_{\mathrm{exit}}^{(k)}$, we first consider all observation times strictly before the candidate exit time. The set
+	{\color{blue}
+	For a given candidate exit time \(T_{\mathrm{exit}}^{(k)}\), we first consider all observation times strictly before the candidate exit time. The set
 	\begin{equation}
 		E_k
 		=
@@ -671,14 +668,14 @@ provides a nonincreasing measure of the remaining temporal variation of the esti
 		T<T_{\mathrm{exit}}^{(k)}:
 		\omega_l(T,T_{\mathrm{exit}}^{(k)})
 		\geq
-		\tau'_k-\varepsilon_2
+		\tau'_k
 		\right\},
 		\label{eq:stage2_set}
 	\end{equation}
-	is the numerical implementation of the Stage-2 set, where $\varepsilon_2$ is a numerical tolerance. If $E_k$ is empty, the candidate does not yield a valid entry time. Otherwise, we define $T_k^*=\max E_k$. The corresponding oscillation level is
+	defines the Stage-2 set. If $E_k$ is empty, the candidate does not yield a valid entry time. Otherwise, we define $T_k^*=\max E_k$. The corresponding oscillation level is
 	\(
 	\tau_k=\omega_l(T_k^*,T_{\mathrm{exit}}^{(k)}).
-	\)
+	\)}
 	We then consider all observation times $T<T_{\mathrm{exit}}^{(k)}$ for which
 	\(
 	|\omega_l(T,T_{\mathrm{exit}}^{(k)})-\tau_k|\leq\varepsilon_3,
@@ -715,7 +712,7 @@ provides a nonincreasing measure of the remaining temporal variation of the esti
 	=
 	[T_{\mathrm{entry}}^{(k)},T_{\mathrm{exit}}^{(k)}].
 	\)
-	The endpoints are determined entirely from the sequential estimation trajectory and the oscillation construction.}
+	The endpoints are determined entirely from the sequential estimation trajectory and the oscillation construction.
 
 \section{Real-World Application: COVID-19 Case Study}
 \label{sec:covid-real-data}
