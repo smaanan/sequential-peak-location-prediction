@@ -724,8 +724,7 @@ the daily case series for these three countries.
 The Chinese series is obtained from the Johns Hopkins University Center for Systems Science and Engineering (JHU CSSE) feed via the \texttt{COVID19} R package~\citep{Guidotti2020,Guidotti2022}, while the French and German series are obtained from the European Centre for Disease Prevention and Control (ECDC) open data portal~\citepalias{ecdc_covid_france_2020}. For each country, we
 analyze the sequence $T \mapsto \hat{l}(T)$ for the quantile levels
 $\tau \in \{0.25,0.5,0.75,0.95\}$, using quantile-loss minimization over
-the Gaussian-shaped parametric peak model. Following Algorithm~1 of the
-manuscript, the candidate peak location ranges over the analysis horizon
+the Gaussian-shaped parametric peak model. Following Algorithm~\ref{algo:quantile}, the candidate peak location ranges over the analysis horizon
 $h = \max(T)$, so that for each country the search set is
 $\{1,\ldots,h\}$. We then assess the temporal stabilization of the
 estimated peak-location path using the retrospective stabilization
@@ -744,7 +743,7 @@ the strict containment criterion
 \(
 T_{\mathrm{entry}}^{(k)} < L < T_{\mathrm{exit}}^{(k)}
 \)
-is reported for each country and quantile level. This minimum-width
+is reported for each country and quantile level, when such a candidate exists. This minimum-width
 selection is used only for retrospective evaluation and is not part of
 the operational procedure when $L$ is unknown.
 
@@ -755,20 +754,22 @@ the operational procedure when $L$ is unknown.
 	\label{fig:covid-1x3}
 \end{figure}
 
+{\color{blue}
 \subsection{China}
 \label{subsec:china}
 
 We analyze the first wave of the COVID-19 epidemic in China, using the
-first 60 daily new case counts from January 22 to March 22, 2020, obtained from the JHU CSSE feed via the \texttt{COVID19} R package \citep{Guidotti2020,Guidotti2022}. The
-estimation is performed for observation horizons $T=4,\ldots,35$. For
-each quantile level $\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the
-sequence $T\mapsto\hat{l}(T)$ by minimizing the empirical quantile loss
-over the Gaussian-shaped peak model, with candidate peak locations
-ranging over $l\in\{1,\ldots,h\}$ with $h=35$. Temporal stabilization is
-assessed using the criterion introduced in
-Section~\ref{sec:stability-analysis}, with tolerance $\varepsilon=3$. The
-resulting estimated peak-location sequences are reported in
-Table~\ref{tab:china_tau}.
+first 60 daily new case counts from January 22 to March 22, 2020, obtained
+from the JHU CSSE feed via the \texttt{COVID19} R package
+\citep{Guidotti2020,Guidotti2022}. The estimation is performed for
+observation horizons $T=4,\ldots,35$. For each quantile level
+$\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the sequence
+$T\mapsto\hat{l}(T)$ by minimizing the empirical quantile loss over the
+Gaussian-shaped peak model, with candidate peak locations ranging over
+$l\in\{1,\ldots,h\}$ with $h=35$. Temporal stabilization is assessed
+using the criterion introduced in Section~\ref{sec:stability-analysis},
+with tolerance $\varepsilon=3$. The resulting estimated peak-location
+sequences are reported in Table~\ref{tab:china_tau}.
 
 The corresponding stabilization times are $T_{\mathrm{stab}}=15$, $13$,
 $23$, and $28$ for $\tau=0.25$, $0.5$, $0.75$, and $0.95$,
@@ -781,27 +782,67 @@ Stage-2 candidates satisfying
 \(
 T_{\mathrm{entry}}^{(k)}<L<T_{\mathrm{exit}}^{(k)},
 \)
-retain the one with the smallest width
+retain the candidate with the smallest width
 \(
 w_k=T_{\mathrm{exit}}^{(k)}-T_{\mathrm{entry}}^{(k)}.
 \)
 This minimum-width selection is used only for retrospective evaluation
 and is not part of the operational procedure when the peak location is
-unknown.
+unknown. The candidate index $k$ is therefore chosen among the
+peak-containing candidates by this smallest-width criterion.
 
 For China, the observed peak location is $L=22$. The resulting
 retrospective selection for the four quantile levels is reported in
 Table~\ref{tab:china_entry_exit}. For $\tau=0.25$, the selected candidate
-corresponds to $\tau'_k=1$, with $T_{\mathrm{exit}}=26$, $T^*=15$,
-$\tau=3$, and $T_{\mathrm{entry}}=15$, giving a window width $w^*=11$.
-For $\tau=0.5$, the selected candidate corresponds to $\tau'_k=2$, with
-$T_{\mathrm{exit}}=24$, $T^*=15$, $\tau=2$, and $T_{\mathrm{entry}}=15$,
-giving $w^*=9$. For $\tau=0.95$, the selected candidate corresponds to
-$\tau'_k=15$, with $T_{\mathrm{exit}}=26$, $T^*=21$, $\tau=21$, and
-$T_{\mathrm{entry}}=13$, giving $w^*=13$. For $\tau=0.75$, no Stage-2
-candidate satisfies the strict containment condition
-$T_{\mathrm{entry}}^{(k)}<22<T_{\mathrm{exit}}^{(k)}$, and consequently
-no retrospective candidate is selected.
+is indexed by $k=1$. It has
+\(
+\tau'_1=1,
+%\qquad
+T_{\mathrm{exit}}^{(1)}=26,
+%\qquad
+T_1^*=15,
+%\qquad
+\tau_1=3,
+%\qquad
+T_{\mathrm{entry}}^{(1)}=15,
+\)
+and therefore has width $w_1=11$. For $\tau=0.5$, the selected candidate
+is indexed by $k=2$. It has
+\(
+\tau'_2=2,
+%\qquad
+T_{\mathrm{exit}}^{(2)}=24,
+%\qquad
+T_2^*=15,
+%\qquad
+\tau_2=2,
+%\qquad
+T_{\mathrm{entry}}^{(2)}=15,
+\)
+and therefore has width $w_2=9$. For $\tau=0.95$, the selected candidate
+is indexed by $k=4$. It has
+\(
+\tau'_4=15,
+%\qquad
+T_{\mathrm{exit}}^{(4)}=26,
+%\qquad
+T_4^*=21,
+%\qquad
+\tau_4=21,
+%\qquad
+T_{\mathrm{entry}}^{(4)}=13,
+\)
+and therefore has width $w_4=13$. For $\tau=0.25$ and $\tau=0.5$, the
+Stage-2 level $\tau_k$ is attained at a single observation horizon, so
+that $T_k^*=T_{\mathrm{entry}}^{(k)}$. For $\tau=0.95$, the level is
+attained at nine consecutive observation horizons spanning $T=13$ to
+$T=21$, so that $T_4^*=21$ while $T_{\mathrm{entry}}^{(4)}=13$. For
+$\tau=0.75$, no Stage-2 candidate satisfies the strict containment
+condition
+\(
+T_{\mathrm{entry}}^{(k)}<22<T_{\mathrm{exit}}^{(k)},
+\)
+and consequently no retrospective candidate is selected.
 
 \begin{table}[htbp]
 	\centering
@@ -813,82 +854,163 @@ no retrospective candidate is selected.
 		$\tau$ &
 		$k$ &
 		$\tau'_k$ &
-		$T_{\mathrm{exit}}$ &
-		$T^*$ &
-		$\tau$ &
-		$T_{\mathrm{entry}}$ &
-		$w^*$ &
+		$T_{\mathrm{exit}}^{(k)}$ &
+		$T_k^*$ &
+		$\tau_k$ &
+		$T_{\mathrm{entry}}^{(k)}$ &
+		$w_k$ &
 		$L$ \\
 		\midrule
-		$0.25$ & 1 & 1 & 26 & 15 & 3 & 15 & 11 & 22 \\
-		$0.50$ & 2 & 2 & 24 & 15 & 2 & 15 & 9  & 22 \\
+		$0.25$ & 1 & 1  & 26 & 15 & 3  & 15 & 11 & 22 \\
+		$0.50$ & 2 & 2  & 24 & 15 & 2  & 15 & 9  & 22 \\
 		$0.75$ & -- & -- & -- & -- & -- & -- & -- & 22 \\
 		$0.95$ & 4 & 15 & 26 & 21 & 21 & 13 & 13 & 22 \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-The results show that the retrospective peak-region candidate depends on
-the quantile level. The selected windows are $(15,26)$ for $\tau=0.25$,
-$(15,24)$ for $\tau=0.5$, and $(13,26)$ for $\tau=0.95$. For
-$\tau=0.75$, the two-stage construction does not produce a candidate
-whose window strictly contains the observed peak location $L=22$. These
-results complement the stabilization analysis in
-Table~\ref{tab:china_tau}: the stabilization time describes the temporal
-stabilization of the estimated peak-location path, whereas the two-stage
-construction uses its oscillations to identify candidate windows for the
-peak region.
+For $\tau=0.5$, the selected window is $(15,24)$. This is close to the
+window $(14,25)$ reported in~\citet{Der25} for the same dataset under
+the least-absolute-deviation criterion, the small difference reflecting
+that the peak-location trajectory is here recomputed for the
+quantile-based procedure.
 
+The results show that the retrospective peak-region candidate depends on
+the quantile level. The selected windows are $(15,26)$ for
+$\tau=0.25$, $(15,24)$ for $\tau=0.5$, and $(13,26)$ for
+$\tau=0.95$. For $\tau=0.75$, the two-stage construction does not
+produce a candidate whose window strictly contains the observed peak
+location $L=22$. These results complement the stabilization analysis in
+Table~\ref{tab:china_tau}: the stabilization time describes the temporal
+stabilization of the estimated peak-location path, whereas the
+two-stage construction uses its oscillations to identify candidate
+windows for the peak region.
+}
+\clearpage
+{\color{blue}
 \subsection{France}
 \label{subsec:france}
 
-Next, we apply the estimation method to daily COVID-19 cases in France, using ECDC data from January 15 to May 31, 2020 \citepalias{ecdc_covid_france_2020}. The analysis covers observation horizons $T=50,\ldots,89$. For each quantile level $\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the corresponding estimation path $T\mapsto\hat{l}(T)$, with candidate peak locations ranging over $l\in\{1,\ldots,h\}$ with $h=\max(T)=89$. Temporal stabilization is assessed using the criterion introduced in Section~\ref{sec:stability-analysis}, with tolerance $\varepsilon=5$. The estimated peak-location sequences are reported in Table~\ref{tab:france_tau}.
+Next, we apply the estimation method to daily COVID-19 cases in France,
+using ECDC data from January 15 to May 31, 2020
+\citepalias{ecdc_covid_france_2020}. The analysis covers observation
+horizons $T=50,\ldots,89$. For each quantile level
+$\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the corresponding estimation
+path $T\mapsto\hat{l}(T)$, with candidate peak locations ranging over
+$l\in\{1,\ldots,h\}$ with $h=\max(T)=89$. Temporal stabilization is
+assessed using the criterion introduced in
+Section~\ref{sec:stability-analysis}, with tolerance $\varepsilon=5$.
+The estimated peak-location sequences are reported in
+Table~\ref{tab:france_tau}.
 
-The corresponding stabilization times are $T_{\mathrm{stab}}=85$, $82$, $80$, and $85$ for $\tau=0.25$, $0.5$, $0.75$, and $0.95$, respectively. The stabilization criterion characterizes the temporal behavior of the estimated peak-location path and is distinct from the entry--exit construction introduced in Section~\ref{sec:entry-exit}. For the present real-data application, where the observed peak location is known retrospectively, we apply the latter construction and, among the Stage-2 candidates satisfying
-\(
-T_{\mathrm{entry}}^{(k)}<L<T_{\mathrm{exit}}^{(k)},
-\)
-retain the one with the smallest width
-\(
-w_k=T_{\mathrm{exit}}^{(k)}-T_{\mathrm{entry}}^{(k)}.
-\)
-This minimum-width selection is used only for retrospective evaluation and is not part of the operational procedure when the peak location is unknown.
+The corresponding stabilization times are $T_{\mathrm{stab}}=85$, $82$,
+$80$, and $85$ for $\tau=0.25$, $0.5$, $0.75$, and $0.95$,
+respectively. As in the China analysis, we then apply the two-stage
+entry--exit construction of Section~\ref{sec:entry-exit} and select the
+peak-containing candidate with the smallest width, using the same
+minimum-width criterion introduced above.
 
-For France, the observed peak location is $L=78$. The resulting retrospective selection for the four quantile levels is reported in Table~\ref{tab:france_entry_exit}. For $\tau=0.25$, the selected candidate corresponds to $\tau'_k=13$, with $T_{\mathrm{exit}}=79$, $T^*=76$, $\tau=13$, and $T_{\mathrm{entry}}=72$, giving a window width $w^*=7$. For $\tau=0.5$, the selected candidate corresponds to $\tau'_k=4$, with $T_{\mathrm{exit}}=82$, $T^*=78$, $\tau=6$, and $T_{\mathrm{entry}}=73$, giving $w^*=9$. For $\tau=0.75$, the selected candidate corresponds to $\tau'_k=8$, with $T_{\mathrm{exit}}=79$, $T^*=72$, $\tau=11$, and $T_{\mathrm{entry}}=70$, giving $w^*=9$. For $\tau=0.95$, the selected candidate corresponds to $\tau'_k=11$, with $T_{\mathrm{exit}}=80$, $T^*=77$, $\tau=13$, and $T_{\mathrm{entry}}=70$, giving $w^*=10$.
+For France, the observed peak location is $L=78$. The resulting
+retrospective selection for the four quantile levels is reported in
+Table~\ref{tab:france_entry_exit}. For $\tau=0.25$, the selected
+candidate is indexed by $k=5$. It has
+\(
+\tau'_5=13,
+%\qquad
+T_{\mathrm{exit}}^{(5)}=79,
+%\qquad
+T_5^*=76,
+%\qquad
+\tau_5=13,
+%\qquad
+T_{\mathrm{entry}}^{(5)}=72,
+\)
+and therefore has width $w_5=7$. For $\tau=0.5$, the selected candidate
+is indexed by $k=3$. It has
+\(
+\tau'_3=4,
+%\qquad
+T_{\mathrm{exit}}^{(3)}=82,
+%\qquad
+T_3^*=78,
+%\qquad
+\tau_3=6,
+%\qquad
+T_{\mathrm{entry}}^{(3)}=73,
+\)
+and therefore has width $w_3=9$. For $\tau=0.75$, the selected
+candidate is also indexed by $k=3$. It has
+\(
+\tau'_3=8,
+%\qquad
+T_{\mathrm{exit}}^{(3)}=79,
+%\qquad
+T_3^*=72,
+%\qquad
+\tau_3=11,
+%\qquad
+T_{\mathrm{entry}}^{(3)}=70,
+\)
+and therefore has width $w_3=9$. For $\tau=0.95$, the selected
+candidate is indexed by $k=6$. It has
+\(
+\tau'_6=11,
+%\qquad
+T_{\mathrm{exit}}^{(6)}=80,
+%\qquad
+T_6^*=77,
+%\qquad
+\tau_6=13,
+%\qquad
+T_{\mathrm{entry}}^{(6)}=70,
+\)
+and therefore has width $w_6=10$. Unlike the China case, the plateau
+at level $\tau_k$ is not a singleton in any of the four selections: the
+sets $Z_k=\{T:\omega_l(T,T_{\mathrm{exit}}^{(k)})=\tau_k\}$ contain
+$5$, $6$, $3$, and $8$ observation times, respectively, so that
+$T_k^*>T_{\mathrm{entry}}^{(k)}$ in every case.
 
 \begin{table}[htbp]
 	\centering
-	\caption{Retrospective selection of the peak-region candidate for COVID-19 in France.}
+	\caption{Retrospective selection of the peak-region candidate for
+		COVID-19 in France.}
 	\label{tab:france_entry_exit}
 	\begin{tabular}{c|cccccccc}
 		\toprule
 		$\tau$ &
 		$k$ &
 		$\tau'_k$ &
-		$T_{\mathrm{exit}}$ &
-		$T^*$ &
-		$\tau$ &
-		$T_{\mathrm{entry}}$ &
-		$w^*$ &
+		$T_{\mathrm{exit}}^{(k)}$ &
+		$T_k^*$ &
+		$\tau_k$ &
+		$T_{\mathrm{entry}}^{(k)}$ &
+		$w_k$ &
 		$L$ \\
 		\midrule
-		$0.25$ & 5 & 13 & 79 & 76 & 13 & 72 & 7 & 78 \\
-		$0.50$ & 3 & 4 & 82 & 78 & 6 & 73 & 9 & 78 \\
-		$0.75$ & 3 & 8 & 79 & 72 & 11 & 70 & 9 & 78 \\
+		$0.25$ & 5 & 13 & 79 & 76 & 13 & 72 & 7  & 78 \\
+		$0.50$ & 3 & 4  & 82 & 78 & 6  & 73 & 9  & 78 \\
+		$0.75$ & 3 & 8  & 79 & 72 & 11 & 70 & 9  & 78 \\
 		$0.95$ & 6 & 11 & 80 & 77 & 13 & 70 & 10 & 78 \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-The results show that the retrospective peak-region candidate depends on the quantile level. The selected windows are $(72,79)$ for $\tau=0.25$, $(73,82)$ for $\tau=0.5$, $(70,79)$ for $\tau=0.75$, and $(70,80)$ for $\tau=0.95$. All four windows strictly contain the observed peak location $L=78$, so a retrospective candidate is selected for every quantile level; the widths vary between 7 and 10 across the four quantile specifications. These results complement the stabilization analysis in Table~\ref{tab:france_tau}: the stabilization time describes the temporal stabilization of the estimated peak-location path, whereas the two-stage construction uses its oscillations to identify candidate windows for the peak region.
+The results show that the retrospective peak-region candidate depends on
+the quantile level. The selected windows are $(72,79)$ for
+$\tau=0.25$, $(73,82)$ for $\tau=0.5$, $(70,79)$ for $\tau=0.75$, and
+$(70,80)$ for $\tau=0.95$. All four windows strictly contain the
+observed peak location $L=78$, so a retrospective candidate is selected
+for every quantile level, and the widths vary between $7$ and $10$
+across the four quantile specifications.
 
 \subsection{Germany}
 \label{subsec:germany}
 
 Finally, we consider COVID-19 daily cases in Germany from January 28 to
-July 5, 2020, obtained from the ECDC open data portal~\citepalias{ecdc_covid_france_2020}. To align the peak location with day $t=61$, we index the
-data starting on January 28. We analyze observation horizons
-$T=40,\ldots,75$. For each quantile level
+July 5, 2020, obtained from the ECDC open data portal
+\citepalias{ecdc_covid_france_2020}. To align the peak location with day
+$t=61$, we index the data starting on January 28. We analyze observation
+horizons $T=40,\ldots,75$. For each quantile level
 $\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the estimation path
 $T\mapsto\hat{l}(T)$, with candidate peak locations ranging over
 $l\in\{1,\ldots,h\}$ with $h=75$. Temporal stabilization is assessed
@@ -898,34 +1020,48 @@ reported in Table~\ref{tab:germany_tau}.
 
 The corresponding stabilization times are $T_{\mathrm{stab}}=60$, $59$,
 $56$, and $57$ for $\tau=0.25$, $0.5$, $0.75$, and $0.95$,
-respectively. The stabilization criterion characterizes the temporal
-behavior of the estimated peak-location path and is distinct from the
-entry--exit construction introduced in Section~\ref{sec:entry-exit}. For
-the present real-data application, where the observed peak location is
-known retrospectively, we apply the latter construction and, among the
-Stage-2 candidates satisfying
-\(
-T_{\mathrm{entry}}^{(k)}<L<T_{\mathrm{exit}}^{(k)},
-\)
-retain the one with the smallest width
-\(
-w_k=T_{\mathrm{exit}}^{(k)}-T_{\mathrm{entry}}^{(k)}.
-\)
-This minimum-width selection is used only for retrospective evaluation
-and is not part of the operational procedure when the peak location is
-unknown.
+respectively. As in the China and France analyses, we then apply the
+two-stage entry--exit construction of Section~\ref{sec:entry-exit} and
+select the peak-containing candidate with the smallest width, using the
+same minimum-width criterion introduced above.
 
 For Germany, the observed peak location is $L=61$. The resulting
 retrospective selection for the four quantile levels is reported in
 Table~\ref{tab:germany_entry_exit}. For $\tau=0.25$, the selected
-candidate corresponds to $\tau'_k=15$, with $T_{\mathrm{exit}}=62$,
-$T^*=60$, $\tau=15$, and $T_{\mathrm{entry}}=60$, giving a window width
-$w^*=2$. For $\tau=0.95$, the selected candidate corresponds to
-$\tau'_k=9$, with $T_{\mathrm{exit}}=63$, $T^*=56$, $\tau=18$, and
-$T_{\mathrm{entry}}=56$, giving $w^*=7$. For $\tau=0.5$ and
-$\tau=0.75$, no Stage-2 candidate satisfies the strict containment
-condition $T_{\mathrm{entry}}^{(k)}<61<T_{\mathrm{exit}}^{(k)}$, and
-consequently no retrospective candidate is selected.
+candidate is indexed by $k=7$. It has
+\(
+\tau'_7=15,
+%\qquad
+T_{\mathrm{exit}}^{(7)}=62,
+%\qquad
+T_7^*=60,
+%\qquad
+\tau_7=15,
+%\qquad
+T_{\mathrm{entry}}^{(7)}=60,
+\)
+and therefore has width $w_7=2$. For $\tau=0.95$, the selected
+candidate is indexed by $k=6$. It has
+\(
+\tau'_6=9,
+%\qquad
+T_{\mathrm{exit}}^{(6)}=63,
+%\qquad
+T_6^*=56,
+%\qquad
+\tau_6=18,
+%\qquad
+T_{\mathrm{entry}}^{(6)}=56,
+\)
+and therefore has width $w_6=7$. In both cases, the level $\tau_k$ is
+attained at a single observation horizon, so that
+$T_k^*=T_{\mathrm{entry}}^{(k)}$. For $\tau=0.5$ and $\tau=0.75$, no
+Stage-2 candidate satisfies the strict containment condition
+\(
+T_{\mathrm{entry}}^{(k)}<61<T_{\mathrm{exit}}^{(k)},
+\)
+and consequently no retrospective candidate is selected for these two
+quantile levels.
 
 \begin{table}[htbp]
 	\centering
@@ -937,17 +1073,17 @@ consequently no retrospective candidate is selected.
 		$\tau$ &
 		$k$ &
 		$\tau'_k$ &
-		$T_{\mathrm{exit}}$ &
-		$T^*$ &
-		$\tau$ &
-		$T_{\mathrm{entry}}$ &
-		$w^*$ &
+		$T_{\mathrm{exit}}^{(k)}$ &
+		$T_k^*$ &
+		$\tau_k$ &
+		$T_{\mathrm{entry}}^{(k)}$ &
+		$w_k$ &
 		$L$ \\
 		\midrule
 		$0.25$ & 7 & 15 & 62 & 60 & 15 & 60 & 2 & 61 \\
 		$0.50$ & -- & -- & -- & -- & -- & -- & -- & 61 \\
 		$0.75$ & -- & -- & -- & -- & -- & -- & -- & 61 \\
-		$0.95$ & 6 & 9 & 63 & 56 & 18 & 56 & 7 & 61 \\
+		$0.95$ & 6 & 9  & 63 & 56 & 18 & 56 & 7 & 61 \\
 		\bottomrule
 	\end{tabular}
 \end{table}
@@ -955,12 +1091,12 @@ consequently no retrospective candidate is selected.
 The results show that the retrospective peak-region candidate depends on
 the quantile level. The selected windows are $(60,62)$ for $\tau=0.25$,
 and $(56,63)$ for $\tau=0.95$. For $\tau=0.5$ and $\tau=0.75$, the
-two-stage construction does not produce a candidate whose window strictly
-contains the observed peak location $L=61$. These results complement the
-stabilization analysis in Table~\ref{tab:germany_tau}: the stabilization
-time describes the temporal stabilization of the estimated peak-location
-path, whereas the two-stage construction uses its oscillations to
-identify candidate windows for the peak region.
+two-stage construction does not produce a candidate whose window
+strictly contains the observed peak location $L=61$. These results
+complement the stabilization analysis in Table~\ref{tab:germany_tau}:
+the stabilization time describes the temporal stabilization of the
+estimated peak-location path, whereas the two-stage construction uses
+its oscillations to identify candidate windows for the peak region.}
 
 \subsection{Comparison Across Quantile Levels}
 

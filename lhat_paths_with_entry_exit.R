@@ -306,7 +306,7 @@ for (tau in taus) {
     L_true,
     na.rm = TRUE
   )
-  
+
   plot(
     NA,
     xlim = range(T_vals),
@@ -315,15 +315,15 @@ for (tau in taus) {
     ylab = expression(hat(l)(T)),
     main = bquote(tau == .(tau))
   )
-  
+
   abline(
     h = L_true,
     col = "gray40",
     lty = 2
   )
-  
+
   grid()
-  
+
   lines(
     T_vals,
     l_path,

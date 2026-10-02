@@ -86,8 +86,51 @@ h <- 30
 T_vals <- 4:h
 taus <- c(0.25, 0.5, 0.75, 0.95)
 
-pdf(file = "fig3_4a_4b_combined.pdf", width = 8, height = 8)
+pdf(file = "fig3_4a_4b_combined2.pdf", width = 8, height = 8)
 par(mfrow = c(4, 3), mar = c(2, 2, 1, 1), oma = c(3, 3, 2.5, 1))  # reduce inner margins, use outer margins
+
+# for (tau in taus) {
+#   set.seed(seed)
+#   signal_full <- A_true * exp(-((1:h) - L_true)^2 / S_true^2)
+#   b <- sqrt((A_true / snr)^2 / al_variance(tau))
+#   noise_full <- rGL_tau_b(h, tau, b)
+#   I_full <- signal_full + noise_full
+#   
+#   l_hats <- numeric(length(T_vals))
+#   a_hats <- numeric(length(T_vals))
+#   s_hats <- numeric(length(T_vals))
+#   
+#   for (i in seq_along(T_vals)) {
+#     T <- T_vals[i]
+#     I_T <- I_full[1:T]
+#     est <- estimate_params(I_T, tau, h)
+#     l_hats[i] <- est$l_hat
+#     a_hats[i] <- est$a_hat
+#     s_hats[i] <- est$s_hat
+#   }
+#   
+#   # Column 1: l_hat(T)
+#   plot(T_vals, l_hats, type = "b", col = "blue", pch = 19,
+#        xlab = "", ylab = "", main = "", axes = FALSE)
+#   abline(h = L_true, col = "red", lty = 2)
+#   grid(); box(); axis(1); axis(2)
+#   if (tau == taus[1]) mtext(expression(hat(l)), side = 3, line = 1)
+#   mtext(bquote(tau == .(tau)), side = 2, line = 3)
+#   
+#   # Column 2: a_hat(T)
+#   plot(T_vals, a_hats, type = "b", col = "darkgreen", pch = 19,
+#        xlab = "", ylab = "", main = "", axes = FALSE)
+#   abline(h = A_true, col = "red", lty = 2)
+#   grid(); box(); axis(1); axis(2)
+#   if (tau == taus[1]) mtext(expression(hat(a)), side = 3, line = 1)
+#   
+#   # Column 3: s_hat(T)
+#   plot(T_vals, s_hats, type = "b", col = "purple", pch = 19,
+#        xlab = "", ylab = "", main = "", axes = FALSE)
+#   abline(h = S_true, col = "red", lty = 2)
+#   grid(); box(); axis(1); axis(2)
+#   if (tau == taus[1]) mtext(expression(hat(s)), side = 3, line = 1)
+# }
 
 for (tau in taus) {
   set.seed(seed)
@@ -110,24 +153,24 @@ for (tau in taus) {
   }
   
   # Column 1: l_hat(T)
-  plot(T_vals, l_hats, type = "b", col = "blue", pch = 19,
+  plot(T_vals, l_hats, type = "o", pch = 21, col = "gray35", bg = "darkgoldenrod1",
        xlab = "", ylab = "", main = "", axes = FALSE)
-  abline(h = L_true, col = "red", lty = 2)
+  abline(h = L_true, col = "gray", lty = 2)
   grid(); box(); axis(1); axis(2)
   if (tau == taus[1]) mtext(expression(hat(l)), side = 3, line = 1)
   mtext(bquote(tau == .(tau)), side = 2, line = 3)
   
   # Column 2: a_hat(T)
-  plot(T_vals, a_hats, type = "b", col = "darkgreen", pch = 19,
+  plot(T_vals, a_hats, type = "o", pch = 21, col = "gray35", bg = "darkmagenta",
        xlab = "", ylab = "", main = "", axes = FALSE)
-  abline(h = A_true, col = "red", lty = 2)
+  abline(h = A_true, col = "gray", lty = 2)
   grid(); box(); axis(1); axis(2)
   if (tau == taus[1]) mtext(expression(hat(a)), side = 3, line = 1)
   
   # Column 3: s_hat(T)
-  plot(T_vals, s_hats, type = "b", col = "purple", pch = 19,
+  plot(T_vals, s_hats, type = "o", pch = 21, col = "gray35", bg = "darkslategray1",
        xlab = "", ylab = "", main = "", axes = FALSE)
-  abline(h = S_true, col = "red", lty = 2)
+  abline(h = S_true, col = "gray", lty = 2)
   grid(); box(); axis(1); axis(2)
   if (tau == taus[1]) mtext(expression(hat(s)), side = 3, line = 1)
 }

@@ -79,23 +79,22 @@ STAGE2_TOLERANCE <- 1e-10
 ############################################################
 
 get_france_cases_ecdc <- function(
+    file = "~/Downloads/6YbQxT6Z",
     start_date = "2020-01-15",
     end_date   = "2020-05-31"
 ) {
   
-  url <- paste0(
-    "https://opendata.ecdc.europa.eu/",
-    "covid19/casedistribution/csv"
+  dat <- readr::read_csv(
+    file,
+    col_types = readr::cols(),
+    progress = FALSE
   )
   
-  read_csv(
-    url,
-    col_types = cols()
-  ) %>%
-    filter(
+  dat %>%
+    dplyr::filter(
       countriesAndTerritories == "France"
     ) %>%
-    mutate(
+    dplyr::mutate(
       date = as.Date(
         sprintf(
           "%04d-%02d-%02d",
@@ -105,27 +104,65 @@ get_france_cases_ecdc <- function(
         )
       )
     ) %>%
-    filter(
+    dplyr::filter(
       date >= as.Date(start_date),
       date <= as.Date(end_date)
     ) %>%
-    arrange(date) %>%
-    select(
+    dplyr::arrange(date) %>%
+    dplyr::select(
       date,
       daily_cases = cases
-    ) %>%
-    mutate(
-      daily_cases = ifelse(
-        daily_cases < 0,
-        NA,
-        daily_cases
-      ),
-      daily_cases = zoo::na.locf(
-        daily_cases,
-        na.rm = FALSE
-      )
     )
 }
+
+# get_france_cases_ecdc <- function(
+#     start_date = "2020-01-15",
+#     end_date   = "2020-05-31"
+# ) {
+#   
+#   url <- paste0(
+#     "https://opendata.ecdc.europa.eu/",
+#     "covid19/casedistribution/csv"
+#   )
+#   
+#   read_csv(
+#     url,
+#     col_types = cols()
+#   ) %>%
+#     filter(
+#       countriesAndTerritories == "France"
+#     ) %>%
+#     mutate(
+#       date = as.Date(
+#         sprintf(
+#           "%04d-%02d-%02d",
+#           year,
+#           month,
+#           day
+#         )
+#       )
+#     ) %>%
+#     filter(
+#       date >= as.Date(start_date),
+#       date <= as.Date(end_date)
+#     ) %>%
+#     arrange(date) %>%
+#     select(
+#       date,
+#       daily_cases = cases
+#     ) %>%
+#     mutate(
+#       daily_cases = ifelse(
+#         daily_cases < 0,
+#         NA,
+#         daily_cases
+#       ),
+#       daily_cases = zoo::na.locf(
+#         daily_cases,
+#         na.rm = FALSE
+#       )
+#     )
+# }
 
 
 france <- get_france_cases_ecdc()
