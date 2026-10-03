@@ -731,6 +731,43 @@ provides a nonincreasing measure of the remaining temporal variation of the esti
 	candidate contains $L$ strictly.
 	The complete list of Stage-2 candidates generated in the simulation study is reported in Appendix~\ref{app:simulation-candidates}.
 	
+%	\begin{table}[htbp]
+%		\centering
+%		\caption{Stage-2 candidate selected for each quantile level
+%			$\tau$ and each signal-to-noise ratio in the simulation
+%			study. The selected candidate is the peak-containing
+%			candidate with the smallest width $w_k$; the last column
+%			reports whether $L$ lies strictly inside the selected
+%			window.}
+%		\label{tab:simulation_selected}
+%		\begin{tabular}{cccccccccc}
+%			\toprule
+%			$\tau$ & SNR &
+%			$k$ &
+%			$\epsilon'_k$ &
+%			$T_{\mathrm{exit}}^{(k)}$ &
+%			$T_k^*$ &
+%			$\epsilon_k$ &
+%			$T_{\mathrm{entry}}^{(k)}$ &
+%			$w_k$ &
+%			$L\in(\cdot,\cdot)$ \\
+%			\midrule
+%			$0.25$ & 1000 & 0 & 0  & 30 & 29 & 0  & 11 & 19 & yes \\
+%			$0.25$ & 100  & 0 & 0  & 30 & 29 & 0  & 18 & 12 & yes \\
+%			$0.25$ & 1    & 1 & 9  & 29 & 24 & 9  & 17 & 12 & yes \\
+%			$0.50$ & 1000 & 0 & 0  & 30 & 29 & 0  & 9  & 21 & yes \\
+%			$0.50$ & 100  & 0 & 0  & 30 & 29 & 0  & 18 & 12 & yes \\
+%			$0.50$ & 1    & 2 & 5  & 27 & 21 & 10 & 21 & 6  & yes \\
+%			$0.75$ & 1000 & 0 & 0  & 30 & 29 & 0  & 12 & 18 & yes \\
+%			$0.75$ & 100  & 0 & 0  & 30 & 29 & 0  & 16 & 14 & yes \\
+%			$0.75$ & 1    & 3 & 10 & 27 & 16 & 20 & 7  & 20 & yes \\
+%			$0.95$ & 1000 & 0 & 0  & 30 & 29 & 0  & 13 & 17 & yes \\
+%			$0.95$ & 100  & 0 & 0  & 30 & 29 & 0  & 16 & 14 & yes \\
+%			$0.95$ & 1    & 1 & 3  & 27 & 20 & 3  & 20 & 7  & yes \\
+%			\bottomrule
+%		\end{tabular}
+%	\end{table}
+	
 	\begin{table}[htbp]
 		\centering
 		\caption{Stage-2 candidate selected for each quantile level
@@ -752,18 +789,33 @@ provides a nonincreasing measure of the remaining temporal variation of the esti
 			$w_k$ &
 			$L\in(\cdot,\cdot)$ \\
 			\midrule
-			$0.25$ & 1000 & 0 & 0  & 30 & 29 & 0  & 11 & 19 & yes \\
-			$0.25$ & 100  & 0 & 0  & 30 & 29 & 0  & 18 & 12 & yes \\
-			$0.25$ & 1    & 1 & 9  & 29 & 24 & 9  & 17 & 12 & yes \\
-			$0.50$ & 1000 & 0 & 0  & 30 & 29 & 0  & 9  & 21 & yes \\
-			$0.50$ & 100  & 0 & 0  & 30 & 29 & 0  & 18 & 12 & yes \\
-			$0.50$ & 1    & 2 & 5  & 27 & 21 & 10 & 21 & 6  & yes \\
-			$0.75$ & 1000 & 0 & 0  & 30 & 29 & 0  & 12 & 18 & yes \\
-			$0.75$ & 100  & 0 & 0  & 30 & 29 & 0  & 16 & 14 & yes \\
-			$0.75$ & 1    & 3 & 10 & 27 & 16 & 20 & 7  & 20 & yes \\
-			$0.95$ & 1000 & 0 & 0  & 30 & 29 & 0  & 13 & 17 & yes \\
-			$0.95$ & 100  & 0 & 0  & 30 & 29 & 0  & 16 & 14 & yes \\
-			$0.95$ & 1    & 1 & 3  & 27 & 20 & 3  & 20 & 7  & yes \\
+			
+			\multirow{3}{*}{$0.25$}
+			& 1000 & 0 & 0 & 30 & 29 & 0 & 11 & 19 & yes \\
+			& 100  & 0 & 0 & 30 & 29 & 0 & 18 & 12 & yes \\
+			& 1    & 1 & 9 & 29 & 24 & 9 & 17 & 12 & yes \\
+			
+			\midrule
+			
+			\multirow{3}{*}{$0.50$}
+			& 1000 & 0 & 0 & 30 & 29 & 0 & 9  & 21 & yes \\
+			& 100  & 0 & 0 & 30 & 29 & 0 & 18 & 12 & yes \\
+			& 1    & 2 & 5 & 27 & 21 & 10 & 21 & 6  & yes \\
+			
+			\midrule
+			
+			\multirow{3}{*}{$0.75$}
+			& 1000 & 0 & 0  & 30 & 29 & 0  & 12 & 18 & yes \\
+			& 100  & 0 & 0  & 30 & 29 & 0  & 16 & 14 & yes \\
+			& 1    & 3 & 10 & 27 & 16 & 20 & 7  & 20 & yes \\
+			
+			\midrule
+			
+			\multirow{3}{*}{$0.95$}
+			& 1000 & 0 & 0 & 30 & 29 & 0 & 13 & 17 & yes \\
+			& 100  & 0 & 0 & 30 & 29 & 0 & 16 & 14 & yes \\
+			& 1    & 1 & 3 & 27 & 20 & 3 & 20 & 7  & yes \\
+			
 			\bottomrule
 		\end{tabular}
 	\end{table}
@@ -1233,7 +1285,7 @@ The resulting minima are obtained for
 \end{itemize}
 These results indicate that the empirical quantile-loss criterion favors different quantile specifications across the three epidemic trajectories. In particular, the lower quantile $\tau=0.25$ yields the smallest objective value for China, whereas the upper quantile $\tau=0.95$ yields the smallest objective value for both France and Germany. This comparison is descriptive and is intended to characterize the behavior of the proposed estimator under the four quantile levels considered, rather than to establish that any one of these quantiles represents the true conditional quantile of the epidemic process.
 
-\clearpage
+%\clearpage
 \bibliography{references}
 
 \paragraph*{Data Availability Statement}
@@ -1406,95 +1458,99 @@ $T_{\mathrm{entry}}^{(k)}$, the width
 $w_k=T_{\mathrm{exit}}^{(k)}-T_{\mathrm{entry}}^{(k)}$, and a flag
 indicating whether the window strictly contains the true peak
 location $L$.
+%\begin{center}
+%	\small
+%	\begin{longtable}{cccccccccc}
+%		\caption{Full Stage-2 candidate list for the simulation study.}
+%		\label{tab:simulation_all_candidates} \\
+%		\toprule
+%		$\tau$ & SNR & $k$ & $\epsilon'_k$ &
+%		$T_{\mathrm{exit}}^{(k)}$ & $T_k^*$ &
+%		$\epsilon_k$ & $T_{\mathrm{entry}}^{(k)}$ &
+%		$w_k$ & $L\in(\cdot,\cdot)$ \\
+%		\midrule
+%		\endfirsthead
+%		\multicolumn{10}{c}{\tablename\ \thetable{} (continued)}\\
+%		\toprule
+%		$\tau$ & SNR & $k$ & $\epsilon'_k$ &
+%		$T_{\mathrm{exit}}^{(k)}$ & $T_k^*$ &
+%		$\epsilon_k$ & $T_{\mathrm{entry}}^{(k)}$ &
+%		$w_k$ & $L\in(\cdot,\cdot)$ \\
+%		\midrule
+%		\endhead
+%		\bottomrule
+%		\endfoot
+%		$0.25$ & 1000 & 0 & 0  & 30 & 29 & 0  & 11 & 19 & yes \\
+%		$0.25$ & 1000 & 1 & 1  & 10 & 8  & 1  & 4  & 6  & no  \\
+%		$0.25$ & 100  & 0 & 0  & 30 & 29 & 0  & 18 & 12 & yes \\
+%		$0.25$ & 100  & 1 & 1  & 17 & 13 & 1  & 11 & 6  & no  \\
+%		$0.25$ & 100  & 2 & 2  & 13 & 10 & 3  & 10 & 3  & no  \\
+%		$0.25$ & 100  & 3 & 5  & 10 & 8  & 11 & 5  & 5  & no  \\
+%		$0.25$ & 100  & 4 & 8  & 9  & 8  & 11 & 5  & 4  & no  \\
+%		$0.25$ & 100  & 5 & 11 & 8  & 5  & 11 & 5  & 3  & no  \\
+%		$0.25$ & 1    & 0 & 0  & 30 & 29 & 9  & 17 & 13 & yes \\
+%		$0.25$ & 1    & 1 & 9  & 29 & 24 & 9  & 17 & 12 & yes \\
+%		$0.25$ & 1    & 2 & 11 & 16 & 14 & 12 & 13 & 3  & no  \\
+%		$0.25$ & 1    & 3 & 20 & 15 & 10 & 25 & 10 & 5  & no  \\
+%		$0.25$ & 1    & 4 & 23 & 14 & 10 & 25 & 10 & 4  & no  \\
+%		$0.25$ & 1    & 5 & 25 & 12 & 10 & 25 & 10 & 2  & no  \\
+%		$0.25$ & 1    & 6 & 26 & 9  & 5  & 26 & 4  & 5  & no  \\
+%		$0.50$ & 1000 & 0 & 0  & 30 & 29 & 0  & 9  & 21 & yes \\
+%		$0.50$ & 1000 & 1 & 2  & 8  & 7  & 4  & 5  & 3  & no  \\
+%		$0.50$ & 100  & 0 & 0  & 30 & 29 & 0  & 18 & 12 & yes \\
+%		$0.50$ & 100  & 1 & 1  & 17 & 16 & 1  & 16 & 1  & no  \\
+%		$0.50$ & 100  & 2 & 2  & 15 & 12 & 2  & 12 & 3  & no  \\
+%		$0.50$ & 100  & 3 & 3  & 12 & 10 & 3  & 10 & 2  & no  \\
+%		$0.50$ & 100  & 4 & 5  & 11 & 9  & 9  & 9  & 2  & no  \\
+%		$0.50$ & 100  & 5 & 9  & 9  & 7  & 17 & 7  & 2  & no  \\
+%		$0.50$ & 100  & 6 & 12 & 8  & 7  & 17 & 7  & 1  & no  \\
+%		$0.50$ & 1    & 0 & 0  & 30 & 29 & 1  & 28 & 2  & no  \\
+%		$0.50$ & 1    & 1 & 1  & 29 & 28 & 1  & 28 & 1  & no  \\
+%		$0.50$ & 1    & 2 & 5  & 27 & 21 & 10 & 21 & 6  & yes \\
+%		$0.50$ & 1    & 3 & 10 & 21 & 20 & 13 & 17 & 4  & no  \\
+%		$0.50$ & 1    & 4 & 13 & 20 & 15 & 22 & 6  & 14 & no  \\
+%		$0.50$ & 1    & 5 & 22 & 16 & 15 & 22 & 6  & 10 & no  \\
+%		$0.75$ & 1000 & 0 & 0  & 30 & 29 & 0  & 12 & 18 & yes \\
+%		$0.75$ & 1000 & 1 & 1  & 11 & 8  & 1  & 8  & 3  & no  \\
+%		$0.75$ & 1000 & 2 & 2  & 7  & 5  & 3  & 5  & 2  & no  \\
+%		$0.75$ & 1000 & 3 & 3  & 5  & 4  & 10 & 4  & 1  & no  \\
+%		$0.75$ & 100  & 0 & 0  & 30 & 29 & 0  & 16 & 14 & yes \\
+%		$0.75$ & 100  & 1 & 2  & 15 & 12 & 3  & 12 & 3  & no  \\
+%		$0.75$ & 100  & 2 & 4  & 12 & 8  & 5  & 8  & 4  & no  \\
+%		$0.75$ & 100  & 3 & 6  & 11 & 7  & 9  & 7  & 4  & no  \\
+%		$0.75$ & 100  & 4 & 10 & 7  & 5  & 19 & 5  & 2  & no  \\
+%		$0.75$ & 100  & 5 & 11 & 6  & 5  & 19 & 5  & 1  & no  \\
+%		$0.75$ & 100  & 6 & 19 & 5  & 4  & 23 & 4  & 1  & no  \\
+%		$0.75$ & 1    & 0 & 0  & 30 & 29 & 8  & 29 & 1  & no  \\
+%		$0.75$ & 1    & 1 & 8  & 29 & 16 & 20 & 7  & 22 & yes \\
+%		$0.75$ & 1    & 2 & 9  & 28 & 16 & 20 & 7  & 21 & yes \\
+%		$0.75$ & 1    & 3 & 10 & 27 & 16 & 20 & 7  & 20 & yes \\
+%		$0.75$ & 1    & 4 & 11 & 20 & 16 & 16 & 8  & 12 & no  \\
+%		$0.75$ & 1    & 5 & 13 & 19 & 16 & 15 & 8  & 11 & no  \\
+%		$0.95$ & 1000 & 0 & 0  & 30 & 29 & 0  & 13 & 17 & yes \\
+%		$0.95$ & 1000 & 1 & 1  & 12 & 7  & 2  & 6  & 6  & no  \\
+%		$0.95$ & 1000 & 2 & 3  & 7  & 5  & 3  & 5  & 2  & no  \\
+%		$0.95$ & 100  & 0 & 0  & 30 & 29 & 0  & 16 & 14 & yes \\
+%		$0.95$ & 100  & 1 & 2  & 15 & 12 & 3  & 12 & 3  & no  \\
+%		$0.95$ & 100  & 2 & 3  & 13 & 11 & 3  & 10 & 3  & no  \\
+%		$0.95$ & 100  & 3 & 5  & 12 & 7  & 6  & 7  & 5  & no  \\
+%		$0.95$ & 100  & 4 & 6  & 11 & 6  & 6  & 6  & 5  & no  \\
+%		$0.95$ & 100  & 5 & 7  & 9  & 5  & 10 & 4  & 5  & no  \\
+%		$0.95$ & 1    & 0 & 0  & 30 & 29 & 0  & 28 & 2  & no  \\
+%		$0.95$ & 1    & 1 & 3  & 27 & 20 & 3  & 20 & 7  & yes \\
+%		$0.95$ & 1    & 2 & 4  & 20 & 17 & 13 & 17 & 3  & no  \\
+%		$0.95$ & 1    & 3 & 6  & 19 & 17 & 13 & 17 & 2  & no  \\
+%		$0.95$ & 1    & 4 & 13 & 17 & 16 & 15 & 16 & 1  & no  \\
+%		$0.95$ & 1    & 5 & 15 & 16 & 8  & 17 & 8  & 8  & no  \\
+%		$0.95$ & 1    & 6 & 20 & 15 & 7  & 24 & 4  & 11 & no  \\
+%		$0.95$ & 1    & 7 & 22 & 12 & 7  & 24 & 4  & 8  & no  \\
+%	\end{longtable}
+%\end{center}
 
-\begin{center}
-	\small
-	\begin{longtable}{cccccccccc}
-		\caption{Full Stage-2 candidate list for the simulation study.}
-		\label{tab:simulation_all_candidates} \\
-		\toprule
-		$\tau$ & SNR & $k$ & $\epsilon'_k$ &
-		$T_{\mathrm{exit}}^{(k)}$ & $T_k^*$ &
-		$\epsilon_k$ & $T_{\mathrm{entry}}^{(k)}$ &
-		$w_k$ & $L\in(\cdot,\cdot)$ \\
-		\midrule
-		\endfirsthead
-		\multicolumn{10}{c}{\tablename\ \thetable{} (continued)}\\
-		\toprule
-		$\tau$ & SNR & $k$ & $\epsilon'_k$ &
-		$T_{\mathrm{exit}}^{(k)}$ & $T_k^*$ &
-		$\epsilon_k$ & $T_{\mathrm{entry}}^{(k)}$ &
-		$w_k$ & $L\in(\cdot,\cdot)$ \\
-		\midrule
-		\endhead
-		\bottomrule
-		\endfoot
-		$0.25$ & 1000 & 0 & 0  & 30 & 29 & 0  & 11 & 19 & yes \\
-		$0.25$ & 1000 & 1 & 1  & 10 & 8  & 1  & 4  & 6  & no  \\
-		$0.25$ & 100  & 0 & 0  & 30 & 29 & 0  & 18 & 12 & yes \\
-		$0.25$ & 100  & 1 & 1  & 17 & 13 & 1  & 11 & 6  & no  \\
-		$0.25$ & 100  & 2 & 2  & 13 & 10 & 3  & 10 & 3  & no  \\
-		$0.25$ & 100  & 3 & 5  & 10 & 8  & 11 & 5  & 5  & no  \\
-		$0.25$ & 100  & 4 & 8  & 9  & 8  & 11 & 5  & 4  & no  \\
-		$0.25$ & 100  & 5 & 11 & 8  & 5  & 11 & 5  & 3  & no  \\
-		$0.25$ & 1    & 0 & 0  & 30 & 29 & 9  & 17 & 13 & yes \\
-		$0.25$ & 1    & 1 & 9  & 29 & 24 & 9  & 17 & 12 & yes \\
-		$0.25$ & 1    & 2 & 11 & 16 & 14 & 12 & 13 & 3  & no  \\
-		$0.25$ & 1    & 3 & 20 & 15 & 10 & 25 & 10 & 5  & no  \\
-		$0.25$ & 1    & 4 & 23 & 14 & 10 & 25 & 10 & 4  & no  \\
-		$0.25$ & 1    & 5 & 25 & 12 & 10 & 25 & 10 & 2  & no  \\
-		$0.25$ & 1    & 6 & 26 & 9  & 5  & 26 & 4  & 5  & no  \\
-		$0.50$ & 1000 & 0 & 0  & 30 & 29 & 0  & 9  & 21 & yes \\
-		$0.50$ & 1000 & 1 & 2  & 8  & 7  & 4  & 5  & 3  & no  \\
-		$0.50$ & 100  & 0 & 0  & 30 & 29 & 0  & 18 & 12 & yes \\
-		$0.50$ & 100  & 1 & 1  & 17 & 16 & 1  & 16 & 1  & no  \\
-		$0.50$ & 100  & 2 & 2  & 15 & 12 & 2  & 12 & 3  & no  \\
-		$0.50$ & 100  & 3 & 3  & 12 & 10 & 3  & 10 & 2  & no  \\
-		$0.50$ & 100  & 4 & 5  & 11 & 9  & 9  & 9  & 2  & no  \\
-		$0.50$ & 100  & 5 & 9  & 9  & 7  & 17 & 7  & 2  & no  \\
-		$0.50$ & 100  & 6 & 12 & 8  & 7  & 17 & 7  & 1  & no  \\
-		$0.50$ & 1    & 0 & 0  & 30 & 29 & 1  & 28 & 2  & no  \\
-		$0.50$ & 1    & 1 & 1  & 29 & 28 & 1  & 28 & 1  & no  \\
-		$0.50$ & 1    & 2 & 5  & 27 & 21 & 10 & 21 & 6  & yes \\
-		$0.50$ & 1    & 3 & 10 & 21 & 20 & 13 & 17 & 4  & no  \\
-		$0.50$ & 1    & 4 & 13 & 20 & 15 & 22 & 6  & 14 & no  \\
-		$0.50$ & 1    & 5 & 22 & 16 & 15 & 22 & 6  & 10 & no  \\
-		$0.75$ & 1000 & 0 & 0  & 30 & 29 & 0  & 12 & 18 & yes \\
-		$0.75$ & 1000 & 1 & 1  & 11 & 8  & 1  & 8  & 3  & no  \\
-		$0.75$ & 1000 & 2 & 2  & 7  & 5  & 3  & 5  & 2  & no  \\
-		$0.75$ & 1000 & 3 & 3  & 5  & 4  & 10 & 4  & 1  & no  \\
-		$0.75$ & 100  & 0 & 0  & 30 & 29 & 0  & 16 & 14 & yes \\
-		$0.75$ & 100  & 1 & 2  & 15 & 12 & 3  & 12 & 3  & no  \\
-		$0.75$ & 100  & 2 & 4  & 12 & 8  & 5  & 8  & 4  & no  \\
-		$0.75$ & 100  & 3 & 6  & 11 & 7  & 9  & 7  & 4  & no  \\
-		$0.75$ & 100  & 4 & 10 & 7  & 5  & 19 & 5  & 2  & no  \\
-		$0.75$ & 100  & 5 & 11 & 6  & 5  & 19 & 5  & 1  & no  \\
-		$0.75$ & 100  & 6 & 19 & 5  & 4  & 23 & 4  & 1  & no  \\
-		$0.75$ & 1    & 0 & 0  & 30 & 29 & 8  & 29 & 1  & no  \\
-		$0.75$ & 1    & 1 & 8  & 29 & 16 & 20 & 7  & 22 & yes \\
-		$0.75$ & 1    & 2 & 9  & 28 & 16 & 20 & 7  & 21 & yes \\
-		$0.75$ & 1    & 3 & 10 & 27 & 16 & 20 & 7  & 20 & yes \\
-		$0.75$ & 1    & 4 & 11 & 20 & 16 & 16 & 8  & 12 & no  \\
-		$0.75$ & 1    & 5 & 13 & 19 & 16 & 15 & 8  & 11 & no  \\
-		$0.95$ & 1000 & 0 & 0  & 30 & 29 & 0  & 13 & 17 & yes \\
-		$0.95$ & 1000 & 1 & 1  & 12 & 7  & 2  & 6  & 6  & no  \\
-		$0.95$ & 1000 & 2 & 3  & 7  & 5  & 3  & 5  & 2  & no  \\
-		$0.95$ & 100  & 0 & 0  & 30 & 29 & 0  & 16 & 14 & yes \\
-		$0.95$ & 100  & 1 & 2  & 15 & 12 & 3  & 12 & 3  & no  \\
-		$0.95$ & 100  & 2 & 3  & 13 & 11 & 3  & 10 & 3  & no  \\
-		$0.95$ & 100  & 3 & 5  & 12 & 7  & 6  & 7  & 5  & no  \\
-		$0.95$ & 100  & 4 & 6  & 11 & 6  & 6  & 6  & 5  & no  \\
-		$0.95$ & 100  & 5 & 7  & 9  & 5  & 10 & 4  & 5  & no  \\
-		$0.95$ & 1    & 0 & 0  & 30 & 29 & 0  & 28 & 2  & no  \\
-		$0.95$ & 1    & 1 & 3  & 27 & 20 & 3  & 20 & 7  & yes \\
-		$0.95$ & 1    & 2 & 4  & 20 & 17 & 13 & 17 & 3  & no  \\
-		$0.95$ & 1    & 3 & 6  & 19 & 17 & 13 & 17 & 2  & no  \\
-		$0.95$ & 1    & 4 & 13 & 17 & 16 & 15 & 16 & 1  & no  \\
-		$0.95$ & 1    & 5 & 15 & 16 & 8  & 17 & 8  & 8  & no  \\
-		$0.95$ & 1    & 6 & 20 & 15 & 7  & 24 & 4  & 11 & no  \\
-		$0.95$ & 1    & 7 & 22 & 12 & 7  & 24 & 4  & 8  & no  \\
-	\end{longtable}
-\end{center}
+
+% preamble: \usepackage{booktabs}, \usepackage{pdflscape}  (or lscape)
+%\begin{landscape}
+\input{stage2_candidates_compact.tex}
+%\end{landscape}
 }
-
 \end{document}
