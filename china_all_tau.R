@@ -61,9 +61,10 @@ T_vals <- 4:35
 
 # Numerical tolerances used in Section 7
 STAGE1_TOLERANCE <- 1e-10
-E_TOLERANCE      <- 1e-10
-STAGE2_TOLERANCE <- 1e-10
-
+# E_TOLERANCE      <- 1e-10
+# STAGE2_TOLERANCE <- 1e-10
+E_TOLERANCE      <- 0
+STAGE2_TOLERANCE <- 0
 
 ############################################################
 # 3. DOWNLOAD AND PREPARE CHINA COVID-19 DATA

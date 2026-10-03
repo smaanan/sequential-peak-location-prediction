@@ -1,5 +1,5 @@
-"tau_level","step","tau_prime","T_exit","T_star","tau","T_entry","w_star","Z_k_min","Z_k_max","n_Z_k","Z_k_width","w_star_max","L","peak_contained"
-0.25,7,15,62,60,15,60,2,60,60,1,0,2,61,TRUE
-0.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,61,FALSE
-0.75,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,61,FALSE
-0.95,6,9,63,56,18,56,7,56,56,1,0,7,61,TRUE
+"tau_level","step","tau_prime","T_exit","T_star","tau","T_entry","w_star","L","peak_contained"
+0.25,7,15,62,60,15,60,2,61,TRUE
+0.5,NA,NA,NA,NA,NA,NA,NA,61,FALSE
+0.75,NA,NA,NA,NA,NA,NA,NA,61,FALSE
+0.95,6,9,63,56,18,56,7,61,TRUE
