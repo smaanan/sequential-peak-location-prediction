@@ -731,43 +731,6 @@ provides a nonincreasing measure of the remaining temporal variation of the esti
 	candidate contains $L$ strictly.
 	The complete list of Stage-2 candidates generated in the simulation study is reported in Appendix~\ref{app:simulation-candidates}.
 	
-%	\begin{table}[htbp]
-%		\centering
-%		\caption{Stage-2 candidate selected for each quantile level
-%			$\tau$ and each signal-to-noise ratio in the simulation
-%			study. The selected candidate is the peak-containing
-%			candidate with the smallest width $w_k$; the last column
-%			reports whether $L$ lies strictly inside the selected
-%			window.}
-%		\label{tab:simulation_selected}
-%		\begin{tabular}{cccccccccc}
-%			\toprule
-%			$\tau$ & SNR &
-%			$k$ &
-%			$\epsilon'_k$ &
-%			$T_{\mathrm{exit}}^{(k)}$ &
-%			$T_k^*$ &
-%			$\epsilon_k$ &
-%			$T_{\mathrm{entry}}^{(k)}$ &
-%			$w_k$ &
-%			$L\in(\cdot,\cdot)$ \\
-%			\midrule
-%			$0.25$ & 1000 & 0 & 0  & 30 & 29 & 0  & 11 & 19 & yes \\
-%			$0.25$ & 100  & 0 & 0  & 30 & 29 & 0  & 18 & 12 & yes \\
-%			$0.25$ & 1    & 1 & 9  & 29 & 24 & 9  & 17 & 12 & yes \\
-%			$0.50$ & 1000 & 0 & 0  & 30 & 29 & 0  & 9  & 21 & yes \\
-%			$0.50$ & 100  & 0 & 0  & 30 & 29 & 0  & 18 & 12 & yes \\
-%			$0.50$ & 1    & 2 & 5  & 27 & 21 & 10 & 21 & 6  & yes \\
-%			$0.75$ & 1000 & 0 & 0  & 30 & 29 & 0  & 12 & 18 & yes \\
-%			$0.75$ & 100  & 0 & 0  & 30 & 29 & 0  & 16 & 14 & yes \\
-%			$0.75$ & 1    & 3 & 10 & 27 & 16 & 20 & 7  & 20 & yes \\
-%			$0.95$ & 1000 & 0 & 0  & 30 & 29 & 0  & 13 & 17 & yes \\
-%			$0.95$ & 100  & 0 & 0  & 30 & 29 & 0  & 16 & 14 & yes \\
-%			$0.95$ & 1    & 1 & 3  & 27 & 20 & 3  & 20 & 7  & yes \\
-%			\bottomrule
-%		\end{tabular}
-%	\end{table}
-	
 	\begin{table}[htbp]
 		\centering
 		\caption{Stage-2 candidate selected for each quantile level
@@ -973,43 +936,25 @@ For China, the observed peak location is $L=22$. The resulting
 retrospective selection for the four quantile levels is reported in
 Table~\ref{tab:china_entry_exit}. For $\tau=0.25$, the selected candidate
 is indexed by $k=1$. It has
-\(
-\epsilon'_1=1,
-%\qquad
-T_{\mathrm{exit}}^{(1)}=26,
-%\qquad
-T_1^*=15,
-%\qquad
-\epsilon_1=3,
-%\qquad
-T_{\mathrm{entry}}^{(1)}=15,
-\)
+$\epsilon'_1=1$,
+$T_{\mathrm{exit}}^{(1)}=26$,
+$T_1^*=15$,
+$\epsilon_1=3$, and
+$T_{\mathrm{entry}}^{(1)}=15$,
 and therefore has width $w_1=11$. For $\tau=0.5$, the selected candidate
 is indexed by $k=2$. It has
-\(
-\epsilon'_2=2,
-%\qquad
-T_{\mathrm{exit}}^{(2)}=24,
-%\qquad
-T_2^*=15,
-%\qquad
-\epsilon_2=2,
-%\qquad
-T_{\mathrm{entry}}^{(2)}=15,
-\)
+$\epsilon'_2=2$,
+$T_{\mathrm{exit}}^{(2)}=24$,
+$T_2^*=15$,
+$\epsilon_2=2$, and
+$T_{\mathrm{entry}}^{(2)}=15$,
 and therefore has width $w_2=9$. For $\tau=0.95$, the selected candidate
 is indexed by $k=4$. It has
-\(
-\epsilon'_4=15,
-%\qquad
-T_{\mathrm{exit}}^{(4)}=26,
-%\qquad
-T_4^*=21,
-%\qquad
-\epsilon_4=21,
-%\qquad
-T_{\mathrm{entry}}^{(4)}=13,
-\)
+$\epsilon'_4=15$,
+$T_{\mathrm{exit}}^{(4)}=26$,
+$T_4^*=21$,
+$\epsilon_4=21$, and
+$T_{\mathrm{entry}}^{(4)}=13$,
 and therefore has width $w_4=13$. For $\tau=0.25$ and $\tau=0.5$, the
 Stage-2 level $\epsilon_k$ is attained at a single observation horizon, so
 that $T_k^*=T_{\mathrm{entry}}^{(k)}$. For $\tau=0.95$, the level is
@@ -1090,56 +1035,32 @@ For France, the observed peak location is $L=78$. The resulting
 retrospective selection for the four quantile levels is reported in
 Table~\ref{tab:france_entry_exit}. For $\tau=0.25$, the selected
 candidate is indexed by $k=5$. It has
-\(
-\epsilon'_5=13,
-%\qquad
-T_{\mathrm{exit}}^{(5)}=79,
-%\qquad
-T_5^*=76,
-%\qquad
-\epsilon_5=13,
-%\qquad
-T_{\mathrm{entry}}^{(5)}=72,
-\)
+$\epsilon'_5=13$,
+$T_{\mathrm{exit}}^{(5)}=79$,
+$T_5^*=76$,
+$\epsilon_5=13$, and
+$T_{\mathrm{entry}}^{(5)}=72$,
 and therefore has width $w_5=7$. For $\tau=0.5$, the selected candidate
 is indexed by $k=3$. It has
-\(
-\epsilon'_3=4,
-%\qquad
-T_{\mathrm{exit}}^{(3)}=82,
-%\qquad
-T_3^*=78,
-%\qquad
-\epsilon_3=6,
-%\qquad
-T_{\mathrm{entry}}^{(3)}=73,
-\)
+$\epsilon'_3=4$,
+$T_{\mathrm{exit}}^{(3)}=82$,
+$T_3^*=78$,
+$\epsilon_3=6$, and
+$T_{\mathrm{entry}}^{(3)}=73$,
 and therefore has width $w_3=9$. For $\tau=0.75$, the selected
 candidate is also indexed by $k=3$. It has
-\(
-\epsilon'_3=8,
-%\qquad
-T_{\mathrm{exit}}^{(3)}=79,
-%\qquad
-T_3^*=72,
-%\qquad
-\epsilon_3=11,
-%\qquad
-T_{\mathrm{entry}}^{(3)}=70,
-\)
+$\epsilon'_3=8$,
+$T_{\mathrm{exit}}^{(3)}=79$,
+$T_3^*=72$,
+$\epsilon_3=11$, and
+$T_{\mathrm{entry}}^{(3)}=70$,
 and therefore has width $w_3=9$. For $\tau=0.95$, the selected
 candidate is indexed by $k=6$. It has
-\(
-\epsilon'_6=11,
-%\qquad
-T_{\mathrm{exit}}^{(6)}=80,
-%\qquad
-T_6^*=77,
-%\qquad
-\epsilon_6=13,
-%\qquad
-T_{\mathrm{entry}}^{(6)}=70,
-\)
+$\epsilon'_6=11$,
+$T_{\mathrm{exit}}^{(6)}=80$,
+$T_6^*=77$,
+$\epsilon_6=13$, and
+$T_{\mathrm{entry}}^{(6)}=70$,
 and therefore has width $w_6=10$. Unlike the China case, the plateau
 at level $\epsilon_k$ is not a singleton in any of the four selections: the
 sets $Z_k=\{T:\omega_l(T,T_{\mathrm{exit}}^{(k)})=\epsilon_k\}$ contain
@@ -1205,30 +1126,18 @@ For Germany, the observed peak location is $L=61$. The resulting
 retrospective selection for the four quantile levels is reported in
 Table~\ref{tab:germany_entry_exit}. For $\tau=0.25$, the selected
 candidate is indexed by $k=7$. It has
-\(
-\epsilon'_7=15,
-%\qquad
-T_{\mathrm{exit}}^{(7)}=62,
-%\qquad
-T_7^*=60,
-%\qquad
-\epsilon_7=15,
-%\qquad
-T_{\mathrm{entry}}^{(7)}=60,
-\)
+$\epsilon'_7=15$,
+$T_{\mathrm{exit}}^{(7)}=62$,
+$T_7^*=60$,
+$\epsilon_7=15$, and
+$T_{\mathrm{entry}}^{(7)}=60$,
 and therefore has width $w_7=2$. For $\tau=0.95$, the selected
 candidate is indexed by $k=6$. It has
-\(
-\epsilon'_6=9,
-%\qquad
-T_{\mathrm{exit}}^{(6)}=63,
-%\qquad
-T_6^*=56,
-%\qquad
-\epsilon_6=18,
-%\qquad
-T_{\mathrm{entry}}^{(6)}=56,
-\)
+$\epsilon'_6=9$,
+$T_{\mathrm{exit}}^{(6)}=63$,
+$T_6^*=56$,
+$\epsilon_6=18$, and
+$T_{\mathrm{entry}}^{(6)}=56$,
 and therefore has width $w_6=7$. In both cases, the level $\epsilon_k$ is
 attained at a single observation horizon, so that
 $T_k^*=T_{\mathrm{entry}}^{(k)}$. For $\tau=0.5$ and $\tau=0.75$, no
@@ -1450,14 +1359,76 @@ agencies in the public, commercial, or not-for-profit sectors.
 
 For reference, Table~\ref{tab:simulation_all_candidates} lists every
 Stage-2 candidate generated by the two-stage construction in the
-simulation study, for each pair $(\tau,\mathrm{SNR})$. The columns
-report the candidate index $k$, the Stage-1 level $\epsilon'_k$, the
-Stage-1 exit time $T_{\mathrm{exit}}^{(k)}$, the latest admissible
-time $T_k^*$, the Stage-2 level $\epsilon_k$, the entry time
-$T_{\mathrm{entry}}^{(k)}$, the width
-$w_k=T_{\mathrm{exit}}^{(k)}-T_{\mathrm{entry}}^{(k)}$, and a flag
-indicating whether the window strictly contains the true peak
-location $L$.
+simulation study, for each pair $(\tau,\mathrm{SNR})$. Rows are
+indexed by the candidate index $k$; the columns are grouped by
+quantile level $\tau$, with the three SNR levels nested within each
+$\tau$, and the table is split into two vertically stacked panels
+($\tau\in\{0.25,0.50\}$ and $\tau\in\{0.75,0.95\}$). Each cell reports
+the window $[T_{\mathrm{entry}}^{(k)},\,T_{\mathrm{exit}}^{(k)}]$
+followed, in parentheses, by its width
+$w_k=T_{\mathrm{exit}}^{(k)}-T_{\mathrm{entry}}^{(k)}$. Windows that
+strictly contain the true peak location $L$, i.e.\
+$T_{\mathrm{entry}}^{(k)}<L<T_{\mathrm{exit}}^{(k)}$, are shown in
+bold. Entries of the form $[--,T_{\mathrm{exit}}^{(k)}]$ indicate
+candidates for which the Stage-2 construction yields no entry time
+(so no width is defined), and blank cells indicate that the
+construction terminated before reaching that value of $k$. The
+intermediate quantities $\epsilon'_k$, $T_k^*$ and $\epsilon_k$ are
+omitted from the table for compactness.
+
+\begin{table}[htbp]
+	\centering
+	\setlength{\tabcolsep}{5pt}
+	\renewcommand{\arraystretch}{1.15}
+	\caption{Stage-2 candidates $[T_{\mathrm{entry}}^{(k)}, T_{\mathrm{exit}}^{(k)}]\,(w_k)$. Bold entries satisfy $T_{\mathrm{entry}}^{(k)} < L < T_{\mathrm{exit}}^{(k)}$; $[--, T_{\mathrm{exit}}^{(k)}]$ indicates no valid entry.}
+	\label{tab:simulation_all_candidates}
+	\begin{tabular}{ccccccc}
+		\toprule
+		& \multicolumn{3}{c}{$\tau = 0.25$} & \multicolumn{3}{c}{$\tau = 0.5$} \\
+		\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+		$k$ & SNR $= 1000$ & SNR $= 100$ & SNR $= 1$ & SNR $= 1000$ & SNR $= 100$ & SNR $= 1$ \\
+		\midrule
+		0 & \textbf{[11, 30] (19)} & \textbf{[18, 30] (12)} & \textbf{[17, 30] (13)} & \textbf{[9, 30] (21)} & \textbf{[18, 30] (12)} & [28, 30] (2) \\
+		1 & [4, 10] (6) & [11, 17] (6) & \textbf{[17, 29] (12)} & [5, 8] (3) & [16, 17] (1) & [28, 29] (1) \\
+		2 &  & [10, 13] (3) & [13, 16] (3) & [--, 7] & [12, 15] (3) & \textbf{[21, 27] (6)} \\
+		3 &  & [5, 10] (5) & [10, 15] (5) & [--, 4] & [10, 12] (2) & [17, 21] (4) \\
+		4 &  & [5, 9] (4) & [10, 14] (4) &  & [9, 11] (2) & [6, 20] (14) \\
+		5 &  & [5, 8] (3) & [10, 12] (2) &  & [7, 9] (2) & [6, 16] (10) \\
+		6 &  & [--, 4] & [4, 9] (5) &  & [7, 8] (1) & [--, 5] \\
+		7 &  &  &  &  & [--, 7] &  \\
+		8 &  &  &  &  & [--, 6] &  \\
+		9 &  &  &  &  & [--, 4] &  \\
+		\midrule
+		& \multicolumn{3}{c}{$\tau = 0.75$} & \multicolumn{3}{c}{$\tau = 0.95$} \\
+		\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+		$k$ & SNR $= 1000$ & SNR $= 100$ & SNR $= 1$ & SNR $= 1000$ & SNR $= 100$ & SNR $= 1$ \\
+		\midrule
+		0 & \textbf{[12, 30] (18)} & \textbf{[16, 30] (14)} & [29, 30] (1) & \textbf{[13, 30] (17)} & \textbf{[16, 30] (14)} & [28, 30] (2) \\
+		1 & [8, 11] (3) & [12, 15] (3) & \textbf{[7, 29] (22)} & [6, 12] (6) & [12, 15] (3) & \textbf{[20, 27] (7)} \\
+		2 & [5, 7] (2) & [8, 12] (4) & \textbf{[7, 28] (21)} & [5, 7] (2) & [10, 13] (3) & [17, 20] (3) \\
+		3 & [4, 5] (1) & [7, 11] (4) & \textbf{[7, 27] (20)} & [--, 4] & [7, 12] (5) & [17, 19] (2) \\
+		4 & [--, 4] & [5, 7] (2) & [8, 20] (12) &  & [6, 11] (5) & [16, 17] (1) \\
+		5 &  & [5, 6] (1) & [8, 19] (11) &  & [4, 9] (5) & [8, 16] (8) \\
+		6 &  & [4, 5] (1) & [--, 16] &  & [--, 7] & [4, 15] (11) \\
+		7 &  & [--, 4] & [--, 6] &  & [--, 6] & [4, 12] (8) \\
+		8 &  &  &  &  &  & [--, 7] \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+
+%\input{stage2_candidates_compact.tex}
+
+%For reference, Table~\ref{tab:simulation_all_candidates} lists every
+%Stage-2 candidate generated by the two-stage construction in the
+%simulation study, for each pair $(\tau,\mathrm{SNR})$. The columns
+%report the candidate index $k$, the Stage-1 level $\epsilon'_k$, the
+%Stage-1 exit time $T_{\mathrm{exit}}^{(k)}$, the latest admissible
+%time $T_k^*$, the Stage-2 level $\epsilon_k$, the entry time
+%$T_{\mathrm{entry}}^{(k)}$, the width
+%$w_k=T_{\mathrm{exit}}^{(k)}-T_{\mathrm{entry}}^{(k)}$, and a flag
+%indicating whether the window strictly contains the true peak
+%location $L$.
 %\begin{center}
 %	\small
 %	\begin{longtable}{cccccccccc}
@@ -1550,7 +1521,7 @@ location $L$.
 
 % preamble: \usepackage{booktabs}, \usepackage{pdflscape}  (or lscape)
 %\begin{landscape}
-\input{stage2_candidates_compact.tex}
+%\input{stage2_candidates_compact.tex}
 %\end{landscape}
 }
 \end{document}
