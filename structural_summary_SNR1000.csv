@@ -1,0 +1,5 @@
+"tau","n_pairs","n_equal","proportion_equal","exit_ordering_holds","n_entry_reversals","entry_nonincreasing"
+0.25,25,0,0,TRUE,0,TRUE
+0.5,24,2,0.0833333333333333,TRUE,0,TRUE
+0.75,70,25,0.357142857142857,TRUE,0,TRUE
+0.95,48,6,0.125,TRUE,0,TRUE
