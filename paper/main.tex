@@ -764,184 +764,6 @@ T_{\mathrm{exit}}^{(k)}(T)
 \]
 All endpoints are determined entirely from the sequential estimation trajectory available up to the current observation horizon \(T\) and from the corresponding retrospective oscillation construction.
 
-%\subsection{Numerical illustration}
-%\label{subsec:entry-exit-simulation}
-%
-%We illustrate the operational construction of
-%Sections~\ref{subsec:oscillations}--\ref{subsec:entry-time} on the
-%simulation setting of
-%Sections~\ref{sec:symmetric_laplace_estimation} and~\ref{sec:parameter_estimation_paths},
-%with $A=1$, $L=22$, $S=10$, $h=30$, and for the four quantile levels
-%$\tau\in\{0.25,0.5,0.75,0.95\}$. Three signal-to-noise ratios are
-%considered, $\mathrm{SNR}\in\{1000,100,1\}$, corresponding to the
-%large, moderate, and small signal-to-noise regimes of the numerical
-%study.
-%For each current observation horizon $T$ and each pair
-%$(\tau,\mathrm{SNR})$, the two-stage construction produces a family of
-%Stage-2 candidates
-%$\{(T_{\mathrm{entry}}^{(k)}(T),T_{\mathrm{exit}}^{(k)}(T))\}_{k}$,
-%indexed as in Section~\ref{subsec:candidate-exit-times}. The candidate
-%selection rule used below is the ex-post rule of
-%Section~\ref{subsec:entry-time}: among the candidates whose window
-%strictly contains the true peak location $L$, we retain the one with
-%the smallest width $w_k(T)$. This rule is used only for the simulation
-%study, where $L$ is known, and is not part of the operational procedure
-%when $L$ is unknown.
-%Because no candidate can contain $L$ when $T\le L$, the selected
-%candidate is reported only for $T>L$. For each $(\tau,\mathrm{SNR})$,
-%we define the \emph{operational detection time}
-%\[
-%T_{\mathrm{det}}(\tau,\mathrm{SNR})
-%=
-%\min
-%\left\{
-%T>L:\ 
-%T_{\mathrm{entry}}^{(k^\star(T))}(T)
-%<
-%L
-%<
-%T_{\mathrm{exit}}^{(k^\star(T))}(T)
-%\
-%\text{for all}\ T'\ge T
-%\right\},
-%\]
-%where $k^\star(T)$ is the selected candidate at horizon $T$. This
-%quantity measures the earliest horizon from which the operationally
-%constructed candidate brackets the true peak and continues to do so as
-%new observations arrive.
-%Table~\ref{tab:simulation_detection} reports $T_{\mathrm{det}}$ for
-%each pair $(\tau,\mathrm{SNR})$, together with the first
-%peak-containing horizon and the terminal-horizon candidate. At the two
-%larger signal-to-noise ratios, the initialization candidate $k=0$,
-%with $T_{\mathrm{exit}}^{(0)}(T)=T$ and $\epsilon'_0(T)=0$, is
-%selected at every horizon $T>L$; the corresponding detection time is
-%$T_{\mathrm{det}}=23$, i.e.\ one observation after the true peak. At
-%$\mathrm{SNR}=1$, the selected candidate is nontrivial and depends on
-%the quantile level, and the detection time is delayed accordingly. For
-%$\tau=0.50$, $\tau=0.75$ and $\tau=0.95$, the candidate selected at
-%some intermediate horizons does not bracket $L$, even though it does at
-%later horizons; the detection time therefore differs from the first
-%peak-containing horizon. This temporal intermittency is consistent
-%with the stabilization analysis of Section~\ref{sec:stability-analysis}
-%and reflects the greater variability of the estimated peak-location
-%path at low signal-to-noise ratios.
-%
-%\begin{table}[htbp]
-%	\centering
-%	\caption{Operational detection times $T_{\mathrm{det}}$ for each
-%		quantile level $\tau$ and signal-to-noise ratio. The column
-%		$T_{\mathrm{first}}$ reports the first horizon $T>L$ at which
-%		the selected candidate brackets $L$; the terminal columns
-%		report the selected candidate at $T=30$.}
-%	\label{tab:simulation_detection}
-%	\begin{tabular}{c|ccc|cccc}
-%		\toprule
-%		& \multicolumn{3}{c|}{Detection} & \multicolumn{4}{c}{Terminal candidate ($T=30$)} \\
-%		\cmidrule(lr){2-4} \cmidrule(lr){5-8}
-%		$\tau$ & SNR & $T_{\mathrm{first}}$ & $T_{\mathrm{det}}$ 
-%		& $k^\star$ & $T_{\mathrm{entry}}$ & $T_{\mathrm{exit}}$ & $w_{k^\star}$ \\
-%		\midrule
-%		\multirow{3}{*}{$0.25$}
-%		& 1000 & 23 & 23 & 0 & 11 & 30 & 19 \\
-%		& 100  & 23 & 23 & 0 & 18 & 30 & 12 \\
-%		& 1    & 25 & 25 & 1 & 17 & 29 & 12 \\
-%		\midrule
-%		\multirow{3}{*}{$0.50$}
-%		& 1000 & 23 & 23 & 0 & 9  & 30 & 21 \\
-%		& 100  & 23 & 23 & 0 & 18 & 30 & 12 \\
-%		& 1    & 24 & 28 & 2 & 21 & 27 & 6  \\
-%		\midrule
-%		\multirow{3}{*}{$0.75$}
-%		& 1000 & 23 & 23 & 0 & 12 & 30 & 18 \\
-%		& 100  & 23 & 23 & 0 & 16 & 30 & 14 \\
-%		& 1    & 23 & 29 & 3 & 7  & 27 & 20 \\
-%		\midrule
-%		\multirow{3}{*}{$0.95$}
-%		& 1000 & 23 & 23 & 0 & 13 & 30 & 17 \\
-%		& 100  & 23 & 23 & 0 & 16 & 30 & 14 \\
-%		& 1    & 26 & 28 & 1 & 20 & 27 & 7  \\
-%		\bottomrule
-%	\end{tabular}
-%\end{table}
-%
-%Two observations emerge from Table~\ref{tab:simulation_detection}. At
-%the large and moderate signal-to-noise ratios, the operational
-%detection time is $T_{\mathrm{det}}=23$ for all four quantile levels,
-%and the selected candidate is always the initialization candidate
-%$k=0$. At the small signal-to-noise ratio, the detection time depends
-%on the quantile level, ranging from $25$ for $\tau=0.25$ to $29$ for
-%$\tau=0.75$. The selected candidate at the terminal horizon also
-%differs across quantile levels, reflecting the greater temporal
-%variability of the estimated peak-location path when the noise level is
-%high. For $\tau=0.50$, $\tau=0.75$ and $\tau=0.95$, the first
-%peak-containing horizon is strictly smaller than the detection time,
-%showing that the construction can produce a bracketing candidate at
-%some horizons and then lose it at later horizons; the operational
-%criterion is the one that accounts for this intermittency.
-%
-%For completeness, Table~\ref{tab:simulation_first_k} reports, for each
-%pair $(\tau,\mathrm{SNR})$, the first candidate index at which the
-%strict containment condition holds, both including the initialization
-%$k=0$ and excluding it. 
-%When the initialization already contains $L$,
-%no nontrivial candidate is required; this is the case at SNR $=1000$
-%and SNR $=100$. At SNR $=1$, the first nontrivial peak-containing
-%index equals the selected index in three of the four quantile levels;
-%for $\tau=0.75$ the first admissible nontrivial candidate is $k=1$
-%(width $22$), whereas the selected candidate is $k=3$ (width $20$),
-%the two criteria therefore differing in that single case.
-%
-%	\begin{table}[htbp]
-%	\centering
-%	\caption{First candidate index whose window strictly contains $L$,
-%		for each signal-to-noise ratio and quantile level $\tau$. The
-%		superscripts $(\geq0)$ and $(\geq1)$ distinguish inclusion of
-%		the initialization candidate $k=0$ from the nontrivial
-%		strict-decrease candidates. A dash indicates that no such
-%		candidate exists.}
-%	\label{tab:simulation_first_k}
-%	\begin{tabular}{c|cc|cc|cc|cc}
-%		\toprule
-%		& \multicolumn{2}{c|}{$\tau=0.25$}
-%		& \multicolumn{2}{c|}{$\tau=0.50$}
-%		& \multicolumn{2}{c|}{$\tau=0.75$}
-%		& \multicolumn{2}{c}{$\tau=0.95$} \\
-%		
-%		\cmidrule(lr){2-3}
-%		\cmidrule(lr){4-5}
-%		\cmidrule(lr){6-7}
-%		\cmidrule(lr){8-9}
-%		
-%		$\mathrm{SNR}$
-%		& $k^{(\geq0)}$ & $k^{(\geq1)}$
-%		& $k^{(\geq0)}$ & $k^{(\geq1)}$
-%		& $k^{(\geq0)}$ & $k^{(\geq1)}$
-%		& $k^{(\geq0)}$ & $k^{(\geq1)}$ \\
-%		\midrule
-%		
-%		1000
-%		& 0 & --
-%		& 0 & --
-%		& 0 & --
-%		& 0 & -- \\
-%		
-%		100
-%		& 0 & --
-%		& 0 & --
-%		& 0 & --
-%		& 0 & -- \\
-%		
-%		1
-%		& 0 & 1
-%		& 2 & 2
-%		& 1 & 1
-%		& 1 & 1 \\
-%		
-%		\bottomrule
-%	\end{tabular}
-%\end{table}
-
-{\color{blue}
 \subsection{Numerical illustration}
 \label{subsec:entry-exit-simulation}
 
@@ -1088,17 +910,179 @@ transient, confirming the numerical regularity noted above.
 	\label{fig:entry_vs_next_exit_snr1000}
 \end{figure}
 
-\paragraph{Operational detection time.}
-We now turn to the operational detection criterion used in the
-simulation study. The candidate selection rule used below is the
-ex-post rule of Section~\ref{subsec:entry-time}: among the candidates
-whose window strictly contains the true peak location $L$, we retain
-the one with the smallest width $w_k(T)$. This rule is used only for
-the simulation study, where $L$ is known, and is not part of the
-operational procedure when $L$ is unknown. Because no candidate can
-contain $L$ when $T\le L$, the selected candidate is reported only
-for $T>L$. For each $(\tau,\mathrm{SNR})$, we define the
-\emph{operational detection time}
+%\paragraph{Operational detection time.}
+%We now turn to the operational detection criterion used in the
+%simulation study. The candidate selection rule used below is the
+%ex-post rule of Section~\ref{subsec:entry-time}: among the candidates
+%whose window strictly contains the true peak location $L$, we retain
+%the one with the smallest width $w_k(T)$. This rule is used only for
+%the simulation study, where $L$ is known, and is not part of the
+%operational procedure when $L$ is unknown. Because no candidate can
+%contain $L$ when $T\le L$, the selected candidate is reported only
+%for $T>L$. For each $(\tau,\mathrm{SNR})$, we define the
+%\emph{operational detection time}
+%\[
+%T_{\mathrm{det}}(\tau,\mathrm{SNR})
+%=
+%\min
+%\left\{
+%T>L:\ 
+%T_{\mathrm{entry}}^{(k^\star(T))}(T)
+%<
+%L
+%<
+%T_{\mathrm{exit}}^{(k^\star(T))}(T)
+%\
+%\text{for all}\ T'\ge T
+%\right\},
+%\]
+%where $k^\star(T)$ is the selected candidate at horizon $T$. This
+%quantity measures the earliest horizon from which the operationally
+%constructed candidate brackets the true peak and continues to do so
+%as new observations arrive.
+%Table~\ref{tab:simulation_detection} reports $T_{\mathrm{det}}$ for
+%each pair $(\tau,\mathrm{SNR})$, together with the first
+%peak-containing horizon and the terminal-horizon candidate. At the
+%two larger signal-to-noise ratios, the initialization candidate
+%$k=0$, with $T_{\mathrm{exit}}^{(0)}(T)=T$ and $\epsilon'_0(T)=0$,
+%is selected at every horizon $T>L$; the corresponding detection time
+%is $T_{\mathrm{det}}=23$, i.e.\ one observation after the true peak.
+%At $\mathrm{SNR}=1$, the selected candidate is nontrivial and depends
+%on the quantile level, and the detection time is delayed accordingly.
+%For $\tau=0.50$, $\tau=0.75$ and $\tau=0.95$, the candidate selected
+%at some intermediate horizons does not bracket $L$, even though it
+%does at later horizons; the detection time therefore differs from the
+%first peak-containing horizon. This temporal intermittency is
+%consistent with the stabilization analysis of
+%Section~\ref{sec:stability-analysis} and reflects the greater
+%variability of the estimated peak-location path at low
+%signal-to-noise ratios.
+
+%\begin{table}[htbp]
+%	\centering
+%	\caption{Operational detection times $T_{\mathrm{det}}$ for each
+%		quantile level $\tau$ and signal-to-noise ratio. The column
+%		$T_{\mathrm{first}}$ reports the first horizon $T>L$ at which
+%		the selected candidate brackets $L$; the terminal columns
+%		report the selected candidate at $T=30$.}
+%	\label{tab:simulation_detection}
+%	\begin{tabular}{c|ccc|cccc}
+%		\toprule
+%		& \multicolumn{3}{c|}{Detection} & \multicolumn{4}{c}{Terminal candidate ($T=30$)} \\
+%		\cmidrule(lr){2-4} \cmidrule(lr){5-8}
+%		$\tau$ & SNR & $T_{\mathrm{first}}$ & $T_{\mathrm{det}}$ 
+%		& $k^\star$ & $T_{\mathrm{entry}}$ & $T_{\mathrm{exit}}$ & $w_{k^\star}$ \\
+%		\midrule
+%		\multirow{3}{*}{$0.25$}
+%		& 1000 & 23 & 23 & 0 & 11 & 30 & 19 \\
+%		& 100  & 23 & 23 & 0 & 18 & 30 & 12 \\
+%		& 1    & 25 & 25 & 1 & 17 & 29 & 12 \\
+%		\midrule
+%		\multirow{3}{*}{$0.50$}
+%		& 1000 & 23 & 23 & 0 & 9  & 30 & 21 \\
+%		& 100  & 23 & 23 & 0 & 18 & 30 & 12 \\
+%		& 1    & 24 & 28 & 2 & 21 & 27 & 6  \\
+%		\midrule
+%		\multirow{3}{*}{$0.75$}
+%		& 1000 & 23 & 23 & 0 & 12 & 30 & 18 \\
+%		& 100  & 23 & 23 & 0 & 16 & 30 & 14 \\
+%		& 1    & 23 & 29 & 3 & 7  & 27 & 20 \\
+%		\midrule
+%		\multirow{3}{*}{$0.95$}
+%		& 1000 & 23 & 23 & 0 & 13 & 30 & 17 \\
+%		& 100  & 23 & 23 & 0 & 16 & 30 & 14 \\
+%		& 1    & 26 & 28 & 1 & 20 & 27 & 7  \\
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+%
+%Two observations emerge from Table~\ref{tab:simulation_detection}. At
+%the large and moderate signal-to-noise ratios, the operational
+%detection time is $T_{\mathrm{det}}=23$ for all four quantile levels,
+%and the selected candidate is always the initialization candidate
+%$k=0$. At the small signal-to-noise ratio, the detection time depends
+%on the quantile level, ranging from $25$ for $\tau=0.25$ to $29$ for
+%$\tau=0.75$. The selected candidate at the terminal horizon also
+%differs across quantile levels, reflecting the greater temporal
+%variability of the estimated peak-location path when the noise level
+%is high. For $\tau=0.50$, $\tau=0.75$ and $\tau=0.95$, the first
+%peak-containing horizon is strictly smaller than the detection time,
+%showing that the construction can produce a bracketing candidate at
+%some horizons and then lose it at later horizons; the operational
+%criterion is the one that accounts for this intermittency.
+%
+%For completeness, Table~\ref{tab:simulation_first_k} reports, for
+%each pair $(\tau,\mathrm{SNR})$, the first candidate index at which
+%the strict containment condition holds, both including the
+%initialization $k=0$ and excluding it. When the initialization
+%already contains $L$, no nontrivial candidate is required; this is
+%the case at SNR $=1000$ and SNR $=100$. At SNR $=1$, the first
+%nontrivial peak-containing index equals the selected index in three
+%of the four quantile levels; for $\tau=0.75$ the first admissible
+%nontrivial candidate is $k=1$ (width $22$), whereas the selected
+%candidate is $k=3$ (width $20$), the two criteria therefore
+%differing in that single case.
+%
+%\begin{table}[htbp]
+%	\centering
+%	\caption{First candidate index whose window strictly contains $L$,
+%		for each signal-to-noise ratio and quantile level $\tau$. The
+%		superscripts $(\geq0)$ and $(\geq1)$ distinguish inclusion of
+%		the initialization candidate $k=0$ from the nontrivial
+%		strict-decrease candidates. A dash indicates that no such
+%		candidate exists.}
+%	\label{tab:simulation_first_k}
+%	\begin{tabular}{c|cc|cc|cc|cc}
+%		\toprule
+%		& \multicolumn{2}{c|}{$\tau=0.25$}
+%		& \multicolumn{2}{c|}{$\tau=0.50$}
+%		& \multicolumn{2}{c|}{$\tau=0.75$}
+%		& \multicolumn{2}{c}{$\tau=0.95$} \\
+%		
+%		\cmidrule(lr){2-3}
+%		\cmidrule(lr){4-5}
+%		\cmidrule(lr){6-7}
+%		\cmidrule(lr){8-9}
+%		
+%		$\mathrm{SNR}$
+%		& $k^{(\geq0)}$ & $k^{(\geq1)}$
+%		& $k^{(\geq0)}$ & $k^{(\geq1)}$
+%		& $k^{(\geq0)}$ & $k^{(\geq1)}$
+%		& $k^{(\geq0)}$ & $k^{(\geq1)}$ \\
+%		\midrule
+%		
+%		1000
+%		& 0 & --
+%		& 0 & --
+%		& 0 & --
+%		& 0 & -- \\
+%		
+%		100
+%		& 0 & --
+%		& 0 & --
+%		& 0 & --
+%		& 0 & -- \\
+%		
+%		1
+%		& 0 & 1
+%		& 2 & 2
+%		& 1 & 1
+%		& 1 & 1 \\
+%		
+%		\bottomrule
+%	\end{tabular}
+%\end{table}
+
+{\color{blue}
+\paragraph{Operational detection times.}
+We now turn to the detection criteria used in the simulation
+study. Since the true peak location $L$ is unknown in operational
+use, we consider two complementary criteria, and we report them
+side by side.
+The first is the \emph{coverage-based} criterion of
+Section~\ref{subsec:entry-time}. Among the candidates whose window
+strictly contains $L$, we retain the one with the smallest width
+$w_k(T)$, and we define the coverage-based detection time
 \[
 T_{\mathrm{det}}(\tau,\mathrm{SNR})
 =
@@ -1115,142 +1099,129 @@ T_{\mathrm{exit}}^{(k^\star(T))}(T)
 \right\},
 \]
 where $k^\star(T)$ is the selected candidate at horizon $T$. This
-quantity measures the earliest horizon from which the operationally
-constructed candidate brackets the true peak and continues to do so
-as new observations arrive.
-Table~\ref{tab:simulation_detection} reports $T_{\mathrm{det}}$ for
-each pair $(\tau,\mathrm{SNR})$, together with the first
-peak-containing horizon and the terminal-horizon candidate. At the
-two larger signal-to-noise ratios, the initialization candidate
-$k=0$, with $T_{\mathrm{exit}}^{(0)}(T)=T$ and $\epsilon'_0(T)=0$,
-is selected at every horizon $T>L$; the corresponding detection time
-is $T_{\mathrm{det}}=23$, i.e.\ one observation after the true peak.
-At $\mathrm{SNR}=1$, the selected candidate is nontrivial and depends
-on the quantile level, and the detection time is delayed accordingly.
-For $\tau=0.50$, $\tau=0.75$ and $\tau=0.95$, the candidate selected
-at some intermediate horizons does not bracket $L$, even though it
-does at later horizons; the detection time therefore differs from the
-first peak-containing horizon. This temporal intermittency is
-consistent with the stabilization analysis of
-Section~\ref{sec:stability-analysis} and reflects the greater
-variability of the estimated peak-location path at low
-signal-to-noise ratios.
+criterion is available only in the simulation study, where $L$ is
+known, and it measures the earliest horizon from which the
+operationally constructed interval brackets the true peak and
+continues to do so as new observations arrive.
+The second criterion replaces $L$ by the current point estimate
+$\hat l(T)$. At each horizon $T$, we consider all candidate
+intervals $[T_{\mathrm{entry}}^{(k)}(T), T_{\mathrm{exit}}^{(k)}(T)]$,
+retain those satisfying
+\[
+T_{\mathrm{entry}}^{(k)}(T)
+\le
+\hat l(T)
+\le
+T_{\mathrm{exit}}^{(k)}(T),
+\]
+and select the narrowest one. This selection uses only quantities
+available at horizon $T$ and is therefore fully operational. It
+defines the \emph{self-consistent detection time}
+\[
+T_{\mathrm{est}}(\tau,\mathrm{SNR})
+=
+\min
+\left\{
+T:\ \exists\,k \text{ such that }
+T_{\mathrm{entry}}^{(k)}(T)
+\le
+\hat l(T)
+\le
+T_{\mathrm{exit}}^{(k)}(T)
+\right\}.
+\]
+Unlike $T_{\mathrm{det}}$, $T_{\mathrm{est}}$ does not guarantee
+that the selected interval contains $L$; it only guarantees that
+the interval is consistent with the current point estimate. The
+two criteria answer different questions, and reporting them side
+by side gives a clear view of the operational trade-off.
+
+Table~\ref{tab:simulation_detection} reports $T_{\mathrm{est}}$,
+the first peak-containing horizon $T_{\mathrm{first}}$, and the
+coverage-based detection time $T_{\mathrm{det}}$, for each pair
+$(\tau,\mathrm{SNR})$, together with the selected ex-post candidate
+at the terminal horizon $T=30$. The quantity $T_{\mathrm{first}}$
+is the first horizon $T>L$ at which the selected ex-post candidate
+happens to bracket $L$; $T_{\mathrm{det}}$ is the first horizon
+from which it brackets $L$ at every later horizon; and
+$T_{\mathrm{est}}$ is the first horizon at which the operational
+selection is self-consistent.
 
 \begin{table}[htbp]
 	\centering
-	\caption{Operational detection times $T_{\mathrm{det}}$ for each
-		quantile level $\tau$ and signal-to-noise ratio. The column
-		$T_{\mathrm{first}}$ reports the first horizon $T>L$ at which
-		the selected candidate brackets $L$; the terminal columns
-		report the selected candidate at $T=30$.}
+	\caption{Detection times for each quantile level $\tau$ and
+		signal-to-noise ratio. $T_{\mathrm{est}}$ is the
+		self-consistent criterion based on the point estimate
+		$\hat l(T)$; $T_{\mathrm{first}}$ is the first horizon $T>L$
+		at which the selected ex-post candidate strictly contains
+		$L$; $T_{\mathrm{det}}$ is the first horizon from which the
+		selected ex-post candidate strictly contains $L$ at every
+		later horizon. The last four columns report the selected
+		ex-post candidate at the terminal horizon $T=30$.}
 	\label{tab:simulation_detection}
-	\begin{tabular}{c|ccc|cccc}
+	\begin{tabular}{c|c|ccc|cccc}
 		\toprule
-		& \multicolumn{3}{c|}{Detection} & \multicolumn{4}{c}{Terminal candidate ($T=30$)} \\
-		\cmidrule(lr){2-4} \cmidrule(lr){5-8}
-		$\tau$ & SNR & $T_{\mathrm{first}}$ & $T_{\mathrm{det}}$ 
+		& & \multicolumn{3}{c|}{Detection time}
+		& \multicolumn{4}{c}{Terminal candidate ($T=30$)} \\
+		\cmidrule(lr){3-5} \cmidrule(lr){6-9}
+		$\tau$ & SNR
+		& $T_{\mathrm{est}}$ & $T_{\mathrm{first}}$ & $T_{\mathrm{det}}$
 		& $k^\star$ & $T_{\mathrm{entry}}$ & $T_{\mathrm{exit}}$ & $w_{k^\star}$ \\
 		\midrule
 		\multirow{3}{*}{$0.25$}
-		& 1000 & 23 & 23 & 0 & 11 & 30 & 19 \\
-		& 100  & 23 & 23 & 0 & 18 & 30 & 12 \\
-		& 1    & 25 & 25 & 1 & 17 & 29 & 12 \\
+		& 1000 & 22 & 23 & 23 & 0 & 11 & 30 & 19 \\
+		& 100  & 22 & 23 & 23 & 0 & 18 & 30 & 12 \\
+		& 1    &  6 & 25 & 25 & 1 & 17 & 29 & 12 \\
 		\midrule
 		\multirow{3}{*}{$0.50$}
-		& 1000 & 23 & 23 & 0 & 9  & 30 & 21 \\
-		& 100  & 23 & 23 & 0 & 18 & 30 & 12 \\
-		& 1    & 24 & 28 & 2 & 21 & 27 & 6  \\
+		& 1000 & 22 & 23 & 23 & 0 & 9  & 30 & 21 \\
+		& 100  & 22 & 23 & 23 & 0 & 18 & 30 & 12 \\
+		& 1    & 10 & 24 & 28 & 2 & 21 & 27 & 6  \\
 		\midrule
 		\multirow{3}{*}{$0.75$}
-		& 1000 & 23 & 23 & 0 & 12 & 30 & 18 \\
-		& 100  & 23 & 23 & 0 & 16 & 30 & 14 \\
-		& 1    & 23 & 29 & 3 & 7  & 27 & 20 \\
+		& 1000 & 22 & 23 & 23 & 0 & 12 & 30 & 18 \\
+		& 100  & 22 & 23 & 23 & 0 & 16 & 30 & 14 \\
+		& 1    & 18 & 23 & 29 & 3 & 7  & 27 & 20 \\
 		\midrule
 		\multirow{3}{*}{$0.95$}
-		& 1000 & 23 & 23 & 0 & 13 & 30 & 17 \\
-		& 100  & 23 & 23 & 0 & 16 & 30 & 14 \\
-		& 1    & 26 & 28 & 1 & 20 & 27 & 7  \\
+		& 1000 & 22 & 23 & 23 & 0 & 13 & 30 & 17 \\
+		& 100  & 22 & 23 & 23 & 0 & 16 & 30 & 14 \\
+		& 1    &  9 & 26 & 28 & 1 & 20 & 27 & 7  \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-Two observations emerge from Table~\ref{tab:simulation_detection}. At
-the large and moderate signal-to-noise ratios, the operational
-detection time is $T_{\mathrm{det}}=23$ for all four quantile levels,
-and the selected candidate is always the initialization candidate
-$k=0$. At the small signal-to-noise ratio, the detection time depends
-on the quantile level, ranging from $25$ for $\tau=0.25$ to $29$ for
-$\tau=0.75$. The selected candidate at the terminal horizon also
-differs across quantile levels, reflecting the greater temporal
-variability of the estimated peak-location path when the noise level
-is high. For $\tau=0.50$, $\tau=0.75$ and $\tau=0.95$, the first
-peak-containing horizon is strictly smaller than the detection time,
-showing that the construction can produce a bracketing candidate at
-some horizons and then lose it at later horizons; the operational
-criterion is the one that accounts for this intermittency.
+Three observations emerge from Table~\ref{tab:simulation_detection}.
+First, at the large and moderate signal-to-noise ratios, the
+self-consistent criterion yields $T_{\mathrm{est}}=22$ for all
+four quantile levels, one observation before the coverage-based
+criterion at $T_{\mathrm{det}}=23$. The interval
+$[T_{\mathrm{entry}}^{(0)}(T),T]$ contains the point estimate
+$\hat l(T)=22$ as soon as the current horizon $T$ reaches the
+estimated peak location, and only one additional observation is
+required for the interval to also cover $L$ strictly. The near
+coincidence of $T_{\mathrm{est}}$ and $T_{\mathrm{det}}$ at high
+signal-to-noise ratio indicates that the self-consistent criterion
+provides a reliable stopping rule in this regime.
 
-For completeness, Table~\ref{tab:simulation_first_k} reports, for
-each pair $(\tau,\mathrm{SNR})$, the first candidate index at which
-the strict containment condition holds, both including the
-initialization $k=0$ and excluding it. When the initialization
-already contains $L$, no nontrivial candidate is required; this is
-the case at SNR $=1000$ and SNR $=100$. At SNR $=1$, the first
-nontrivial peak-containing index equals the selected index in three
-of the four quantile levels; for $\tau=0.75$ the first admissible
-nontrivial candidate is $k=1$ (width $22$), whereas the selected
-candidate is $k=3$ (width $20$), the two criteria therefore
-differing in that single case.
-
-\begin{table}[htbp]
-	\centering
-	\caption{First candidate index whose window strictly contains $L$,
-		for each signal-to-noise ratio and quantile level $\tau$. The
-		superscripts $(\geq0)$ and $(\geq1)$ distinguish inclusion of
-		the initialization candidate $k=0$ from the nontrivial
-		strict-decrease candidates. A dash indicates that no such
-		candidate exists.}
-	\label{tab:simulation_first_k}
-	\begin{tabular}{c|cc|cc|cc|cc}
-		\toprule
-		& \multicolumn{2}{c|}{$\tau=0.25$}
-		& \multicolumn{2}{c|}{$\tau=0.50$}
-		& \multicolumn{2}{c|}{$\tau=0.75$}
-		& \multicolumn{2}{c}{$\tau=0.95$} \\
-		
-		\cmidrule(lr){2-3}
-		\cmidrule(lr){4-5}
-		\cmidrule(lr){6-7}
-		\cmidrule(lr){8-9}
-		
-		$\mathrm{SNR}$
-		& $k^{(\geq0)}$ & $k^{(\geq1)}$
-		& $k^{(\geq0)}$ & $k^{(\geq1)}$
-		& $k^{(\geq0)}$ & $k^{(\geq1)}$
-		& $k^{(\geq0)}$ & $k^{(\geq1)}$ \\
-		\midrule
-		
-		1000
-		& 0 & --
-		& 0 & --
-		& 0 & --
-		& 0 & -- \\
-		
-		100
-		& 0 & --
-		& 0 & --
-		& 0 & --
-		& 0 & -- \\
-		
-		1
-		& 0 & 1
-		& 2 & 2
-		& 1 & 1
-		& 1 & 1 \\
-		
-		\bottomrule
-	\end{tabular}
-\end{table}
-}
+Second, at the small signal-to-noise ratio, the two criteria
+diverge sharply. The self-consistent time is much earlier than the
+coverage-based time: for $\tau=0.25$, $T_{\mathrm{est}}=6$ while
+$T_{\mathrm{det}}=25$; for $\tau=0.95$, $T_{\mathrm{est}}=9$ while
+$T_{\mathrm{det}}=28$. In this regime the estimated trajectory
+$\hat l(T)$ is noisy, and the interval that contains it can be
+narrow and located far from $L$. 
+The interval selected by the self-consistent criterion therefore has no relation to the true peak.
+This illustrates that $T_{\mathrm{est}}$ is optimistic at low
+signal-to-noise ratio and should not be interpreted as a coverage
+statement on $L$.
+Third, for $\tau=0.50$, $\tau=0.75$ and $\tau=0.95$, the first
+peak-containing horizon $T_{\mathrm{first}}$ is strictly smaller
+than $T_{\mathrm{det}}$ at $\mathrm{SNR}=1$, showing that the
+construction can produce a bracketing candidate at some horizons
+and then lose it at later horizons. The coverage-based criterion
+$T_{\mathrm{det}}$ accounts for this intermittency, whereas the
+first-hit quantity $T_{\mathrm{first}}$ does not.}
 
 \section{Real-World Application: COVID-19 Case Study}
 \label{sec:covid-real-data}
