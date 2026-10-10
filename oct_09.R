@@ -618,13 +618,6 @@ stage2_all_candidates <- function(
       S2$T.entry <= hat.l.current &&
       hat.l.current <= S2$T.exit
     
-    # valid.interval <- !is.na(S2$T_entry) &&
-    #   !is.na(S2$T.exit)
-    # 
-    # estimate.in.window <- valid.interval &&
-    #   S2$T_entry <= hat.l.current &&
-    #   hat.l.current <= S2$T.exit
-    
     results[[i]] <- data.frame(
       Data = Data,
       T_current = T.current,
@@ -782,11 +775,6 @@ select_narrowest_candidate <- function(
   selected <- candidates[1, out.cols, drop = FALSE]
   rownames(selected) <- NULL
   selected
-  
-  # selected <- candidates[1, , drop = FALSE]
-  # rownames(selected) <- NULL
-  # 
-  # selected
 }
 
 
@@ -1676,59 +1664,59 @@ table.selected.expost$interpretation <- with(
 # 26. SAVE CSV FILES
 ############################################################
 
-write.csv(
-  table.selected.expost,
-  "entry-exit-selected-expost-all-tau-SNR-T.csv",
-  row.names = FALSE
-)
-
-write.csv(
-  table.selected.estimate,
-  "entry-exit-selected-operational-all-tau-SNR-T.csv",
-  row.names = FALSE
-)
-
-write.csv(
-  combined.diagnostics,
-  "simulation-all-stage2-candidates-T-dependent.csv",
-  row.names = FALSE
-)
-
-write.csv(
-  combined.E.diagnostics,
-  "simulation-all-E-candidates-T-dependent.csv",
-  row.names = FALSE
-)
-
-write.csv(
-  first_k_table,
-  "simulation-first-k-summary-T-dependent.csv",
-  row.names = FALSE
-)
-
-write.csv(
-  table.T_est,
-  "simulation-T-est-summary.csv",
-  row.names = FALSE
-)
-
-write.csv(
-  table.first.true.containment,
-  "simulation-T-first-true-containment-summary.csv",
-  row.names = FALSE
-)
-
-write.csv(
-  table.T_det,
-  "simulation-T-det-summary.csv",
-  row.names = FALSE
-)
-
-write.csv(
-  table.comparison,
-  "simulation-comparison-T-est-T-first-T-det.csv",
-  row.names = FALSE
-)
+# write.csv(
+#   table.selected.expost,
+#   "entry-exit-selected-expost-all-tau-SNR-T.csv",
+#   row.names = FALSE
+# )
+# 
+# write.csv(
+#   table.selected.estimate,
+#   "entry-exit-selected-operational-all-tau-SNR-T.csv",
+#   row.names = FALSE
+# )
+# 
+# write.csv(
+#   combined.diagnostics,
+#   "simulation-all-stage2-candidates-T-dependent.csv",
+#   row.names = FALSE
+# )
+# 
+# write.csv(
+#   combined.E.diagnostics,
+#   "simulation-all-E-candidates-T-dependent.csv",
+#   row.names = FALSE
+# )
+# 
+# write.csv(
+#   first_k_table,
+#   "simulation-first-k-summary-T-dependent.csv",
+#   row.names = FALSE
+# )
+# 
+# write.csv(
+#   table.T_est,
+#   "simulation-T-est-summary.csv",
+#   row.names = FALSE
+# )
+# 
+# write.csv(
+#   table.first.true.containment,
+#   "simulation-T-first-true-containment-summary.csv",
+#   row.names = FALSE
+# )
+# 
+# write.csv(
+#   table.T_det,
+#   "simulation-T-det-summary.csv",
+#   row.names = FALSE
+# )
+# 
+# write.csv(
+#   table.comparison,
+#   "simulation-comparison-T-est-T-first-T-det.csv",
+#   row.names = FALSE
+# )
 
 
 ############################################################
