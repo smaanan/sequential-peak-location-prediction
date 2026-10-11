@@ -29,9 +29,9 @@
 %\author[1]{Sa\"{i}d Maanan\,\orcidlink{0000-0001-9365-7586}%
 %\thanks{Corresponding author: \texttt{maanan.said@gmail.com}}}
 %\author[2]{Azzouz Dermoune}
-%\author[1]{Ahmed El Ghini}
 %\author[3]{Daoud Ounaissi}
 %\author[4]{Yousri Slaoui}
+%\author[1]{Ahmed El Ghini}
 %
 %\affil[1]{LEAM, Mohammed V University in Rabat,  Morocco}
 %\affil[2]{Laboratoire Paul Painlevé, USTL–CNRS–UMR 8524, Lille, France}
@@ -1223,8 +1223,6 @@ All endpoints are determined entirely from the sequential estimation trajectory 
 %$T_{\mathrm{det}}$ accounts for this intermittency, whereas the
 %first-hit quantity $T_{\mathrm{first}}$ does not.}
 
-%\clearpage
-{\color{blue}
 \subsection{Construction of a data-driven interval for the peak location}
 \label{subsec:entry-exit-simulation}
 
@@ -1237,11 +1235,8 @@ Sections~\ref{sec:symmetric_laplace_estimation} and
 \ref{sec:parameter_estimation_paths}, with
 \(
 A=1,
-%\qquad 
 L=22,
-%\qquad 
 S=10,
-%\qquad 
 h=30,
 \)
 and quantile levels
@@ -1313,21 +1308,28 @@ Across the four quantile levels at $\mathrm{SNR}=1000$, the simulation
 contains $25$, $24$, $70$, and $48$ consecutive candidate pairs for
 $\tau=0.25$, $0.50$, $0.75$, and $0.95$, respectively. No violation
 of either ordering is observed in these pairs.
-Consequently, the candidate intervals are nested in the simulated
-cases in which these orderings hold:
-\[
-T_{\mathrm{entry}}^{(k+1)}(T)
-\leq
-T_{\mathrm{entry}}^{(k)}(T)
-<
-T_{\mathrm{exit}}^{(k+1)}(T)
-<
-T_{\mathrm{exit}}^{(k)}(T),
-\]
-and hence
-\(
-\mathcal R_{k+1}(T)\subset\mathcal R_k(T).
-\)
+%Consequently, the candidate intervals are nested in the simulated
+%cases in which these orderings hold:
+%\[
+%T_{\mathrm{entry}}^{(k+1)}(T)
+%\leq
+%T_{\mathrm{entry}}^{(k)}(T)
+%<
+%T_{\mathrm{exit}}^{(k+1)}(T)
+%<
+%T_{\mathrm{exit}}^{(k)}(T),
+%\]
+%and hence
+%\(
+%\mathcal R_{k+1}(T)\subset\mathcal R_k(T).
+%\)
+{\color{blue}
+Consequently, both endpoints of $\mathcal R_k(T)$ are
+nonincreasing in $k$, so that $\mathcal R_{k+1}(T)$ lies
+(weakly) to the left of $\mathcal R_k(T)$. These inequalities do
+not imply that the candidate intervals are nested, and in general
+consecutive candidates may overlap or be disjoint.
+}
 We also examine whether the entry time of candidate $k$ coincides
 with the exit time of candidate $k+1$, that is,
 \begin{equation}
@@ -1538,8 +1540,99 @@ theoretically or assessed through repeated independent simulation
 replicates. The single-realization illustration above is intended to
 demonstrate the operational construction and its behaviour across
 quantile levels and signal-to-noise regimes, rather than to establish
-statistical coverage.}
-%\clearpage
+statistical coverage.
+{\color{blue}
+\paragraph{Monte Carlo assessment of empirical coverage.}
+
+We next assess the empirical coverage of the operational intervals using repeated independent simulations. For each combination of $\tau\in\{0.25,0.50,0.75,0.95\}$ and $\mathrm{SNR}\in\{1000,100,1\}$, we generate $M=1000$ independent trajectories under the same peak model, with $A=1$, $L=22$, $S=10$, and observation horizon $h=30$. At each available horizon $T$, the operational selection rule defined in \eqref{eq:admissible-candidates}--\eqref{eq:selected-peak-interval} is applied separately to each trajectory. The true peak location $L$ is used only after selection to assess whether the selected interval contains it.
+Let $\widehat{\mathcal I}_m(T)$ denote the selected interval for replicate $m$, when an interval is available. We define the interval-selection rate by
+\[
+\widehat q_M(T)
+=
+\frac{1}{M}
+\sum_{m=1}^M
+\mathbf 1\!\left\{
+\widehat{\mathcal I}_m(T) \neq \varnothing
+\right\},
+\]
+and the empirical coverage among selected intervals by
+\[
+\widehat p^{\,\mathrm{sel}}_M(T)
+=
+\frac{
+	\displaystyle
+	\sum_{m=1}^M
+	\mathbf 1\!\left\{
+	L \in \widehat{\mathcal I}_m(T)
+	\right\}
+}{
+	\displaystyle
+	\sum_{m=1}^M
+	\mathbf 1\!\left\{
+	\widehat{\mathcal I}_m(T) \neq \varnothing
+	\right\}
+},
+\]
+provided that at least one interval is selected. We also report the unconditional success proportion
+\[
+\widehat p^{\,\mathrm{all}}_M(T)
+=
+\frac{1}{M}
+\sum_{m=1}^M
+\mathbf 1\!\left\{
+L \in \widehat{\mathcal I}_m(T)
+\right\}.
+\]
+Thus, $\widehat p_{\mathrm{all}}(T)$ accounts for both interval-selection failures and selected intervals that do not contain the true peak location. When no interval is selected in any replicate, the conditional coverage is undefined.
+
+Figure~\ref{fig:mc_coverage_selected} displays the empirical coverage among selected intervals as a function of $T$, while Figure~\ref{fig:mc_selection_rate} shows the corresponding interval-selection rates. The results reveal a marked dependence on the signal-to-noise ratio. For $\mathrm{SNR}=1000$, no interval is selected in the simulations for $T<22$, whereas the selection rate and empirical coverage are both equal to one from $T=22$ onward. For $\mathrm{SNR}=100$, selection is rare at several early horizons, but from $T=23$ onward all simulated trajectories yield a selected interval, with empirical coverage equal to one. At $T=22$, the selection rate is between $0.998$ and $0.999$, and all selected intervals contain $L$.
+
+The low-SNR results are substantially different. At $\mathrm{SNR}=1$, intervals may be selected before $T=22$, but none of the selected intervals at these earlier horizons contains the true peak location in the simulated sample. At $T=22$, empirical coverage among selected intervals ranges from approximately $0.261$ to $0.378$, depending on $\tau$. Coverage subsequently increases with the observation horizon, although the rate of increase differs across quantile levels. At $T=30$, for example, the empirical coverage is approximately $0.613$, $0.565$, $0.637$, and $0.844$ for $\tau=0.25$, $0.50$, $0.75$, and $0.95$, respectively. At this horizon, the interval-selection rate is at least $0.996$ for all four quantile levels. Hence, the relatively low coverage at small SNR cannot be attributed solely to failures to select an interval.
+
+Table~\ref{tab:mc_coverage_T30} summarizes the selection rates, empirical coverage probabilities, and mean widths at $T=30$. In the high- and medium-SNR settings, all selected intervals contain the true peak location in the simulated replicates. Under low SNR, the empirical coverage is lower, despite the high selection rates. The mean widths also differ across the SNR regimes, illustrating that interval width alone does not determine whether an interval contains the true peak.
+
+These findings provide a simulation-based assessment of the operational procedure under the specified model and parameter settings. In particular, they show that an interval can be selected consistently without necessarily achieving high empirical coverage. The results should therefore be interpreted as empirical coverage probabilities under the considered simulation design, rather than as a general theoretical coverage guarantee.
+\begin{table}[htbp]
+	\centering
+	\small
+	\caption{Monte Carlo interval-selection rates, empirical coverage, and mean interval widths at $T=30$, based on $M=1000$ independent replicates. The conditional coverage is calculated among selected intervals, and the unconditional success proportion also accounts for replicates in which no interval is selected.}
+	\label{tab:mc_coverage_T30}
+	\begin{tabular}{cccccc}
+		\toprule
+		\(\tau\) & SNR & \(\widehat q_M(30)\) & \(\widehat p^{\,\mathrm{sel}}_M(30)\) & \(\widehat p^{\,\mathrm{all}}_M(30)\) & Mean width \\
+		\midrule
+		0.25 & 1000 & 1.000 & 1.000 & 1.000 & 18.699 \\
+		0.25 &  100 & 1.000 & 1.000 & 1.000 & 12.663 \\
+		0.25 &    1 & 0.998 & 0.613 & 0.612 &  5.624 \\
+		\midrule
+		0.50 & 1000 & 1.000 & 1.000 & 1.000 & 18.259 \\
+		0.50 &  100 & 1.000 & 1.000 & 1.000 & 11.978 \\
+		0.50 &    1 & 0.996 & 0.565 & 0.563 &  5.486 \\
+		\midrule
+		0.75 & 1000 & 1.000 & 1.000 & 1.000 & 18.787 \\
+		0.75 &  100 & 1.000 & 1.000 & 1.000 & 12.721 \\
+		0.75 &    1 & 0.996 & 0.637 & 0.634 &  5.296 \\
+		\midrule
+		0.95 & 1000 & 1.000 & 1.000 & 1.000 & 19.656 \\
+		0.95 &  100 & 1.000 & 1.000 & 1.000 & 14.200 \\
+		0.95 &    1 & 1.000 & 0.844 & 0.844 &  5.753 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{monte-carlo-coverage-selected.pdf}
+	\caption{Empirical coverage of the selected operational intervals as a function of the observation horizon $T$, based on $M=1000$ independent simulated trajectories for each combination of $\tau$ and SNR. Coverage is calculated conditionally on interval selection. The horizontal axis gives the observation horizon, and each panel corresponds to one quantile level.}
+	\label{fig:mc_coverage_selected}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{monte-carlo-interval-selection-rate.pdf}
+	\caption{Empirical interval-selection rate as a function of the observation horizon $T$, based on $M=1000$ independent simulated trajectories for each combination of $\tau$ and SNR. The selection rate is the proportion of replicates for which the operational rule selects an interval. Each panel corresponds to one quantile level.}
+	\label{fig:mc_selection_rate}
+\end{figure}}
 
 \section{Real-World Application: COVID-19 Case Study}
 \label{sec:covid-real-data}
