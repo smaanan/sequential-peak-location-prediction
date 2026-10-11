@@ -764,465 +764,6 @@ T_{\mathrm{exit}}^{(k)}(T)
 \]
 All endpoints are determined entirely from the sequential estimation trajectory available up to the current observation horizon \(T\) and from the corresponding retrospective oscillation construction.
 
-%\subsection{Numerical illustration}
-%\label{subsec:entry-exit-simulation}
-%
-%We illustrate the operational construction of
-%Sections~\ref{subsec:oscillations}--\ref{subsec:entry-time} on the
-%simulation setting of
-%Sections~\ref{sec:symmetric_laplace_estimation} and~\ref{sec:parameter_estimation_paths},
-%with $A=1$, $L=22$, $S=10$, $h=30$, and for the four quantile levels
-%$\tau\in\{0.25,0.5,0.75,0.95\}$. Three signal-to-noise ratios are
-%considered, $\mathrm{SNR}\in\{1000,100,1\}$, corresponding to the
-%large, moderate, and small signal-to-noise regimes of the numerical
-%study.
-%For each current observation horizon $T$ and each pair
-%$(\tau,\mathrm{SNR})$, the two-stage construction produces a family of
-%Stage-2 candidates
-%$\{(T_{\mathrm{entry}}^{(k)}(T),T_{\mathrm{exit}}^{(k)}(T))\}_{k}$,
-%indexed as in Section~\ref{subsec:candidate-exit-times}. Before
-%turning to the operational detection criterion, we first analyse the
-%structure of these candidates in the clean regime $\mathrm{SNR}=1000$.
-%
-%\paragraph{Structural analysis of consecutive candidates.}
-%For a fixed current horizon $T$, the candidate intervals
-%$\mathcal R_k(T) = [T_{\mathrm{entry}}^{(k)}(T), T_{\mathrm{exit}}^{(k)}(T)]$
-%exhibit three properties.
-%First, the exit times are strictly ordered in $k$:
-%\begin{equation}
-%	T_{\mathrm{exit}}^{(k+1)}(T)
-%	<
-%	T_{\mathrm{exit}}^{(k)}(T),
-%	\qquad k\ge0.
-%	\label{eq:exit-ordering}
-%\end{equation}
-%This follows by construction, because $T_{\mathrm{exit}}^{(1)}(T),
-%T_{\mathrm{exit}}^{(2)}(T),\ldots$ are the strict-decrease points of
-%$t\mapsto\omega_l(t,T)$ ordered in decreasing order. The numerical
-%simulation at $\mathrm{SNR}=1000$ confirms \eqref{eq:exit-ordering}
-%with no violations for any of the four quantile levels considered.
-%Second, the Stage-2 sets satisfy $E_{k+1}(T)\subseteq E_k(T)$. This
-%inclusion follows from \eqref{eq:exit-ordering} together with the
-%monotonicity of $\omega_l$ with respect to its second argument, and it
-%implies
-%\(
-%T_{k+1}^*(T)\le T_k^*(T).
-%\)
-%Numerically, the entry times are likewise ordered:
-%\begin{equation}
-%	T_{\mathrm{entry}}^{(k+1)}(T)
-%	\le
-%	T_{\mathrm{entry}}^{(k)}(T)
-%	\qquad k\ge0.
-%	\label{eq:entry-ordering}
-%\end{equation}
-%Across the four quantile levels at $\mathrm{SNR}=1000$, the total
-%number of candidate pairs is $25$, $24$, $70$ and $48$ for
-%$\tau=0.25$, $0.50$, $0.75$ and $0.95$ respectively, and no reversal
-%of \eqref{eq:entry-ordering} is observed. Combined with
-%\eqref{eq:exit-ordering}, the candidate intervals are therefore nested:
-%\[
-%T_{\mathrm{entry}}^{(k+1)}(T)
-%\le
-%T_{\mathrm{entry}}^{(k)}(T)
-%<
-%T_{\mathrm{exit}}^{(k+1)}(T)
-%<
-%T_{\mathrm{exit}}^{(k)}(T),
-%\]
-%so that $\mathcal R_{k+1}(T)\subset\mathcal R_k(T)$.
-%Third, it is natural to ask whether the entry time of candidate $k$
-%coincides with the exit time of candidate $k+1$, i.e. whether
-%\begin{equation}
-%	T_{\mathrm{entry}}^{(k)}(T)
-%	=
-%	T_{\mathrm{exit}}^{(k+1)}(T).
-%	\label{eq:entry-exit-identity}
-%\end{equation}
-%This identity does not follow from the definitions, because
-%$T_{\mathrm{exit}}^{(k+1)}(T)$ is determined from the retrospective
-%oscillation $\omega_l(t,T)$ with right endpoint $T$, whereas
-%$T_{\mathrm{entry}}^{(k)}(T)$ is determined from
-%$\omega_l(t,T_{\mathrm{exit}}^{(k)}(T))$ with right endpoint
-%$T_{\mathrm{exit}}^{(k)}(T)$. Numerically, \eqref{eq:entry-exit-identity}
-%is not universal. The proportions of pairs satisfying it are reported
-%in Table~\ref{tab:simulation_structure}, and range from $0\%$ for
-%$\tau=0.25$ to $35.7\%$ for $\tau=0.75$. Once the trajectory has
-%stabilised, however, the differences
-%$T_{\mathrm{entry}}^{(k)}(T)-T_{\mathrm{exit}}^{(k+1)}(T)$ take values
-%in $\{-1,0,+1\}$ and their sign depends on $k$. In particular, for
-%$k=0$ and all four quantile levels, the difference is consistently
-%$+1$ at large $T$, so that the first entry time lies exactly one
-%observation after the first exit-decrease point. This is a numerical
-%regularity of the construction at large SNR, not a general property.
-%
-%\begin{table}[htbp]
-%	\centering
-%	\caption{Structural summary of consecutive candidates at
-%		$\mathrm{SNR}=1000$. For each quantile level, the columns report
-%		the number of consecutive pairs, the proportion of pairs for
-%		which the identity \eqref{eq:entry-exit-identity} holds, whether
-%		the exit ordering \eqref{eq:exit-ordering} holds, and the number
-%		of reversals of the entry ordering \eqref{eq:entry-ordering}.}
-%	\label{tab:simulation_structure}
-%	\begin{tabular}{c|cccc}
-%		\toprule
-%		$\tau$ & $n_{\text{pairs}}$ & proportion equal & exit ordering & entry reversals \\
-%		\midrule
-%		$0.25$ & 25 & $0.000$ & yes & $0$ \\
-%		$0.50$ & 24 & $0.083$ & yes & $0$ \\
-%		$0.75$ & 70 & $0.357$ & yes & $0$ \\
-%		$0.95$ & 48 & $0.125$ & yes & $0$ \\
-%		\bottomrule
-%	\end{tabular}
-%\end{table}
-%
-%Figure~\ref{fig:candidate_trajectories_snr1000} displays the joint
-%trajectories $T\mapsto T_{\mathrm{exit}}^{(k)}(T)$ and
-%$T\mapsto T_{\mathrm{entry}}^{(k)}(T)$ for
-%$k\in\{0,1,2,3\}$, one panel per quantile level, at
-%$\mathrm{SNR}=1000$. The nested structure of the candidates and the
-%stabilisation of the trajectories are both visible.
-%Figure~\ref{fig:entry_vs_next_exit_snr1000} displays the difference
-%$T_{\mathrm{entry}}^{(k)}(T)-T_{\mathrm{exit}}^{(k+1)}(T)$ as a
-%function of $T$ for each $k$, one panel per quantile level. The
-%values remain close to the zero line once $T$ is past the initial
-%transient, confirming the numerical regularity noted above.
-%
-%\begin{figure}[htbp]
-%	\centering
-%	\includegraphics[width=\textwidth]{fig_exit_entry_times_SNR1000.pdf}
-%	\caption{Candidate exit times $T_{\mathrm{exit}}^{(k)}(T)$ (solid)
-%		and entry times $T_{\mathrm{entry}}^{(k)}(T)$ (dashed) as
-%		functions of the current observation horizon $T$, at
-%		$\mathrm{SNR}=1000$, for the four quantile levels. The
-%		horizontal line marks the true peak location $L=22$.}
-%	\label{fig:candidate_trajectories_snr1000}
-%\end{figure}
-%
-%\begin{figure}[htbp]
-%	\centering
-%	\includegraphics[width=\textwidth]{fig_entry_vs_next_exit_SNR1000.pdf}
-%	\caption{Difference $T_{\mathrm{entry}}^{(k)}(T)-T_{\mathrm{exit}}^{(k+1)}(T)$
-%		as a function of the current observation horizon $T$, at
-%		$\mathrm{SNR}=1000$, for the four quantile levels. A value of
-%		zero corresponds to the identity \eqref{eq:entry-exit-identity}.}
-%	\label{fig:entry_vs_next_exit_snr1000}
-%\end{figure}
-%
-%%\paragraph{Operational detection time.}
-%%We now turn to the operational detection criterion used in the
-%%simulation study. The candidate selection rule used below is the
-%%ex-post rule of Section~\ref{subsec:entry-time}: among the candidates
-%%whose window strictly contains the true peak location $L$, we retain
-%%the one with the smallest width $w_k(T)$. This rule is used only for
-%%the simulation study, where $L$ is known, and is not part of the
-%%operational procedure when $L$ is unknown. Because no candidate can
-%%contain $L$ when $T\le L$, the selected candidate is reported only
-%%for $T>L$. For each $(\tau,\mathrm{SNR})$, we define the
-%%\emph{operational detection time}
-%%\[
-%%T_{\mathrm{det}}(\tau,\mathrm{SNR})
-%%=
-%%\min
-%%\left\{
-%%T>L:\ 
-%%T_{\mathrm{entry}}^{(k^\star(T))}(T)
-%%<
-%%L
-%%<
-%%T_{\mathrm{exit}}^{(k^\star(T))}(T)
-%%\
-%%\text{for all}\ T'\ge T
-%%\right\},
-%%\]
-%%where $k^\star(T)$ is the selected candidate at horizon $T$. This
-%%quantity measures the earliest horizon from which the operationally
-%%constructed candidate brackets the true peak and continues to do so
-%%as new observations arrive.
-%%Table~\ref{tab:simulation_detection} reports $T_{\mathrm{det}}$ for
-%%each pair $(\tau,\mathrm{SNR})$, together with the first
-%%peak-containing horizon and the terminal-horizon candidate. At the
-%%two larger signal-to-noise ratios, the initialization candidate
-%%$k=0$, with $T_{\mathrm{exit}}^{(0)}(T)=T$ and $\epsilon'_0(T)=0$,
-%%is selected at every horizon $T>L$; the corresponding detection time
-%%is $T_{\mathrm{det}}=23$, i.e.\ one observation after the true peak.
-%%At $\mathrm{SNR}=1$, the selected candidate is nontrivial and depends
-%%on the quantile level, and the detection time is delayed accordingly.
-%%For $\tau=0.50$, $\tau=0.75$ and $\tau=0.95$, the candidate selected
-%%at some intermediate horizons does not bracket $L$, even though it
-%%does at later horizons; the detection time therefore differs from the
-%%first peak-containing horizon. This temporal intermittency is
-%%consistent with the stabilization analysis of
-%%Section~\ref{sec:stability-analysis} and reflects the greater
-%%variability of the estimated peak-location path at low
-%%signal-to-noise ratios.
-%
-%%\begin{table}[htbp]
-%%	\centering
-%%	\caption{Operational detection times $T_{\mathrm{det}}$ for each
-%%		quantile level $\tau$ and signal-to-noise ratio. The column
-%%		$T_{\mathrm{first}}$ reports the first horizon $T>L$ at which
-%%		the selected candidate brackets $L$; the terminal columns
-%%		report the selected candidate at $T=30$.}
-%%	\label{tab:simulation_detection}
-%%	\begin{tabular}{c|ccc|cccc}
-%%		\toprule
-%%		& \multicolumn{3}{c|}{Detection} & \multicolumn{4}{c}{Terminal candidate ($T=30$)} \\
-%%		\cmidrule(lr){2-4} \cmidrule(lr){5-8}
-%%		$\tau$ & SNR & $T_{\mathrm{first}}$ & $T_{\mathrm{det}}$ 
-%%		& $k^\star$ & $T_{\mathrm{entry}}$ & $T_{\mathrm{exit}}$ & $w_{k^\star}$ \\
-%%		\midrule
-%%		\multirow{3}{*}{$0.25$}
-%%		& 1000 & 23 & 23 & 0 & 11 & 30 & 19 \\
-%%		& 100  & 23 & 23 & 0 & 18 & 30 & 12 \\
-%%		& 1    & 25 & 25 & 1 & 17 & 29 & 12 \\
-%%		\midrule
-%%		\multirow{3}{*}{$0.50$}
-%%		& 1000 & 23 & 23 & 0 & 9  & 30 & 21 \\
-%%		& 100  & 23 & 23 & 0 & 18 & 30 & 12 \\
-%%		& 1    & 24 & 28 & 2 & 21 & 27 & 6  \\
-%%		\midrule
-%%		\multirow{3}{*}{$0.75$}
-%%		& 1000 & 23 & 23 & 0 & 12 & 30 & 18 \\
-%%		& 100  & 23 & 23 & 0 & 16 & 30 & 14 \\
-%%		& 1    & 23 & 29 & 3 & 7  & 27 & 20 \\
-%%		\midrule
-%%		\multirow{3}{*}{$0.95$}
-%%		& 1000 & 23 & 23 & 0 & 13 & 30 & 17 \\
-%%		& 100  & 23 & 23 & 0 & 16 & 30 & 14 \\
-%%		& 1    & 26 & 28 & 1 & 20 & 27 & 7  \\
-%%		\bottomrule
-%%	\end{tabular}
-%%\end{table}
-%%
-%%Two observations emerge from Table~\ref{tab:simulation_detection}. At
-%%the large and moderate signal-to-noise ratios, the operational
-%%detection time is $T_{\mathrm{det}}=23$ for all four quantile levels,
-%%and the selected candidate is always the initialization candidate
-%%$k=0$. At the small signal-to-noise ratio, the detection time depends
-%%on the quantile level, ranging from $25$ for $\tau=0.25$ to $29$ for
-%%$\tau=0.75$. The selected candidate at the terminal horizon also
-%%differs across quantile levels, reflecting the greater temporal
-%%variability of the estimated peak-location path when the noise level
-%%is high. For $\tau=0.50$, $\tau=0.75$ and $\tau=0.95$, the first
-%%peak-containing horizon is strictly smaller than the detection time,
-%%showing that the construction can produce a bracketing candidate at
-%%some horizons and then lose it at later horizons; the operational
-%%criterion is the one that accounts for this intermittency.
-%%
-%%For completeness, Table~\ref{tab:simulation_first_k} reports, for
-%%each pair $(\tau,\mathrm{SNR})$, the first candidate index at which
-%%the strict containment condition holds, both including the
-%%initialization $k=0$ and excluding it. When the initialization
-%%already contains $L$, no nontrivial candidate is required; this is
-%%the case at SNR $=1000$ and SNR $=100$. At SNR $=1$, the first
-%%nontrivial peak-containing index equals the selected index in three
-%%of the four quantile levels; for $\tau=0.75$ the first admissible
-%%nontrivial candidate is $k=1$ (width $22$), whereas the selected
-%%candidate is $k=3$ (width $20$), the two criteria therefore
-%%differing in that single case.
-%%
-%%\begin{table}[htbp]
-%%	\centering
-%%	\caption{First candidate index whose window strictly contains $L$,
-%%		for each signal-to-noise ratio and quantile level $\tau$. The
-%%		superscripts $(\geq0)$ and $(\geq1)$ distinguish inclusion of
-%%		the initialization candidate $k=0$ from the nontrivial
-%%		strict-decrease candidates. A dash indicates that no such
-%%		candidate exists.}
-%%	\label{tab:simulation_first_k}
-%%	\begin{tabular}{c|cc|cc|cc|cc}
-%%		\toprule
-%%		& \multicolumn{2}{c|}{$\tau=0.25$}
-%%		& \multicolumn{2}{c|}{$\tau=0.50$}
-%%		& \multicolumn{2}{c|}{$\tau=0.75$}
-%%		& \multicolumn{2}{c}{$\tau=0.95$} \\
-%%		
-%%		\cmidrule(lr){2-3}
-%%		\cmidrule(lr){4-5}
-%%		\cmidrule(lr){6-7}
-%%		\cmidrule(lr){8-9}
-%%		
-%%		$\mathrm{SNR}$
-%%		& $k^{(\geq0)}$ & $k^{(\geq1)}$
-%%		& $k^{(\geq0)}$ & $k^{(\geq1)}$
-%%		& $k^{(\geq0)}$ & $k^{(\geq1)}$
-%%		& $k^{(\geq0)}$ & $k^{(\geq1)}$ \\
-%%		\midrule
-%%		
-%%		1000
-%%		& 0 & --
-%%		& 0 & --
-%%		& 0 & --
-%%		& 0 & -- \\
-%%		
-%%		100
-%%		& 0 & --
-%%		& 0 & --
-%%		& 0 & --
-%%		& 0 & -- \\
-%%		
-%%		1
-%%		& 0 & 1
-%%		& 2 & 2
-%%		& 1 & 1
-%%		& 1 & 1 \\
-%%		
-%%		\bottomrule
-%%	\end{tabular}
-%%\end{table}
-%
-%{\color{blue}
-%\paragraph{Operational detection times.}
-%We now turn to the detection criteria used in the simulation
-%study. Since the true peak location $L$ is unknown in operational
-%use, we consider two complementary criteria, and we report them
-%side by side.
-%The first is the \emph{coverage-based} criterion of
-%Section~\ref{subsec:entry-time}. Among the candidates whose window
-%strictly contains $L$, we retain the one with the smallest width
-%$w_k(T)$, and we define the coverage-based detection time
-%\[
-%T_{\mathrm{det}}(\tau,\mathrm{SNR})
-%=
-%\min
-%\left\{
-%T>L:\ 
-%T_{\mathrm{entry}}^{(k^\star(T))}(T)
-%<
-%L
-%<
-%T_{\mathrm{exit}}^{(k^\star(T))}(T)
-%\
-%\text{for all}\ T'\ge T
-%\right\},
-%\]
-%where $k^\star(T)$ is the selected candidate at horizon $T$. This
-%criterion is available only in the simulation study, where $L$ is
-%known, and it measures the earliest horizon from which the
-%operationally constructed interval brackets the true peak and
-%continues to do so as new observations arrive.
-%The second criterion replaces $L$ by the current point estimate
-%$\hat l(T)$. At each horizon $T$, we consider all candidate
-%intervals $[T_{\mathrm{entry}}^{(k)}(T), T_{\mathrm{exit}}^{(k)}(T)]$,
-%retain those satisfying
-%\[
-%T_{\mathrm{entry}}^{(k)}(T)
-%\le
-%\hat l(T)
-%\le
-%T_{\mathrm{exit}}^{(k)}(T),
-%\]
-%and select the narrowest one. This selection uses only quantities
-%available at horizon $T$ and is therefore fully operational. It
-%defines the \emph{self-consistent detection time}
-%\[
-%T_{\mathrm{est}}(\tau,\mathrm{SNR})
-%=
-%\min
-%\left\{
-%T:\ \exists\,k \text{ such that }
-%T_{\mathrm{entry}}^{(k)}(T)
-%\le
-%\hat l(T)
-%\le
-%T_{\mathrm{exit}}^{(k)}(T)
-%\right\}.
-%\]
-%Unlike $T_{\mathrm{det}}$, $T_{\mathrm{est}}$ does not guarantee
-%that the selected interval contains $L$; it only guarantees that
-%the interval is consistent with the current point estimate. The
-%two criteria answer different questions, and reporting them side
-%by side gives a clear view of the operational trade-off.
-%
-%Table~\ref{tab:simulation_detection} reports $T_{\mathrm{est}}$,
-%the first peak-containing horizon $T_{\mathrm{first}}$, and the
-%coverage-based detection time $T_{\mathrm{det}}$, for each pair
-%$(\tau,\mathrm{SNR})$, together with the selected ex-post candidate
-%at the terminal horizon $T=30$. The quantity $T_{\mathrm{first}}$
-%is the first horizon $T>L$ at which the selected ex-post candidate
-%happens to bracket $L$; $T_{\mathrm{det}}$ is the first horizon
-%from which it brackets $L$ at every later horizon; and
-%$T_{\mathrm{est}}$ is the first horizon at which the operational
-%selection is self-consistent.
-%
-%\begin{table}[htbp]
-%	\centering
-%	\caption{Detection times for each quantile level $\tau$ and
-%		signal-to-noise ratio. $T_{\mathrm{est}}$ is the
-%		self-consistent criterion based on the point estimate
-%		$\hat l(T)$; $T_{\mathrm{first}}$ is the first horizon $T>L$
-%		at which the selected ex-post candidate strictly contains
-%		$L$; $T_{\mathrm{det}}$ is the first horizon from which the
-%		selected ex-post candidate strictly contains $L$ at every
-%		later horizon. The last four columns report the selected
-%		ex-post candidate at the terminal horizon $T=30$.}
-%	\label{tab:simulation_detection}
-%	\begin{tabular}{c|c|ccc|cccc}
-%		\toprule
-%		& & \multicolumn{3}{c|}{Detection time}
-%		& \multicolumn{4}{c}{Terminal candidate ($T=30$)} \\
-%		\cmidrule(lr){3-5} \cmidrule(lr){6-9}
-%		$\tau$ & SNR
-%		& $T_{\mathrm{est}}$ & $T_{\mathrm{first}}$ & $T_{\mathrm{det}}$
-%		& $k^\star$ & $T_{\mathrm{entry}}$ & $T_{\mathrm{exit}}$ & $w_{k^\star}$ \\
-%		\midrule
-%		\multirow{3}{*}{$0.25$}
-%		& 1000 & 22 & 23 & 23 & 0 & 11 & 30 & 19 \\
-%		& 100  & 22 & 23 & 23 & 0 & 18 & 30 & 12 \\
-%		& 1    &  6 & 25 & 25 & 1 & 17 & 29 & 12 \\
-%		\midrule
-%		\multirow{3}{*}{$0.50$}
-%		& 1000 & 22 & 23 & 23 & 0 & 9  & 30 & 21 \\
-%		& 100  & 22 & 23 & 23 & 0 & 18 & 30 & 12 \\
-%		& 1    & 10 & 24 & 28 & 2 & 21 & 27 & 6  \\
-%		\midrule
-%		\multirow{3}{*}{$0.75$}
-%		& 1000 & 22 & 23 & 23 & 0 & 12 & 30 & 18 \\
-%		& 100  & 22 & 23 & 23 & 0 & 16 & 30 & 14 \\
-%		& 1    & 18 & 23 & 29 & 3 & 7  & 27 & 20 \\
-%		\midrule
-%		\multirow{3}{*}{$0.95$}
-%		& 1000 & 22 & 23 & 23 & 0 & 13 & 30 & 17 \\
-%		& 100  & 22 & 23 & 23 & 0 & 16 & 30 & 14 \\
-%		& 1    &  9 & 26 & 28 & 1 & 20 & 27 & 7  \\
-%		\bottomrule
-%	\end{tabular}
-%\end{table}
-%
-%Three observations emerge from Table~\ref{tab:simulation_detection}.
-%First, at the large and moderate signal-to-noise ratios, the
-%self-consistent criterion yields $T_{\mathrm{est}}=22$ for all
-%four quantile levels, one observation before the coverage-based
-%criterion at $T_{\mathrm{det}}=23$. The interval
-%$[T_{\mathrm{entry}}^{(0)}(T),T]$ contains the point estimate
-%$\hat l(T)=22$ as soon as the current horizon $T$ reaches the
-%estimated peak location, and only one additional observation is
-%required for the interval to also cover $L$ strictly. The near
-%coincidence of $T_{\mathrm{est}}$ and $T_{\mathrm{det}}$ at high
-%signal-to-noise ratio indicates that the self-consistent criterion
-%provides a reliable stopping rule in this regime.
-%
-%Second, at the small signal-to-noise ratio, the two criteria
-%diverge sharply. The self-consistent time is much earlier than the
-%coverage-based time: for $\tau=0.25$, $T_{\mathrm{est}}=6$ while
-%$T_{\mathrm{det}}=25$; for $\tau=0.95$, $T_{\mathrm{est}}=9$ while
-%$T_{\mathrm{det}}=28$. In this regime the estimated trajectory
-%$\hat l(T)$ is noisy, and the interval that contains it can be
-%narrow and located far from $L$. 
-%The interval selected by the self-consistent criterion therefore has no relation to the true peak.
-%This illustrates that $T_{\mathrm{est}}$ is optimistic at low
-%signal-to-noise ratio and should not be interpreted as a coverage
-%statement on $L$.
-%Third, for $\tau=0.50$, $\tau=0.75$ and $\tau=0.95$, the first
-%peak-containing horizon $T_{\mathrm{first}}$ is strictly smaller
-%than $T_{\mathrm{det}}$ at $\mathrm{SNR}=1$, showing that the
-%construction can produce a bracketing candidate at some horizons
-%and then lose it at later horizons. The coverage-based criterion
-%$T_{\mathrm{det}}$ accounts for this intermittency, whereas the
-%first-hit quantity $T_{\mathrm{first}}$ does not.}
-
 \subsection{Construction of a data-driven interval for the peak location}
 \label{subsec:entry-exit-simulation}
 
@@ -1272,118 +813,49 @@ T_{\mathrm{entry}}^{(k)}(T).
 Our objective is to define an operational selection rule that does
 not require knowledge of the true peak location $L$.
 
+{\color{blue}
 \paragraph{Structure of the candidate intervals.}
-
-We first examine the structure of the candidates in the large
-signal-to-noise regime, $\mathrm{SNR}=1000$. For a fixed current
-horizon $T$, the exit times satisfy
+Before defining the selection rule, we record two properties of the
+candidate family. First, the exit times satisfy
 \begin{equation}
 	T_{\mathrm{exit}}^{(k+1)}(T)
 	<
 	T_{\mathrm{exit}}^{(k)}(T),
-	\qquad k\geq 0,
+	\qquad k \geq 0,
 	\label{eq:exit-ordering}
 \end{equation}
-whenever the corresponding consecutive candidates exist. This
-ordering follows from the construction, since the nontrivial exit
-times are the strict-decrease points of
-$t\mapsto\omega_l(t,T)$, ordered from largest to smallest.
-The Stage-2 sets also satisfy
-\(
-E_{k+1}(T)\subseteq E_k(T),
-\)
-which implies
-\(
-T_{k+1}^{*}(T)\leq T_k^{*}(T).
-\)
-The entry times are numerically ordered in the same direction:
+whenever consecutive candidates exist. This follows from the
+construction, since the nontrivial exit times are the strict-decrease
+points of $t \mapsto \omega_l(t,T)$, ordered from largest to smallest.
+Second, the entry times satisfy
 \begin{equation}
 	T_{\mathrm{entry}}^{(k+1)}(T)
 	\leq
 	T_{\mathrm{entry}}^{(k)}(T),
-	\qquad k\geq 0.
+	\qquad k \geq 0,
 	\label{eq:entry-ordering}
 \end{equation}
-Across the four quantile levels at $\mathrm{SNR}=1000$, the simulation
-contains $25$, $24$, $70$, and $48$ consecutive candidate pairs for
-$\tau=0.25$, $0.50$, $0.75$, and $0.95$, respectively. No violation
-of either ordering is observed in these pairs.
-%Consequently, the candidate intervals are nested in the simulated
-%cases in which these orderings hold:
-%\[
-%T_{\mathrm{entry}}^{(k+1)}(T)
-%\leq
-%T_{\mathrm{entry}}^{(k)}(T)
-%<
-%T_{\mathrm{exit}}^{(k+1)}(T)
-%<
-%T_{\mathrm{exit}}^{(k)}(T),
-%\]
-%and hence
-%\(
-%\mathcal R_{k+1}(T)\subset\mathcal R_k(T).
-%\)
-{\color{blue}
-Consequently, both endpoints of $\mathcal R_k(T)$ are
-nonincreasing in $k$, so that $\mathcal R_{k+1}(T)$ lies
-(weakly) to the left of $\mathcal R_k(T)$. These inequalities do
-not imply that the candidate intervals are nested, and in general
-consecutive candidates may overlap or be disjoint.
-}
-We also examine whether the entry time of candidate $k$ coincides
-with the exit time of candidate $k+1$, that is,
-\begin{equation}
-	T_{\mathrm{entry}}^{(k)}(T)
-	=
-	T_{\mathrm{exit}}^{(k+1)}(T).
-	\label{eq:entry-exit-identity}
-\end{equation}
-This identity is not implied by the definitions: the exit time is
-constructed from $\omega_l(t,T)$, whereas the entry time is obtained
-from an oscillation criterion whose right endpoint is
-$T_{\mathrm{exit}}^{(k)}(T)$. The numerical results confirm that
-the identity does not hold universally. The proportions of consecutive
-pairs satisfying \eqref{eq:entry-exit-identity} are reported in
-Table~\ref{tab:simulation_structure}. They range from $0$ for
-$\tau=0.25$ to approximately $0.357$ for $\tau=0.75$.
-
-\begin{table}[htbp]
-	\centering
-	\caption{Structural summary of consecutive candidate intervals
-		at $\mathrm{SNR}=1000$. The table reports the number of consecutive
-		pairs, the proportion satisfying
-		\eqref{eq:entry-exit-identity}, whether the exit ordering
-		\eqref{eq:exit-ordering} holds, and the number of reversals of the
-		entry ordering \eqref{eq:entry-ordering}.}
-	\label{tab:simulation_structure}
-	\begin{tabular}{ccccc}
-		\toprule
-		$\tau$
-		& $n_{\mathrm{pairs}}$
-		& Proportion equal
-		& Exit ordering
-		& Entry reversals \\
-		\midrule
-		$0.25$ & 25 & $0.000$ & Yes & 0 \\
-		$0.50$ & 24 & $0.083$ & Yes & 0 \\
-		$0.75$ & 70 & $0.357$ & Yes & 0 \\
-		$0.95$ & 48 & $0.125$ & Yes & 0 \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-Figure~\ref{fig:candidate_trajectories_snr1000} displays the entry
-and exit times as functions of the current horizon $T$, for the four
-quantile levels at $\mathrm{SNR}=1000$. Figure
-\ref{fig:entry_vs_next_exit_snr1000} displays the difference
-\(
-T_{\mathrm{entry}}^{(k)}(T)
--
-T_{\mathrm{exit}}^{(k+1)}(T),
-\)
-which helps assess the numerical relationship between consecutive
-candidates. These figures illustrate the ordering and the approximate
-coincidence of some entry and exit times, without suggesting that
-the identity \eqref{eq:entry-exit-identity} is a general property.
+for all consecutive candidate pairs observed in the simulation at
+$\mathrm{SNR}=1000$. Thus, in these simulations, both endpoints move
+weakly to the left as $k$ increases. These orderings do not imply that
+the candidate intervals are nested. In particular, the inclusion
+$\mathcal R_{k+1}(T)\subseteq\mathcal R_k(T)$ would require
+$T_{\mathrm{entry}}^{(k+1)}(T)\geq
+T_{\mathrm{entry}}^{(k)}(T)$, in addition to the exit-time ordering
+in~\eqref{eq:exit-ordering}. Moreover, the entry time of candidate
+$k$ does not necessarily coincide with the exit time of candidate
+$k+1$. The exit time is determined from the oscillation
+$\omega_l(t,T)$ with right endpoint $T$, whereas the entry time is
+determined from an oscillation whose right endpoint is
+$T_{\mathrm{exit}}^{(k)}(T)$.
+Figure~\ref{fig:candidate_trajectories_snr1000} displays the
+trajectories $T \mapsto T_{\mathrm{exit}}^{(k)}(T)$ and
+$T \mapsto T_{\mathrm{entry}}^{(k)}(T)$ for $k \in \{0,1,2,3\}$
+at $\mathrm{SNR}=1000$, with one panel per quantile level. These
+plots illustrate the numerical behaviour of the candidate endpoints
+in the considered setting. The operational selection rule below
+does not require the candidate intervals to be nested or their
+consecutive endpoints to coincide.
 
 \begin{figure}[htbp]
 	\centering
@@ -1395,18 +867,7 @@ the identity \eqref{eq:entry-exit-identity} is a general property.
 		line indicates the true peak location $L=22$, shown for
 		simulation reference only.}
 	\label{fig:candidate_trajectories_snr1000}
-\end{figure}
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=\textwidth]{fig_entry_vs_next_exit_SNR1000.pdf}
-	\caption{Difference
-		$T_{\mathrm{entry}}^{(k)}(T)-T_{\mathrm{exit}}^{(k+1)}(T)$
-		as a function of the current horizon $T$ at $\mathrm{SNR}=1000$,
-		for the four quantile levels. A value of zero corresponds to
-		the identity \eqref{eq:entry-exit-identity}.}
-	\label{fig:entry_vs_next_exit_snr1000}
-\end{figure}
+\end{figure}}
 
 \paragraph{Operational selection of the interval.}
 
@@ -1541,7 +1002,7 @@ replicates. The single-realization illustration above is intended to
 demonstrate the operational construction and its behaviour across
 quantile levels and signal-to-noise regimes, rather than to establish
 statistical coverage.
-{\color{blue}
+
 \paragraph{Monte Carlo assessment of empirical coverage.}
 
 We next assess the empirical coverage of the operational intervals using repeated independent simulations. For each combination of $\tau\in\{0.25,0.50,0.75,0.95\}$ and $\mathrm{SNR}\in\{1000,100,1\}$, we generate $M=1000$ independent trajectories under the same peak model, with $A=1$, $L=22$, $S=10$, and observation horizon $h=30$. At each available horizon $T$, the operational selection rule defined in \eqref{eq:admissible-candidates}--\eqref{eq:selected-peak-interval} is applied separately to each trajectory. The true peak location $L$ is used only after selection to assess whether the selected interval contains it.
@@ -1632,7 +1093,7 @@ These findings provide a simulation-based assessment of the operational procedur
 	\includegraphics[width=\textwidth]{monte-carlo-interval-selection-rate.pdf}
 	\caption{Empirical interval-selection rate as a function of the observation horizon $T$, based on $M=1000$ independent simulated trajectories for each combination of $\tau$ and SNR. The selection rate is the proportion of replicates for which the operational rule selects an interval. Each panel corresponds to one quantile level.}
 	\label{fig:mc_selection_rate}
-\end{figure}}
+\end{figure}
 
 \section{Real-World Application: COVID-19 Case Study}
 \label{sec:covid-real-data}
