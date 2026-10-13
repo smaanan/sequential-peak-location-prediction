@@ -72,49 +72,54 @@
 \newlabel{eq:peak_region_width}{{14}{15}{Determination of the entry time}{equation.14}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {7.5}Construction of a data-driven interval for the peak location}{16}{subsection.7.5}\protected@file@percent }
 \newlabel{subsec:entry-exit-simulation}{{7.5}{16}{Construction of a data-driven interval for the peak location}{subsection.7.5}{}}
-\@writefile{toc}{\contentsline {paragraph}{Structure of the candidate intervals.}{16}{section*.7}\protected@file@percent }
-\newlabel{eq:exit-ordering}{{15}{16}{Structure of the candidate intervals}{equation.15}{}}
-\newlabel{eq:entry-ordering}{{16}{16}{Structure of the candidate intervals}{equation.16}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Candidate exit times $T_{\mathrm  {exit}}^{(k)}(T)$ (solid curves) and entry times $T_{\mathrm  {entry}}^{(k)}(T)$ (dashed curves) as functions of the current horizon $T$ at $\mathrm  {SNR}=1000$, for the four quantile levels. The horizontal line indicates the true peak location $L=22$, shown for simulation reference only.}}{17}{figure.caption.8}\protected@file@percent }
-\newlabel{fig:candidate_trajectories_snr1000}{{5}{17}{Candidate exit times $T_{\mathrm {exit}}^{(k)}(T)$ (solid curves) and entry times $T_{\mathrm {entry}}^{(k)}(T)$ (dashed curves) as functions of the current horizon $T$ at $\mathrm {SNR}=1000$, for the four quantile levels. The horizontal line indicates the true peak location $L=22$, shown for simulation reference only}{figure.caption.8}{}}
-\@writefile{toc}{\contentsline {paragraph}{Operational selection of the interval.}{17}{section*.9}\protected@file@percent }
-\newlabel{eq:admissible-candidates}{{17}{17}{Operational selection of the interval}{equation.17}{}}
-\newlabel{eq:selected-candidate}{{18}{17}{Operational selection of the interval}{equation.18}{}}
-\newlabel{eq:selected-peak-interval}{{19}{17}{Operational selection of the interval}{equation.19}{}}
-\newlabel{eq:T-est}{{20}{18}{Operational selection of the interval}{equation.20}{}}
-\@writefile{toc}{\contentsline {paragraph}{Numerical results.}{18}{section*.10}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces First operationally selected candidate interval for each quantile level $\tau $ and signal-to-noise ratio. For compactness, write $T^\star = T_{\mathrm  {est}}$ and $k^\star = \setbox \z@ \hbox {\mathsurround \z@ $\textstyle k$}\mathaccent "0362{k}(T^\star )$. The interval is selected by requiring it to contain $\setbox \z@ \hbox {\mathsurround \z@ $\textstyle l$}\mathaccent "0362{l}(T^\star )$ and then minimizing its width over all admissible candidates. The last column reports $w_{k^\star }(T^\star ) = T_{\mathrm  {exit}}^{(k^\star )}(T^\star ) - T_{\mathrm  {entry}}^{(k^\star )}(T^\star )$.}}{18}{table.caption.11}\protected@file@percent }
-\newlabel{tab:simulation_est_interval}{{2}{18}{First operationally selected candidate interval for each quantile level $\tau $ and signal-to-noise ratio. For compactness, write $T^\star = T_{\mathrm {est}}$ and $k^\star = \widehat k(T^\star )$. The interval is selected by requiring it to contain $\widehat l(T^\star )$ and then minimizing its width over all admissible candidates. The last column reports $w_{k^\star }(T^\star ) = T_{\mathrm {exit}}^{(k^\star )}(T^\star ) - T_{\mathrm {entry}}^{(k^\star )}(T^\star )$}{table.caption.11}{}}
-\@writefile{toc}{\contentsline {paragraph}{Monte Carlo assessment of empirical coverage.}{19}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Stabilization of the sequential estimator.}{16}{section*.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Stabilization of the sequential estimator $\setbox \z@ \hbox {\mathsurround \z@ $\textstyle l$}\mathaccent "0362{l}(T)$, based on $M = 200$ independent replications per $(\tau ,\mathrm  {SNR})$. For each signal-to-noise ratio, the table reports the median entry time at the terminal horizon, the median oscillation over $T \in [20,30]$, the median post-entry error, the proportion of replicates with $\setbox \z@ \hbox {\mathsurround \z@ $\textstyle l$}\mathaccent "0362{l}(h) = L$, and the proportion with zero oscillation over $[20,30]$. Ranges indicate variation across the four quantile levels.}}{16}{table.caption.8}\protected@file@percent }
+\newlabel{tab:stabilization}{{2}{16}{Stabilization of the sequential estimator $\widehat l(T)$, based on $M = 200$ independent replications per $(\tau ,\mathrm {SNR})$. For each signal-to-noise ratio, the table reports the median entry time at the terminal horizon, the median oscillation over $T \in [20,30]$, the median post-entry error, the proportion of replicates with $\widehat l(h) = L$, and the proportion with zero oscillation over $[20,30]$. Ranges indicate variation across the four quantile levels}{table.caption.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Trajectories $T \DOTSB \mapstochar \rightarrow \setbox \z@ \hbox {\mathsurround \z@ $\textstyle l$}\mathaccent "0362{l}(T)$ for $\tau = 0.50$, one panel per signal-to-noise ratio, with $M = 20$ independent replicates per panel. The red dashed line indicates the true peak location $L = 22$. At $\mathrm  {SNR} = 1000$ and $100$, the estimator stabilizes at $L$; at $\mathrm  {SNR} = 1$, it does not.}}{17}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:stabilization_trajectories}{{5}{17}{Trajectories $T \mapsto \widehat l(T)$ for $\tau = 0.50$, one panel per signal-to-noise ratio, with $M = 20$ independent replicates per panel. The red dashed line indicates the true peak location $L = 22$. At $\mathrm {SNR} = 1000$ and $100$, the estimator stabilizes at $L$; at $\mathrm {SNR} = 1$, it does not}{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {paragraph}{Structure of the candidate intervals.}{17}{section*.10}\protected@file@percent }
+\newlabel{eq:exit-ordering}{{15}{17}{Structure of the candidate intervals}{equation.15}{}}
+\newlabel{eq:entry-ordering}{{16}{17}{Structure of the candidate intervals}{equation.16}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Candidate exit times $T_{\mathrm  {exit}}^{(k)}(T)$ (solid curves) and entry times $T_{\mathrm  {entry}}^{(k)}(T)$ (dashed curves) as functions of the current horizon $T$ at $\mathrm  {SNR}=1000$, for the four quantile levels. The horizontal line indicates the true peak location $L=22$, shown for simulation reference only.}}{18}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:candidate_trajectories_snr1000}{{6}{18}{Candidate exit times $T_{\mathrm {exit}}^{(k)}(T)$ (solid curves) and entry times $T_{\mathrm {entry}}^{(k)}(T)$ (dashed curves) as functions of the current horizon $T$ at $\mathrm {SNR}=1000$, for the four quantile levels. The horizontal line indicates the true peak location $L=22$, shown for simulation reference only}{figure.caption.11}{}}
+\@writefile{toc}{\contentsline {paragraph}{Operational selection of the interval.}{18}{section*.12}\protected@file@percent }
+\newlabel{eq:admissible-candidates}{{17}{18}{Operational selection of the interval}{equation.17}{}}
+\newlabel{eq:selected-candidate}{{18}{19}{Operational selection of the interval}{equation.18}{}}
+\newlabel{eq:selected-peak-interval}{{19}{19}{Operational selection of the interval}{equation.19}{}}
+\newlabel{eq:T-est}{{20}{19}{Operational selection of the interval}{equation.20}{}}
+\@writefile{toc}{\contentsline {paragraph}{Numerical results.}{19}{section*.13}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces First operationally selected candidate interval for each quantile level $\tau $ and signal-to-noise ratio. For compactness, write $T^\star = T_{\mathrm  {est}}$ and $k^\star = \setbox \z@ \hbox {\mathsurround \z@ $\textstyle k$}\mathaccent "0362{k}(T^\star )$. The interval is selected by requiring it to contain $\setbox \z@ \hbox {\mathsurround \z@ $\textstyle l$}\mathaccent "0362{l}(T^\star )$ and then minimizing its width over all admissible candidates. The last column reports $w_{k^\star }(T^\star ) = T_{\mathrm  {exit}}^{(k^\star )}(T^\star ) - T_{\mathrm  {entry}}^{(k^\star )}(T^\star )$.}}{19}{table.caption.14}\protected@file@percent }
+\newlabel{tab:simulation_est_interval}{{3}{19}{First operationally selected candidate interval for each quantile level $\tau $ and signal-to-noise ratio. For compactness, write $T^\star = T_{\mathrm {est}}$ and $k^\star = \widehat k(T^\star )$. The interval is selected by requiring it to contain $\widehat l(T^\star )$ and then minimizing its width over all admissible candidates. The last column reports $w_{k^\star }(T^\star ) = T_{\mathrm {exit}}^{(k^\star )}(T^\star ) - T_{\mathrm {entry}}^{(k^\star )}(T^\star )$}{table.caption.14}{}}
+\@writefile{toc}{\contentsline {paragraph}{Monte Carlo assessment of empirical coverage.}{20}{section*.15}\protected@file@percent }
 \citation{Guidotti2020,Guidotti2022}
 \citation{ecdc_covid_france_2020}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Monte Carlo interval-selection rates, empirical coverage, and mean interval widths at $T=30$, based on $M=1000$ independent replicates. The conditional coverage is calculated among selected intervals, and the unconditional success proportion also accounts for replicates in which no interval is selected.}}{20}{table.caption.13}\protected@file@percent }
-\newlabel{tab:mc_coverage_T30}{{3}{20}{Monte Carlo interval-selection rates, empirical coverage, and mean interval widths at $T=30$, based on $M=1000$ independent replicates. The conditional coverage is calculated among selected intervals, and the unconditional success proportion also accounts for replicates in which no interval is selected}{table.caption.13}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Real-World Application: COVID-19 Case Study}{20}{section.8}\protected@file@percent }
-\newlabel{sec:covid-real-data}{{8}{20}{Real-World Application: COVID-19 Case Study}{section.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Empirical coverage of the selected operational intervals as a function of the observation horizon $T$, based on $M=1000$ independent simulated trajectories for each combination of $\tau $ and SNR. Coverage is calculated conditionally on interval selection. The horizontal axis gives the observation horizon, and each panel corresponds to one quantile level.}}{21}{figure.caption.14}\protected@file@percent }
-\newlabel{fig:mc_coverage_selected}{{6}{21}{Empirical coverage of the selected operational intervals as a function of the observation horizon $T$, based on $M=1000$ independent simulated trajectories for each combination of $\tau $ and SNR. Coverage is calculated conditionally on interval selection. The horizontal axis gives the observation horizon, and each panel corresponds to one quantile level}{figure.caption.14}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Empirical interval-selection rate as a function of the observation horizon $T$, based on $M=1000$ independent simulated trajectories for each combination of $\tau $ and SNR. The selection rate is the proportion of replicates for which the operational rule selects an interval. Each panel corresponds to one quantile level.}}{22}{figure.caption.15}\protected@file@percent }
-\newlabel{fig:mc_selection_rate}{{7}{22}{Empirical interval-selection rate as a function of the observation horizon $T$, based on $M=1000$ independent simulated trajectories for each combination of $\tau $ and SNR. The selection rate is the proportion of replicates for which the operational rule selects an interval. Each panel corresponds to one quantile level}{figure.caption.15}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Monte Carlo interval-selection rates, empirical coverage, and mean interval widths at $T=30$, based on $M=1000$ independent replicates. The conditional coverage is calculated among selected intervals, and the unconditional success proportion also accounts for replicates in which no interval is selected.}}{21}{table.caption.16}\protected@file@percent }
+\newlabel{tab:mc_coverage_T30}{{4}{21}{Monte Carlo interval-selection rates, empirical coverage, and mean interval widths at $T=30$, based on $M=1000$ independent replicates. The conditional coverage is calculated among selected intervals, and the unconditional success proportion also accounts for replicates in which no interval is selected}{table.caption.16}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Empirical coverage of the selected operational intervals as a function of the observation horizon $T$, based on $M=1000$ independent simulated trajectories for each combination of $\tau $ and SNR. Coverage is calculated conditionally on interval selection. The horizontal axis gives the observation horizon, and each panel corresponds to one quantile level.}}{22}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:mc_coverage_selected}{{7}{22}{Empirical coverage of the selected operational intervals as a function of the observation horizon $T$, based on $M=1000$ independent simulated trajectories for each combination of $\tau $ and SNR. Coverage is calculated conditionally on interval selection. The horizontal axis gives the observation horizon, and each panel corresponds to one quantile level}{figure.caption.17}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Empirical interval-selection rate as a function of the observation horizon $T$, based on $M=1000$ independent simulated trajectories for each combination of $\tau $ and SNR. The selection rate is the proportion of replicates for which the operational rule selects an interval. Each panel corresponds to one quantile level.}}{23}{figure.caption.18}\protected@file@percent }
+\newlabel{fig:mc_selection_rate}{{8}{23}{Empirical interval-selection rate as a function of the observation horizon $T$, based on $M=1000$ independent simulated trajectories for each combination of $\tau $ and SNR. The selection rate is the proportion of replicates for which the operational rule selects an interval. Each panel corresponds to one quantile level}{figure.caption.18}{}}
 \citation{Guidotti2020,Guidotti2022}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Daily confirmed COVID-19 cases in China, France, and Germany (left to right).}}{23}{figure.caption.16}\protected@file@percent }
-\newlabel{fig:covid-1x3}{{8}{23}{Daily confirmed COVID-19 cases in China, France, and Germany (left to right)}{figure.caption.16}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}China}{23}{subsection.8.1}\protected@file@percent }
-\newlabel{subsec:china}{{8.1}{23}{China}{subsection.8.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Real-World Application: COVID-19 Case Study}{24}{section.8}\protected@file@percent }
+\newlabel{sec:covid-real-data}{{8}{24}{Real-World Application: COVID-19 Case Study}{section.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Daily confirmed COVID-19 cases in China, France, and Germany (left to right).}}{24}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:covid-1x3}{{9}{24}{Daily confirmed COVID-19 cases in China, France, and Germany (left to right)}{figure.caption.19}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}China}{24}{subsection.8.1}\protected@file@percent }
+\newlabel{subsec:china}{{8.1}{24}{China}{subsection.8.1}{}}
 \citation{Der25}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Retrospective selection of the peak-region candidate for COVID-19 in China.}}{25}{table.caption.20}\protected@file@percent }
+\newlabel{tab:china_entry_exit}{{5}{25}{Retrospective selection of the peak-region candidate for COVID-19 in China}{table.caption.20}{}}
 \citation{ecdc_covid_france_2020}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Retrospective selection of the peak-region candidate for COVID-19 in China.}}{24}{table.caption.17}\protected@file@percent }
-\newlabel{tab:china_entry_exit}{{4}{24}{Retrospective selection of the peak-region candidate for COVID-19 in China}{table.caption.17}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}France}{24}{subsection.8.2}\protected@file@percent }
-\newlabel{subsec:france}{{8.2}{24}{France}{subsection.8.2}{}}
 \citation{ecdc_covid_france_2020}
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Retrospective selection of the peak-region candidate for COVID-19 in France.}}{25}{table.caption.18}\protected@file@percent }
-\newlabel{tab:france_entry_exit}{{5}{25}{Retrospective selection of the peak-region candidate for COVID-19 in France}{table.caption.18}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Germany}{25}{subsection.8.3}\protected@file@percent }
-\newlabel{subsec:germany}{{8.3}{25}{Germany}{subsection.8.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Retrospective selection of the peak-region candidate for COVID-19 in Germany.}}{26}{table.caption.19}\protected@file@percent }
-\newlabel{tab:germany_entry_exit}{{6}{26}{Retrospective selection of the peak-region candidate for COVID-19 in Germany}{table.caption.19}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.4}Comparison Across Quantile Levels}{26}{subsection.8.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}France}{26}{subsection.8.2}\protected@file@percent }
+\newlabel{subsec:france}{{8.2}{26}{France}{subsection.8.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Retrospective selection of the peak-region candidate for COVID-19 in France.}}{26}{table.caption.21}\protected@file@percent }
+\newlabel{tab:france_entry_exit}{{6}{26}{Retrospective selection of the peak-region candidate for COVID-19 in France}{table.caption.21}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Germany}{27}{subsection.8.3}\protected@file@percent }
+\newlabel{subsec:germany}{{8.3}{27}{Germany}{subsection.8.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Retrospective selection of the peak-region candidate for COVID-19 in Germany.}}{27}{table.caption.22}\protected@file@percent }
+\newlabel{tab:germany_entry_exit}{{7}{27}{Retrospective selection of the peak-region candidate for COVID-19 in Germany}{table.caption.22}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.4}Comparison Across Quantile Levels}{27}{subsection.8.4}\protected@file@percent }
 \bibdata{references}
 \bibcite{Bar20}{{1}{2020}{{Barmparis and Tsironis}}{{}}}
 \bibcite{Der25}{{2}{2026}{{Dermoune et~al.}}{{Dermoune, Maanan, Ounaissi, and Slaoui}}}
@@ -125,4 +130,4 @@
 \bibcite{See17}{{7}{2017}{{Pei and Shaman}}{{}}}
 \bibcite{Tuc20}{{8}{2023}{{Stewart et~al.}}{{Stewart, Yu, Nascimento, and Hu}}}
 \bibcite{YuB2019}{{9}{2019}{{Yu et~al.}}{{Yu, Graciani, Nascimento, and Hu}}}
-\gdef \@abspage@last{28}
+\gdef \@abspage@last{29}

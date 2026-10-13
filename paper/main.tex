@@ -814,6 +814,86 @@ Our objective is to define an operational selection rule that does
 not require knowledge of the true peak location $L$.
 
 {\color{blue}
+\paragraph{Stabilization of the sequential estimator.}
+The relevance of the candidate intervals depends on the behaviour of
+the sequential estimator $\widehat l(T)$. We therefore first examine,
+by simulation, whether $\widehat l(T)$ stabilizes at the true peak
+location $L$ before the terminal horizon. For each pair
+$(\tau,\mathrm{SNR})$, we generate $M = 200$ independent trajectories
+and record:
+(i) the entry time $T_{\mathrm{entry}}^{(0)}(h)$ at the terminal
+horizon;
+(ii) the oscillation of $\widehat l(T)$ over the last ten horizons
+$T \in [20,30]$;
+(iii) the maximal post-entry error
+$\max_{T \ge T_{\mathrm{entry}}^{(0)}(h)} |\widehat l(T) - L|$;
+(iv) the proportion of replicates with $\widehat l(h) = L$;
+(v) the proportion of replicates with zero oscillation over $[20,30]$.
+Table~\ref{tab:stabilization} reports the medians and proportions.
+
+\begin{table}[htbp]
+	\centering
+	\small
+	\caption{Stabilization of the sequential estimator
+		$\widehat l(T)$, based on $M = 200$ independent replications
+		per $(\tau,\mathrm{SNR})$. For each signal-to-noise ratio, the
+		table reports the median entry time at the terminal horizon,
+		the median oscillation over $T \in [20,30]$, the median
+		post-entry error, the proportion of replicates with
+		$\widehat l(h) = L$, and the proportion with zero oscillation
+		over $[20,30]$. Ranges indicate variation across the four
+		quantile levels.}
+	\label{tab:stabilization}
+	\begin{tabular}{c|ccccc}
+		\toprule
+		SNR
+		& $T_{\mathrm{entry}}^{(0)}(h)$
+		& osc.\ over $[20,30]$
+		& post-entry error
+		& prop.\ $\widehat l(h) = L$
+		& prop.\ stable \\
+		\midrule
+		$1000$ & $10$--$12$ & $0$ & $0$ & $1.00$ & $1.00$ \\
+		$100$  & $16$--$18$ & $0$ & $0$ & $1.00$ & $0.89$--$1.00$ \\
+		$1$    & $27$--$28$ & $6$--$11$ & $1.0$--$2.5$ & $0.14$--$0.35$ & $0.00$--$0.03$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Figure~\ref{fig:stabilization_trajectories} displays, for
+$\tau = 0.50$, twenty trajectories of $\widehat l(T)$ at each of the
+three signal-to-noise ratios. At $\mathrm{SNR} = 1000$ and
+$\mathrm{SNR} = 100$, the trajectories converge to $L = 22$ well
+before the terminal horizon and remain there. At $\mathrm{SNR} = 1$,
+the trajectories continue to fluctuate over the entire observation
+window and do not stabilize.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{hatl_trajectories_tau050.pdf}
+	\caption{Trajectories $T \mapsto \widehat l(T)$ for
+		$\tau = 0.50$, one panel per signal-to-noise ratio, with
+		$M = 20$ independent replicates per panel. The red dashed
+		line indicates the true peak location $L = 22$. At
+		$\mathrm{SNR} = 1000$ and $100$, the estimator stabilizes at
+		$L$; at $\mathrm{SNR} = 1$, it does not.}
+	\label{fig:stabilization_trajectories}
+\end{figure}
+
+The distinction has a direct consequence for the analysis that
+follows. At $\mathrm{SNR} = 1000$ and $\mathrm{SNR} = 100$, the point
+estimate $\widehat l(T)$ alone identifies the true peak location
+after a short transient, and the entry time
+$T_{\mathrm{entry}}^{(0)}(T)$ is sufficient. The exit time carries no
+additional information in these regimes. At $\mathrm{SNR} = 1$, on
+the other hand, no finite entry time stabilizes the estimator, and
+the exit times and the admissible set $\mathcal K(T)$ become the
+only tools that bound the peak location. The construction of the
+candidate intervals, the selection rules, and the empirical coverage
+study therefore focus on the small-SNR regime, while the high- and
+medium-SNR cases are reported as boundary cases.
+}
+
 \paragraph{Structure of the candidate intervals.}
 Before defining the selection rule, we record two properties of the
 candidate family. First, the exit times satisfy
@@ -867,7 +947,7 @@ consecutive endpoints to coincide.
 		line indicates the true peak location $L=22$, shown for
 		simulation reference only.}
 	\label{fig:candidate_trajectories_snr1000}
-\end{figure}}
+\end{figure}
 
 \paragraph{Operational selection of the interval.}
 

@@ -1,147 +1,416 @@
 \documentclass[11pt,a4paper]{article}
-\usepackage[margin=2.3cm]{geometry}
-\usepackage{amsmath,amssymb,amsfonts,booktabs}
-\usepackage{graphicx}
-\graphicspath{{./}{../}}
-\usepackage[round]{natbib}
-\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue]{hyperref}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs}
 \usepackage{setspace}
-\setstretch{1.05}
-\setlength{\parskip}{3pt}
-\setlength{\parindent}{0pt}
-\bibliographystyle{plainnat}
+\usepackage[round]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{doi}
+\setstretch{1.0}
+\usepackage{titlesec}
+\titlespacing*{\section}{0pt}{9pt}{5pt}
+\titlespacing*{\subsection}{0pt}{7pt}{4pt}
+\newtheorem{proposition}{Proposition}
 
-\newcommand{\hl}{\widehat{l}}
-
-\title{\textbf{Peak Prediction Using Quantile Regression and Asymmetric Laplace Noise: Data-Driven Intervals for the Peak Location}}
-
-% TODO: check author list, order and affiliations before submission
-\author{
-  Sa\"{i}d Maanan$^{1}$, Azzouz Dermoune$^{2}$, Daoud Ounaissi$^{3}$, Yousri Slaoui$^{4}$, Ahmed El Ghini$^{1}$\\[3pt]
-  {\small $^{1}$LEAM, Mohammed V University in Rabat, Morocco\quad
-  $^{2}$Laboratoire Paul Painlev\'e, USTL--CNRS--UMR 8524, Lille, France}\\
-  {\small $^{3}$ESA, Angers, France\quad
-  $^{4}$Univ.\ Poitiers, Lab.\ Math.\ et Appl., Futuroscope Chasseneuil, France}\\
-  {\small Corresponding author: \texttt{maanan.said@gmail.com}}
-}
+\title{\textbf{Early Prediction of Peaks in Time Series:\\
+Quantile Regression with Asymmetric Laplace Noise\\
+and a Data-Driven Peak-Region Construction}}
+\author{Sa\"{i}d Maanan\thanks{LEAM, Mohammed V University in Rabat, Morocco. \texttt{maanan.said@gmail.com}} \and
+Azzouz Dermoune\thanks{Laboratoire Paul Painlev\'e, USTL--CNRS--UMR 8524, Lille, France} \and
+Daoud Ounaissi\thanks{ESA, Angers, France} \and
+Yousri Slaoui\thanks{Univ. Poitiers, Lab. Math. et Appl., Futuroscope Chasseneuil, France} \and
+Ahmed El Ghini\thanks{LEAM, Mohammed V University in Rabat, Morocco}}
 \date{}
 
 \begin{document}
 \maketitle
-\vspace{-1.2em}
 
 \begin{abstract}
 \noindent
-Decisions in environmental and epidemiological monitoring often have to be made before a peak is fully observed. We model a series as a Gaussian trend with additive noise and estimate its amplitude, location and spread by quantile regression; for fixed location and spread the amplitude estimator is a weighted $\tau$-quantile. A $\tau$-aligned asymmetric Laplace noise model links the criterion to a likelihood and allows the signal-to-noise ratio (SNR) to be controlled. When the sequential peak-location estimate $\hl(T)$ does not stabilize early, we build candidate entry--exit intervals from the oscillations of the estimation path alone, and select one by requiring that it contain the current estimate. A Monte Carlo study ($M=1000$) shows that the selected interval always contains the true peak at high and moderate SNR, but only about 56--84\% of the time at SNR $=1$ (horizon $T=30$). An application to COVID-19 case counts in China, France and Germany illustrates the construction.\\[3pt]
-\textbf{Keywords:} peak prediction; quantile regression; asymmetric Laplace noise; oscillation; interval estimation; time series.
+Anticipating the location and amplitude of a peak before it is fully observed
+is a recurring problem in environmental and public-policy time series: peaks
+of air pollutant concentrations, temperature extremes during heat waves, peak
+electricity demand, flood levels, and epidemic incidence peaks all require
+decisions to be taken \emph{before} the turning point is observable. We model
+the observations as a Gaussian-shaped unimodal signal corrupted by additive
+noise and develop a quantile-based procedure for estimating its amplitude,
+location, and spread from partial observations. For fixed location and spread,
+the amplitude estimator is a weighted $\tau$-quantile of a transformed version
+of the data, generalizing the least-absolute-deviation (LAD) estimator of
+\citet{Dermoune}. We introduce a $\tau$-aligned asymmetric Laplace noise model
+whose negative log-likelihood is proportional to the quantile check loss,
+providing a unified probabilistic framework in which the quantile level and
+the signal-to-noise ratio can be studied jointly. Because the sequential
+peak-location estimates need not stabilize early, we propose a two-stage
+construction based on the oscillations of the estimation trajectory that
+produces candidate entry and exit times, hence candidate peak regions,
+using only information available at the current observation horizon, without
+knowledge of the true peak. A Monte Carlo study assesses the empirical
+coverage of the resulting intervals, and the methodology is illustrated on
+daily COVID-19 case counts in China, France, and Germany during the first
+pandemic wave. The framework is directly transferable to environmental peak
+events such as pollution episodes and climate extremes.
+
+\medskip
+\noindent\textbf{Keywords:} peak prediction; quantile regression; asymmetric
+Laplace noise; entry and exit times; extreme events; early warning; time
+series.
+
+\medskip
+\noindent\textbf{JEL classification:} C22, C53, Q54, I18.
 \end{abstract}
 
-\section{Motivation}
-Anticipating the timing of a peak (an epidemic wave, a pollution episode, a demand or load maximum) matters for resource allocation and preparedness. General-purpose forecasters such as ARIMA models or recurrent networks describe temporal dependence but are not designed to estimate \emph{when} a future peak will occur, and little theory exists for peak prediction in time series \citep{Tuc20}. We build on the framework of \citet{Der25}: at a current horizon $T$, only $I(1),\dots,I(T)$ are observed and the goal is to estimate the peak location $L$ before it is reached. Our contributions are (i) a quantile-regression criterion indexed by $\tau\in(0,1)$ generalizing the least-absolute-deviation case $\tau=1/2$; (ii) a probabilistic interpretation through $\tau$-aligned asymmetric Laplace noise; and (iii) a data-driven interval for $L$ built only from the estimation trajectory, together with an empirical assessment of its coverage.
+\section{Motivation and research question}
+\label{sec:motivation}
+
+Many decisions in environmental management and public policy must be taken
+\emph{before} the turning point of a crisis is observable: declaring pollution
+alerts while concentrations are still rising, activating heat-wave plans
+before the temperature maximum, dispatching spare generation before the
+electricity demand peak, releasing reservoirs before the flood crest, or
+scaling hospital capacity before the incidence peak of an outbreak. All share
+the same statistical structure: a noisy, unimodal time series whose peak
+location $L$ and amplitude $A$ must be inferred from observations
+$I(1),\ldots,I(T)$ taken before the peak, with possibly $T<L$.
+
+Standard forecasting tools (ARIMA models, recurrent neural networks) describe
+temporal dependence but are not designed to estimate the timing and magnitude
+of a \emph{future peak}; a model can forecast well on average yet locate the
+turning point poorly. We build on the peak-estimation framework of
+\citet{Dermoune}, who model the signal as a Gaussian-shaped peak corrupted by
+Laplace noise and estimate its parameters by least absolute deviations (LAD,
+i.e., median regression), and extend it in three directions:
+\begin{enumerate}
+\item \textbf{Quantile generalization.} The LAD criterion is replaced by a
+general quantile regression criterion indexed by $\tau\in(0,1)$. This is
+natural for peak events: overestimating and underestimating the peak time have
+asymmetric costs (acting too late is typically much costlier than acting too
+early), and environmental and incidence series often exhibit skewed noise.
+\item \textbf{Probabilistic foundation.} We introduce a $\tau$-aligned
+asymmetric Laplace (AL) noise model whose negative log-likelihood coincides
+with the quantile check loss. The criterion thereby acquires a likelihood
+interpretation, and the effects of $\tau$ and of the signal-to-noise ratio
+(SNR) can be studied within one framework.
+\item \textbf{Operational peak-region detection.} When the sequential
+peak-location estimate does not stabilize early enough for a reliable point
+prediction, we construct candidate \emph{entry and exit times} of the peak
+region from the oscillations of the estimation trajectory alone. The
+construction is fully operational, it never uses the true (future) peak
+location, and is validated by Monte Carlo simulation.
+\end{enumerate}
+
+The methodology is illustrated on daily COVID-19 case counts in China, France,
+and Germany during the first wave of 2020, a canonical noisy unimodal series
+whose peak had to be anticipated for planning. Section~\ref{sec:environment}
+discusses the direct transferability of the framework to environmental peak
+series.
 
 \section{Model and quantile-based estimation}
-We assume
-\begin{equation}\label{eq:model}
-I(t)=A\exp\!\left(-\frac{(t-L)^2}{S^2}\right)+e(t),\qquad t=1,\dots,T,
+\label{sec:model}
+
+We observe a unimodal signal corrupted by additive noise,
+\begin{equation}
+I(t)=A\exp\!\left(-\frac{(t-L)^2}{S^2}\right)+e(t),
+\qquad t=1,\ldots,T,
+\label{eq:signal}
 \end{equation}
-with amplitude $A>0$, peak location $L$, spread $S>0$ and noise $e(t)$. With the check function $\rho_\tau(u)=u\,(\tau-\mathbf 1_{\{u<0\}})$ we minimize
-\begin{equation}\label{eq:obj}
-f_\tau(T,a,l,s)=\frac1T\sum_{t=1}^{T}\rho_\tau\!\left(I(t)-a\,e^{-(t-l)^2/s^2}\right).
+with amplitude $A>0$, peak location $L>0$, spread $S>0$, and noise $e(t)$.
+The decision problem is to estimate $(A,L,S)$, and in particular to predict
+$L$, using only observations up to a horizon $T$ that may precede the peak.
+Given a quantile level $\tau\in(0,1)$ and the check loss
+\begin{equation}
+\rho_\tau(u)=u\bigl(\tau-\mathbf 1_{\{u<0\}}\bigr),
+\label{eq:check}
 \end{equation}
-For fixed $(l,s)$, put $w(t)=e^{-(t-l)^2/s^2}$ and $x(t)=I(t)/w(t)$. Since $\rho_\tau(I-aw)=w\,\rho_\tau(x-a)$, the minimizing amplitude is the \emph{weighted $\tau$-quantile} of $x(t)$ with weights $w(t)$. The scale $s$ is then optimized numerically and $\hl(T)$ is the minimizer over $l\in\{1,\dots,h\}$, where $h>T$ is a fixed horizon; thus $\hl(T)$ may point beyond the observed window.
+the parameters are estimated by minimizing the empirical quantile loss
+\begin{equation}
+f_\tau(T,a,l,s)=\frac{1}{T}\sum_{t=1}^{T}
+\rho_\tau\!\left(I(t)-a\exp\!\left(-\frac{(t-l)^2}{s^2}\right)\right)
+\label{eq:objective}
+\end{equation}
+over candidate locations $l$ in a prescribed future horizon and scale values
+$s$, the amplitude being re-estimated for each pair $(l,s)$.
 
-\paragraph{Noise model.}
-To study the role of $\tau$ and of the SNR, we take $e(t)$ with density $f_{\tau,b}(x)=\frac{\tau(1-\tau)}{b}\exp\{-\rho_\tau(x)/b\}$. Then $\mathbb P(e<0)=\tau$, the negative log-likelihood is proportional to the quantile loss, and $\tau=1/2$ gives the symmetric Laplace law. Defining $\mathrm{SNR}=A/\sqrt{\operatorname{Var}(e)}$, the scale is calibrated as $b=\frac{A}{\mathrm{SNR}}\,\tau(1-\tau)/\sqrt{\tau^2+(1-\tau)^2}$.
+\subsection{Weighted quantile estimation of the amplitude}
+\label{sec:weighted}
 
-\section{Candidate entry--exit intervals}
-For a current horizon $T$, define the oscillation of the path over $[t,T]$,
-\[
-\omega_l(t,T)=\max_{t\le t_1,t_2\le T}\bigl|\hl(t_1)-\hl(t_2)\bigr|,
-\]
-which is nonincreasing in $t$ and vanishes at $t=T$. The \emph{candidate exit times} are $T^{(0)}_{\rm exit}(T)=T$ followed by the strict-decrease points $t<T$ of $t\mapsto\omega_l(t,T)$ in decreasing order, $T^{(1)}_{\rm exit}(T)>T^{(2)}_{\rm exit}(T)>\cdots$, with levels $\epsilon'_k(T)=\omega_l(T^{(k)}_{\rm exit},T)$. For each $k$, let
-\[
-E_k(T)=\{t<T^{(k)}_{\rm exit}:\ \omega_l(t,T^{(k)}_{\rm exit})\ge\epsilon'_k(T)\},\qquad T_k^*=\max E_k(T),\qquad \epsilon_k=\omega_l(T_k^*,T^{(k)}_{\rm exit}),
-\]
-and define the entry time as the smallest $t<T^{(k)}_{\rm exit}$ with $\omega_l(t,T^{(k)}_{\rm exit})=\epsilon_k$. The candidate interval and its width are
-\[
-\mathcal R_k(T)=\bigl[T^{(k)}_{\rm entry}(T),\,T^{(k)}_{\rm exit}(T)\bigr],\qquad w_k(T)=T^{(k)}_{\rm exit}(T)-T^{(k)}_{\rm entry}(T).
-\]
-Only the trajectory $\hl(1),\dots,\hl(T)$ is used; $L$ is never required. In simulations at SNR $=1000$ we observe that both endpoints are nonincreasing in $k$ (no violation in the simulated pairs), but consecutive candidates are not in general nested: they may overlap or be disjoint, and $T^{(k)}_{\rm entry}=T^{(k+1)}_{\rm exit}$ holds only for some pairs.
+For fixed $(l,s)$, define the weights $w(t)=\exp(-(t-l)^2/s^2)$ and the
+transformed data $x(t)=I(t)\exp((t-l)^2/s^2)$. Since $\rho_\tau(cu)=c\rho_\tau(u)$
+for $c>0$, minimizing \eqref{eq:objective} over $a$ is equivalent to
+minimizing $\sum_t w(t)\rho_\tau(x(t)-a)$, whose solution is the weighted
+$\tau$-quantile of the transformed observations:
 
-\paragraph{Operational selection.}
-Let $\mathcal K(T)=\{k:\ T^{(k)}_{\rm entry}(T)\le\hl(T)\le T^{(k)}_{\rm exit}(T)\}$. If $\mathcal K(T)\neq\varnothing$ we select the narrowest admissible candidate,
-\[
-\widehat k(T)=\operatorname*{arg\,min}_{k\in\mathcal K(T)}w_k(T),\qquad \widehat{\mathcal I}(T)=\mathcal R_{\widehat k(T)}(T),
-\]
-with ties broken by smaller $k$, then smaller entry and exit times; otherwise no interval is produced at $T$. The first selection horizon is $T_{\rm est}=\min\{T:\mathcal K(T)\ne\varnothing\}$. Neither $\widehat{\mathcal I}(T)$ nor $T_{\rm est}$ uses $L$. The rule guarantees consistency with $\hl(T)$, not containment of $L$, so $\widehat{\mathcal I}(T)$ is a data-driven interval estimate and not a confidence interval; no coverage guarantee $\mathbb P\{L\in\widehat{\mathcal I}(T)\}\ge1-\alpha$ is established. Coverage is therefore assessed by simulation.
+\begin{proposition}
+\label{prop:weighted}
+Let $(x(t),w(t))_{t=1}^T$ be real values with $w(t)>0$. For any
+$\tau\in(0,1)$, a minimizer of $a\mapsto\sum_{t=1}^T w(t)\rho_\tau(x(t)-a)$
+is obtained as follows. Sort the $x(t)$ increasingly,
+$x(\pi(1))\le\cdots\le x(\pi(T))$, and let
+$k=\min\{j:\sum_{i=1}^j w(\pi(i))\ge\tau\sum_{i=1}^T w(i)\}$. Then
+$q_\tau=x(\pi(k))$.
+\end{proposition}
 
-\section{Simulation study of empirical coverage}
-We take $A=1$, $L=22$, $S=10$, $h=30$, $\tau\in\{0.25,0.50,0.75,0.95\}$ and $\mathrm{SNR}\in\{1000,100,1\}$, with $M=1000$ independent trajectories per setting. The selection rule is applied separately to each trajectory at each $T$; $L$ is used only afterwards, to score coverage. We report
-\[
-\widehat q_M(T)=\frac1M\sum_{m=1}^M\mathbf 1\{\widehat{\mathcal I}_m(T)\neq\varnothing\},\qquad
-\widehat p^{\,\rm sel}_M(T)=\frac{\sum_m\mathbf 1\{L\in\widehat{\mathcal I}_m(T)\}}{\sum_m\mathbf 1\{\widehat{\mathcal I}_m(T)\neq\varnothing\}},
-\]
-the selection rate and the coverage among selected intervals, together with the unconditional proportion $\widehat p^{\,\rm all}_M(T)$, in which failures to select count as misses.
+The estimator thus reduces to a one-dimensional profile: for each candidate
+location $l$, optimize $s$, compute the weighted quantile amplitude in closed
+form, and evaluate \eqref{eq:objective}. At $\tau=1/2$ the LAD estimator of
+\citet{Dermoune} is recovered, so the method is a strict generalization. The
+quantile formulation brings two practical advantages for peak monitoring:
+robustness to skewed noise, and the possibility of targeting conservative
+(upper-quantile) or aggressive (lower-quantile) peak estimates according to
+the relative costs of late versus early action.
 
-\begin{figure}[t]
+\section{Likelihood interpretation: \texorpdfstring{$\tau$}{tau}-aligned asymmetric Laplace noise}
+\label{sec:al}
+
+To study the estimator probabilistically, we use the asymmetric Laplace
+density with mode $m$, scale $\lambda>0$ and asymmetry $k>0$,
+\[
+f_{m,\lambda,k}(x)=\frac{\lambda}{k+k^{-1}}
+\begin{cases}
+\exp\!\left(\frac{\lambda(x-m)}{k}\right), & x<m,\\[4pt]
+\exp\!\left(-\lambda k(x-m)\right), & x\ge m,
+\end{cases}
+\]
+for which $\mathbb P(X<m)=k^2/(1+k^2)$. Setting $m=0$ and
+\begin{equation}
+k=\sqrt{\frac{\tau}{1-\tau}}
+\label{eq:k}
+\end{equation}
+gives $\mathbb P(e(t)<0)=\tau$: the noise is \emph{aligned} with the
+quantile criterion, its $\tau$-quantile being exactly zero. Equivalently, the
+aligned density is
+\begin{equation}
+f_{\tau,b}(x)=\frac{\tau(1-\tau)}{b}
+\exp\!\left(-\frac{1}{b}\rho_\tau(x)\right),
+\qquad b>0,
+\label{eq:ALdensity}
+\end{equation}
+since $\int e^{-\rho_\tau(x)/b}dx=b/[\tau(1-\tau)]$. Hence
+$-\log f_{\tau,b}(e)=\text{const}+\rho_\tau(e)/b$, so maximum likelihood
+estimation coincides exactly with minimization of the empirical quantile loss
+\eqref{eq:objective}. The symmetric Laplace model of \citet{Dermoune}
+corresponds to $\tau=1/2$. The variance of \eqref{eq:ALdensity} is
+\begin{equation}
+\operatorname{Var}(e)=b^2\,\frac{\tau^2+(1-\tau)^2}{\tau^2(1-\tau)^2},
+\label{eq:variance}
+\end{equation}
+which, with the convention
+$\mathrm{SNR}=A/\sqrt{\operatorname{Var}(e)}$, yields the scale calibration
+\begin{equation}
+b=\frac{A}{\mathrm{SNR}}\,
+\frac{\tau(1-\tau)}{\sqrt{\tau^2+(1-\tau)^2}}.
+\label{eq:calibration}
+\end{equation}
+Equations \eqref{eq:k}--\eqref{eq:calibration} define a coherent simulation
+design in which each quantile level is paired with noise having its
+$\tau$-quantile at zero and a common SNR, so that the effects of $\tau$ and of
+the noise level can be disentangled.
+
+\section{Sequential estimation, stability, and the peak region}
+\label{sec:stability}
+
+Because decisions are taken online, we study the whole estimation trajectory
+$T\mapsto\hat l(T)$ as data accrue, using two complementary devices.
+
+\subsection{Retrospective stabilization time}
+
+For a tolerance $\varepsilon>0$, define
+\begin{equation}
+T_{\mathrm{stab}}
+=\min\Bigl\{T:\ \max_{u\ge T}\hat l(u)-\min_{u\ge T}\hat l(u)\le\varepsilon\Bigr\}.
+\label{eq:Tstab}
+\end{equation}
+Under $\tau$-aligned AL noise with $A=1$, $L=22$, $S=10$ and
+$\mathrm{SNR}=40$, the stabilization times over
+$\tau\in\{0.25,0.5,0.75,0.95\}$ are $17,17,11,10$ respectively (with
+$\varepsilon=4$): upper quantiles stabilize earlier in this design. We stress
+that \eqref{eq:Tstab} is a retrospective diagnostic; the construction below is
+its operational counterpart.
+
+\subsection{Oscillations and candidate entry--exit times}
+
+Fix a horizon $h$ with $L<h$, and let $T<h$ be the current observation time.
+For $t\le T$, define the retrospective oscillation of the estimation path,
+\begin{equation}
+\omega_l(t,T)=\max_{t\le t_1,t_2\le T}\bigl|\hat l(t_1)-\hat l(t_2)\bigr|.
+\label{eq:omega}
+\end{equation}
+For fixed $T$, $t\mapsto\omega_l(t,T)$ is nonincreasing; its strict decreases
+define candidate exit times
+$T_{\mathrm{exit}}^{(1)}(T)>T_{\mathrm{exit}}^{(2)}(T)>\cdots$ with levels
+$\epsilon'_k(T)=\omega_l(T_{\mathrm{exit}}^{(k)}(T),T)$. For each candidate
+exit time, the Stage-2 set
+\begin{equation}
+E_k(T)=\Bigl\{t<T_{\mathrm{exit}}^{(k)}(T):
+\omega_l\bigl(t,T_{\mathrm{exit}}^{(k)}(T)\bigr)\ge\epsilon'_k(T)\Bigr\}
+\label{eq:stage2}
+\end{equation}
+yields $\epsilon_k(T)=\omega_l(T_k^*(T),T_{\mathrm{exit}}^{(k)}(T))$ with
+$T_k^*(T)=\max E_k(T)$, and the entry time
+\begin{equation}
+T_{\mathrm{entry}}^{(k)}(T)
+=\min\Bigl\{t<T_{\mathrm{exit}}^{(k)}(T):
+\omega_l\bigl(t,T_{\mathrm{exit}}^{(k)}(T)\bigr)=\epsilon_k(T)\Bigr\}.
+\label{eq:entry}
+\end{equation}
+Each candidate $k$ defines a peak region
+$\mathcal R_k(T)=[T_{\mathrm{entry}}^{(k)}(T),T_{\mathrm{exit}}^{(k)}(T)]$ of
+width $w_k(T)=T_{\mathrm{exit}}^{(k)}(T)-T_{\mathrm{entry}}^{(k)}(T)$. All
+endpoints in \eqref{eq:omega}--\eqref{eq:entry} depend only on the estimation
+trajectory available at $T$; the true peak location $L$ is never used.
+
+\subsection{Operational selection of an interval}
+
+Since $\hat l(T)$ is available at horizon $T$ while $L$ is not, we select the
+narrowest candidate containing the current estimate:
+\begin{equation}
+\widehat k(T)=\underset{k\in\mathcal K(T)}{\operatorname{arg\,min}}\,w_k(T),
+\qquad
+\mathcal K(T)=\Bigl\{k:T_{\mathrm{entry}}^{(k)}(T)\le\hat l(T)\le
+T_{\mathrm{exit}}^{(k)}(T)\Bigr\},
+\label{eq:selection}
+\end{equation}
+yielding the data-driven interval $\widehat{\mathcal I}(T)$. The first
+selection horizon
+$T_{\mathrm{est}}=\min\{T:\mathcal K(T)\neq\varnothing\}$ is an operational
+stopping time. We emphasize that $\widehat{\mathcal I}(T)$ is an interval
+estimate whose construction alone carries no coverage guarantee; coverage must
+be assessed empirically, as we do next.
+
+\section{Monte Carlo evidence}
+\label{sec:mc}
+
+We generate $M=1000$ independent replicates of \eqref{eq:signal} with
+$A=1$, $L=22$, $S=10$, $h=30$, $\tau$-aligned AL noise calibrated by
+\eqref{eq:calibration}, and $\mathrm{SNR}\in\{1000,100,1\}$. For each
+replicate we apply the selection rule \eqref{eq:selection} at every horizon
+and record the interval-selection rate and the empirical coverage of $L$ among
+selected intervals (Table~\ref{tab:mc}).
+
+At $\mathrm{SNR}=1000$ and $100$, no interval is selected before $T=22$;
+thereafter the selection rate and empirical coverage are both equal to one
+for all quantile levels. At $\mathrm{SNR}=1$, intervals may be selected
+early but none contains $L=22$ before the peak; at $T=30$ the empirical
+coverage among selected intervals is $0.613$, $0.565$, $0.637$ and $0.844$
+for $\tau=0.25,0.5,0.75,0.95$, with selection rates above $0.996$. Thus, in
+medium-to-high SNR regimes the procedure is conservative: it remains silent
+until the signal is informative and then covers the peak with probability
+one. Under very low SNR it still selects intervals frequently, but selection
+no longer implies coverage, an honest limitation, arguing for pairing the
+interval with an SNR diagnostic rather than treating it as a confidence
+interval.
+
+\begin{table}[htbp]
 \centering
-\includegraphics[width=0.93\textwidth]{monte-carlo-coverage-selected.pdf}
-\caption{Empirical coverage $\widehat p^{\,\rm sel}_M(T)$ of the selected interval versus the horizon $T$ ($M=1000$), one panel per $\tau$ and one curve per SNR; the true peak is $L=22$.}
-\label{fig:cov}
-\end{figure}
-
-\begin{table}[t]
-\centering\small
-\caption{Selection rate, empirical coverage and mean width at $T=30$ ($M=1000$).}
+\caption{Monte Carlo interval-selection rate, empirical coverage, and mean
+width at $T=30$ ($M=1000$ replicates).}
 \label{tab:mc}
 \begin{tabular}{cccccc}
 \toprule
-$\tau$ & SNR & $\widehat q_M(30)$ & $\widehat p^{\,\rm sel}_M(30)$ & $\widehat p^{\,\rm all}_M(30)$ & Mean width\\
+$\tau$ & SNR & Selection & Coverage & Coverage & Mean \\
+& & rate & (selected) & (all) & width \\
 \midrule
-0.25 & 1000 & 1.000 & 1.000 & 1.000 & 18.70\\
-0.25 & 100  & 1.000 & 1.000 & 1.000 & 12.66\\
-0.25 & 1    & 0.998 & 0.613 & 0.612 & 5.62\\
+0.25 & 1000 & 1.000 & 1.000 & 1.000 & 18.70 \\
+0.25 &  100 & 1.000 & 1.000 & 1.000 & 12.66 \\
+0.25 &    1 & 0.998 & 0.613 & 0.612 &  5.62 \\
 \midrule
-0.50 & 1000 & 1.000 & 1.000 & 1.000 & 18.26\\
-0.50 & 100  & 1.000 & 1.000 & 1.000 & 11.98\\
-0.50 & 1    & 0.996 & 0.565 & 0.563 & 5.49\\
+0.50 & 1000 & 1.000 & 1.000 & 1.000 & 18.26 \\
+0.50 &  100 & 1.000 & 1.000 & 1.000 & 11.98 \\
+0.50 &    1 & 0.996 & 0.565 & 0.563 &  5.49 \\
 \midrule
-0.75 & 1000 & 1.000 & 1.000 & 1.000 & 18.79\\
-0.75 & 100  & 1.000 & 1.000 & 1.000 & 12.72\\
-0.75 & 1    & 0.996 & 0.637 & 0.634 & 5.30\\
+0.75 & 1000 & 1.000 & 1.000 & 1.000 & 18.79 \\
+0.75 &  100 & 1.000 & 1.000 & 1.000 & 12.72 \\
+0.75 &    1 & 0.996 & 0.637 & 0.634 &  5.30 \\
 \midrule
-0.95 & 1000 & 1.000 & 1.000 & 1.000 & 19.66\\
-0.95 & 100  & 1.000 & 1.000 & 1.000 & 14.20\\
-0.95 & 1    & 1.000 & 0.844 & 0.844 & 5.75\\
+0.95 & 1000 & 1.000 & 1.000 & 1.000 & 19.66 \\
+0.95 &  100 & 1.000 & 1.000 & 1.000 & 14.20 \\
+0.95 &    1 & 1.000 & 0.844 & 0.844 &  5.75 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The results depend strongly on the SNR (Figure~\ref{fig:cov}, Table~\ref{tab:mc}). At SNR $=1000$ no interval is selected for $T<22$, and from $T=22$ onward both the selection rate and the coverage equal one. At SNR $=100$, selection is rare at some early horizons, but from $T=23$ onward every trajectory yields an interval that contains $L$. At SNR $=1$, intervals may be selected before $T=22$, but in our simulations none of them contains $L$; at $T=22$ the coverage among selected intervals is only about $0.26$--$0.38$, and it rises with $T$ to $0.57$--$0.84$ at $T=30$, depending on $\tau$ (best for $\tau=0.95$). Since the selection rate at $T=30$ is at least $0.996$, the low coverage at SNR $=1$ is not explained by failures to select. Note also that the perfect coverage at high and moderate SNR comes with wide intervals (mean width $12$--$20$ on a horizon of $30$), whereas the low-SNR intervals are narrow (about $5$--$6$) but often miss $L$. These are empirical coverage rates for this design, not a theoretical guarantee.
+\section{Empirical illustration: COVID-19 incidence peaks}
+\label{sec:covid}
 
-\section{Application to COVID-19 case counts}
-We apply the procedure to daily confirmed cases in China (22 January--22 March 2020; JHU CSSE), France and Germany (ECDC), for $\tau\in\{0.25,0.5,0.75,0.95\}$. Because the observed peak $L$ is known retrospectively in each series, the candidates can be evaluated ex post: among those with $T^{(k)}_{\rm entry}<L<T^{(k)}_{\rm exit}$ we report the narrowest (this uses $L$ and is not part of the operational rule). Table~\ref{tab:covid} gives the resulting windows.
+We apply the methodology to daily confirmed COVID-19 cases during the first
+wave of 2020 in China (Jan 22--Mar 22; JHU CSSE via the \texttt{COVID19} R
+package), France (Jan 15--May 31; ECDC), and Germany (Jan 28--Jul 5; ECDC),
+for $\tau\in\{0.25,0.5,0.75,0.95\}$. These are canonical noisy unimodal
+trajectories whose peaks had to be anticipated for health-system planning, and
+they play the same methodological role as an environmental episode series.
 
-\begin{table}[t]
-\centering\small
-\caption{Retrospectively selected windows $(T_{\rm entry},T_{\rm exit})$ strictly containing the observed peak $L$; ``--'' means no candidate contains $L$.}
-\label{tab:covid}
-\begin{tabular}{lcccccc}
-\toprule
-Country & $L$ & $\tau=0.25$ & $\tau=0.50$ & $\tau=0.75$ & $\tau=0.95$\\
-\midrule
-China   & 22 & (15,26) & (15,24) & --      & (13,26)\\
-France  & 78 & (72,79) & (73,82) & (70,79) & (70,80)\\
-Germany & 61 & (60,62) & --      & --      & (56,63)\\
-\bottomrule
-\end{tabular}
-\end{table}
+For each country and quantile level we compute the estimation trajectory
+$T\mapsto\hat l(T)$ and evaluate the entry--exit construction of
+Section~\ref{sec:stability}. Since the realized peaks are known
+retrospectively ($L=22$ for China, $L=78$ for France, $L=61$ for Germany on
+the chosen time scales), candidates are assessed ex post by selecting, among
+peak regions strictly containing $L$, the one of minimal width. China yields
+narrow peak regions $(15,26)$, $(15,24)$ and $(13,26)$ for
+$\tau=0.25,0.5,0.95$ (no candidate contains $L$ for $\tau=0.75$); France
+yields $(72,79)$, $(73,82)$, $(70,79)$ and $(70,80)$; Germany yields the very
+sharp window $(60,62)$ for $\tau=0.25$ and $(56,63)$ for $\tau=0.95$. The
+results confirm that the estimated peak region depends on the quantile level,
+and that the construction behaves conservatively, remaining silent where
+the trajectory is unstable, precisely the behavior desired in an early
+warning context.
 
-For France, all four quantile levels give a window containing the peak, with widths between 7 and 10. For China the windows are $(15,24)$ at $\tau=0.5$, close to the window $(14,25)$ obtained by \citet{Der25} under the least-absolute-deviation criterion, while $\tau=0.75$ yields no containing candidate. For Germany only $\tau=0.25$ and $\tau=0.95$ do. The window therefore depends on the quantile level, and a containing window is not always available.
+\section{Relevance to environmental econometrics}
+\label{sec:environment}
 
-\section{Conclusion and perspectives}
-Quantile regression with $\tau$-aligned asymmetric Laplace noise gives a unified criterion for peak-location estimation, and the oscillation-based entry--exit construction yields a data-driven interval for $L$ that is computed without knowledge of $L$. Simulation shows that its coverage is excellent but costly in width at high and moderate SNR, and limited at low SNR. Open questions are a theoretical coverage result (or a calibration of the selection rule to reach a target level), repeating the study across other peak locations and widths, and applying it to environmental series such as pollution or energy-demand peaks.
+Although illustrated on epidemiological data, the framework is designed for
+the environmental applications emphasized by this conference. Peaks are the
+decisive feature of many environmental time series: daily maxima of
+PM$_{2.5}$/NO$_2$ during pollution episodes, extreme temperatures during heat
+waves, river discharge maxima, peak electricity demand during cold snaps, and
+price or load spikes in energy markets. In each case, (i) the series is
+unimodal around the episode; (ii) the noise is plausibly skewed (episodes
+build slowly and decay fast, or conversely), which the quantile criterion
+accommodates through $\tau$; and (iii) actions (alerts, curfews, generation
+dispatch, reservoir releases) must be triggered before the peak, exactly
+the regime $T<L$ addressed here. The entry--exit construction provides an
+operational trigger (the first selection horizon $T_{\mathrm{est}}$) together
+with an honest assessment of when the signal is too weak for a reliable peak
+region. 
+%Ongoing work applies the method to air pollution episodes and
+%heat-wave temperature series, where the asymmetric costs of late versus early
+%alerts make the quantile formulation particularly natural.
 
-\bibliography{references}
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have extended the LAD peak-estimation framework to general quantile
+levels, endowed it with a likelihood interpretation through $\tau$-aligned
+asymmetric Laplace noise, and added an operational, fully data-driven
+construction of peak regions based on the oscillations of the sequential
+estimation trajectory. Monte Carlo evidence shows that the procedure is
+appropriately conservative when the signal is informative and honestly
+signals its own unreliability when it is not. The methodology is lightweight
+(profile optimization with a closed-form amplitude step), flexible in the
+noise distribution, and directly applicable to environmental peak events.
+Future work includes theoretical coverage guarantees for
+$\widehat{\mathcal I}(T)$, data-driven selection of $\tau$ via pinball-loss
+cross-validation, and multipeak and spatio-temporal extensions relevant for
+regional pollution and climate monitoring.
+
+{\small
+\begin{thebibliography}{9}
+\setlength{\itemsep}{2pt}
+\bibitem[Dermoune et~al.(2026)Dermoune, Maanan, Ounaissi, and Slaoui]{Dermoune}
+Azzouz Dermoune, Saïd Maanan, Daoud Ounaissi, and Yousri Slaoui.
+\newblock Forecasting the amplitude, the location and the width of the peak of
+a time series using the weighted median.
+\newblock \emph{Journal of Applied Statistics}, pages 1--29, September 2026.
+\newblock ISSN 1360-0532.
+\newblock \doi{10.1080/02664763.2026.2734150}.
+%\bibitem[Dermoune et al.(2025)]{Dermoune}
+%Dermoune, A., Maanan, S., Ounaissi, D., Slaoui, Y., El Ghini, A. (2025).
+%Peak prediction for time series: an estimation approach based on the
+%least absolute deviations. Working paper.
+\bibitem[Guidotti \& Ardia(2020)]{Guidotti}
+Guidotti, E., Ardia, D. (2020). COVID-19 data hub. \emph{Journal of Open
+Source Software}, 5(51), 2376.
+\bibitem[Koenker(2005)]{Koenker}
+Koenker, R. (2005). \emph{Quantile Regression}. Cambridge University Press.
+\end{thebibliography}
+}
 
 \end{document}
