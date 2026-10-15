@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.10)  13 OCT 2026 12:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.10)  15 OCT 2026 11:58
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -560,13 +560,22 @@ Overfull \hbox (0.36063pt too wide) in paragraph at lines 94--105
 n-te-grated Mov-ing Av-er-age (ARIMA)
  []
 
+
+LaTeX Warning: Reference `sec:stability-analysis' on page 2 undefined on input 
+line 131.
+
 [2
 
-] [3]
+]
+
+LaTeX Warning: Reference `sec:stability-analysis' on page 3 undefined on input 
+line 149.
+
+[3]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 220.
  [4]
-<../plot_quantile_all.pdf, id=175, 722.7pt x 903.375pt>
+<../plot_quantile_all.pdf, id=172, 722.7pt x 903.375pt>
 File: ../plot_quantile_all.pdf Graphic file (type pdf)
 <use ../plot_quantile_all.pdf>
 Package pdftex.def Info: ../plot_quantile_all.pdf  used on input line 250.
@@ -585,112 +594,108 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 262.
 
 [5] [6 <../plot_quantile_all.pdf>] [7]
-<../figure2_asymmetric_laplace_all_tau_T.pdf, id=210, 722.7pt x 903.375pt>
+<../figure2_asymmetric_laplace_all_tau_T.pdf, id=208, 722.7pt x 903.375pt>
 File: ../figure2_asymmetric_laplace_all_tau_T.pdf Graphic file (type pdf)
 <use ../figure2_asymmetric_laplace_all_tau_T.pdf>
 Package pdftex.def Info: ../figure2_asymmetric_laplace_all_tau_T.pdf  used on i
 nput line 445.
 (pdftex.def)             Requested size: 483.69687pt x 604.62404pt.
  [8] [9 <../figure2_asymmetric_laplace_all_tau_T.pdf>]
+<../fig_tstar_examples.pdf, id=237, 722.7pt x 578.16pt>
+File: ../fig_tstar_examples.pdf Graphic file (type pdf)
+<use ../fig_tstar_examples.pdf>
+Package pdftex.def Info: ../fig_tstar_examples.pdf  used on input line 530.
+(pdftex.def)             Requested size: 483.69687pt x 386.95937pt.
+ [10] [11 <../fig_tstar_examples.pdf>]
 
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 463.
+LaTeX Warning: Reference `sec:stability-analysis' on page 12 undefined on input
+ line 545.
 
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\tau' on input line 463.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 463.
-
-<../fig3_4a_4b_combined.pdf, id=243, 578.16pt x 578.16pt>
-File: ../fig3_4a_4b_combined.pdf Graphic file (type pdf)
-<use ../fig3_4a_4b_combined.pdf>
-Package pdftex.def Info: ../fig3_4a_4b_combined.pdf  used on input line 494.
-(pdftex.def)             Requested size: 459.51054pt x 459.5115pt.
-[10] [11 <../fig3_4a_4b_combined.pdf>]
-<../fig_lhat_paths_snr40_tau.pdf, id=269, 614.295pt x 469.755pt>
-File: ../fig_lhat_paths_snr40_tau.pdf Graphic file (type pdf)
-<use ../fig_lhat_paths_snr40_tau.pdf>
-Package pdftex.def Info: ../fig_lhat_paths_snr40_tau.pdf  used on input line 55
-4.
-(pdftex.def)             Requested size: 483.69687pt x 369.89102pt.
- [12] [13 <../fig_lhat_paths_snr40_tau.pdf>] [14]
-Overfull \hbox (3.22115pt too wide) in paragraph at lines 675--689
+[12]
+Overfull \hbox (3.22115pt too wide) in paragraph at lines 644--658
 \OT1/cmr/m/n/12 The con-ven-tion $\OML/cmm/m/it/12 T[]\OT1/cmr/m/n/12 (\OML/cmm
 /m/it/12 T\OT1/cmr/m/n/12 ) = \OML/cmm/m/it/12 T$ \OT1/cmr/m/n/12 pro-vides the
  ini-tial can-di-date exit time, for which $\OML/cmm/m/it/12 ![] [] \OT1/cmr/m/
 n/12 =
  []
 
-[15] [16]
-<../hatl_trajectories_tau050.pdf, id=315, 722.7pt x 264.99pt>
-File: ../hatl_trajectories_tau050.pdf Graphic file (type pdf)
-<use ../hatl_trajectories_tau050.pdf>
-Package pdftex.def Info: ../hatl_trajectories_tau050.pdf  used on input line 87
-3.
-(pdftex.def)             Requested size: 483.69687pt x 177.35637pt.
- [17 <../hatl_trajectories_tau050.pdf>]
-<../fig_exit_entry_times_SNR1000.pdf, id=332, 614.295pt x 469.755pt>
-File: ../fig_exit_entry_times_SNR1000.pdf Graphic file (type pdf)
-<use ../fig_exit_entry_times_SNR1000.pdf>
-Package pdftex.def Info: ../fig_exit_entry_times_SNR1000.pdf  used on input lin
-e 942.
+[13] [14]
+<../fig_exit_entry_times_SNR1.pdf, id=284, 614.295pt x 469.755pt>
+File: ../fig_exit_entry_times_SNR1.pdf Graphic file (type pdf)
+<use ../fig_exit_entry_times_SNR1.pdf>
+Package pdftex.def Info: ../fig_exit_entry_times_SNR1.pdf  used on input line 8
+64.
 (pdftex.def)             Requested size: 483.69687pt x 369.89102pt.
- [18 <../fig_exit_entry_times_SNR1000.pdf>]
-Overfull \hbox (2.09135pt too wide) in paragraph at lines 1013--1017
+ [15] [16 <../fig_exit_entry_times_SNR1.pdf>]
+Overfull \hbox (2.09135pt too wide) in paragraph at lines 934--938
 \OT1/cmr/m/n/12 spond-ing se-lected in-ter-val for each com-bi-na-tion of $\OML
 /cmm/m/it/12 ^^\$ \OT1/cmr/m/n/12 and $[]$. The in-ter-val width is $\OML/cmm/m
 /it/12 w[]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 T[]\OT1/cmr/m/n/12 )$. 
  []
 
-[19] [20]
-<../monte-carlo-coverage-selected.pdf, id=371, 614.295pt x 469.755pt>
+[17] [18]
+<../monte-carlo-coverage-selected.pdf, id=330, 614.295pt x 469.755pt>
 File: ../monte-carlo-coverage-selected.pdf Graphic file (type pdf)
 <use ../monte-carlo-coverage-selected.pdf>
 Package pdftex.def Info: ../monte-carlo-coverage-selected.pdf  used on input li
-ne 1166.
+ne 1087.
 (pdftex.def)             Requested size: 483.69687pt x 369.89102pt.
-<../monte-carlo-interval-selection-rate.pdf, id=372, 614.295pt x 469.755pt>
+<../monte-carlo-interval-selection-rate.pdf, id=331, 614.295pt x 469.755pt>
 File: ../monte-carlo-interval-selection-rate.pdf Graphic file (type pdf)
 <use ../monte-carlo-interval-selection-rate.pdf>
 Package pdftex.def Info: ../monte-carlo-interval-selection-rate.pdf  used on in
-put line 1173.
+put line 1094.
 (pdftex.def)             Requested size: 483.69687pt x 369.89102pt.
- [21] [22 <../monte-carlo-coverage-selected.pdf>] [23 <../monte-carlo-interval-
-selection-rate.pdf>]
-<../covid_series_1x3.pdf, id=414, 867.24pt x 289.08pt>
+
+
+LaTeX Warning: Reference `sec:stability-analysis' on page 19 undefined on input
+ line 1113.
+
+[19] [20 <../monte-carlo-coverage-selected.pdf>] [21 <../monte-carlo-interval-s
+election-rate.pdf>]
+<../covid_series_1x3.pdf, id=372, 867.24pt x 289.08pt>
 File: ../covid_series_1x3.pdf Graphic file (type pdf)
 <use ../covid_series_1x3.pdf>
-Package pdftex.def Info: ../covid_series_1x3.pdf  used on input line 1213.
+Package pdftex.def Info: ../covid_series_1x3.pdf  used on input line 1134.
 (pdftex.def)             Requested size: 483.69687pt x 161.23528pt.
 
 
-LaTeX Warning: Reference `tab:china_tau' on page 24 undefined on input line 123
-2.
-
-[24 <../covid_series_1x3.pdf>]
-
-LaTeX Warning: Reference `tab:china_tau' on page 25 undefined on input line 132
-6.
-
-[25]
-
-LaTeX Warning: Reference `tab:france_tau' on page 26 undefined on input line 13
-44.
+LaTeX Warning: Reference `sec:stability-analysis' on page 22 undefined on input
+ line 1151.
 
 
-LaTeX Warning: Reference `tab:germany_tau' on page 26 undefined on input line 1
-435.
+LaTeX Warning: Reference `tab:china_tau' on page 22 undefined on input line 115
+3.
 
-[26]
+[22 <../covid_series_1x3.pdf>]
 
-LaTeX Warning: Reference `tab:germany_tau' on page 27 undefined on input line 1
-500.
+LaTeX Warning: Reference `tab:china_tau' on page 23 undefined on input line 124
+7.
 
-[27] (./main.bbl [28{/usr/share/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm-
-super-ts1.enc}]) [29] (./main.aux)
+[23]
+
+LaTeX Warning: Reference `sec:stability-analysis' on page 24 undefined on input
+ line 1263.
+
+
+LaTeX Warning: Reference `tab:france_tau' on page 24 undefined on input line 12
+65.
+
+
+LaTeX Warning: Reference `sec:stability-analysis' on page 24 undefined on input
+ line 1354.
+
+
+LaTeX Warning: Reference `tab:germany_tau' on page 24 undefined on input line 1
+356.
+
+[24]
+
+LaTeX Warning: Reference `tab:germany_tau' on page 25 undefined on input line 1
+421.
+
+[25] (./main.bbl [26{/usr/share/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm-
+super-ts1.enc}]) [27] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-03-20>
@@ -700,13 +705,13 @@ L3 programming layer <2026-03-20>
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 7A3ED8A08C07A1712F3C8081909C3C16;5696.
+(rerunfilecheck)             Checksum: 4B8DD6F19D97839D74E5D9B1DB2E6A34;5774.
  ) 
 Here is how much of TeX's memory you used:
- 13785 strings out of 469296
- 217874 string characters out of 5465560
- 645957 words of memory out of 6000000
- 42316 multiletter control sequences out of 15000+600000
+ 13756 strings out of 469296
+ 216876 string characters out of 5465560
+ 645161 words of memory out of 6000000
+ 42292 multiletter control sequences out of 15000+600000
  641986 words of font info for 94 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  75i,12n,84p,872b,571s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -727,10 +732,10 @@ are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/te
 xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texlive/
 texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texlive/t
 exmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on main.pdf (29 pages, 422636 bytes).
+Output written on main.pdf (27 pages, 381989 bytes).
 PDF statistics:
- 582 PDF objects out of 1000 (max. 8388607)
- 492 compressed objects within 5 object streams
- 115 named destinations out of 1000 (max. 500000)
- 238 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 537 PDF objects out of 1000 (max. 8388607)
+ 452 compressed objects within 5 object streams
+ 110 named destinations out of 1000 (max. 500000)
+ 228 words of extra memory for PDF output out of 10000 (max. 10000000)
 

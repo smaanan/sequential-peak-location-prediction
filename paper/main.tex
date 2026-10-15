@@ -447,126 +447,95 @@ The resulting profiles are displayed in Figure~\ref{fig:asymmetric_laplace_loss_
 	\label{fig:asymmetric_laplace_loss_profiles}
 \end{figure}
 
-\section{Parameter Estimation Trajectories}
+{\color{blue}
+\section{Stabilization of the Sequential Estimator}
 \label{sec:parameter_estimation_paths}
 
-We now analyze how the estimated model parameters, location $\hat{l}(T)$, amplitude $\hat{a}(T)$, and scale $\hat{s}(T)$, evolve as the sample size $T$ increases. Our goal is to assess the stability and convergence of these estimators under the $\tau$-aligned asymmetric Laplace noise introduced in Section~\ref{sec:general_AL_intro}, including its symmetric special case.
-All experiments use the SNR definition given in~\eqref{eq:SNR_definition}, with
-\(
-\mathrm{SNR}=1000
-\),
-and consider quantile levels
-\(
-\tau\in\{0.25,0.5,0.75,0.95\}.
-\)
+We study how the estimated peak location $\hat l(T)$ evolves as the
+observation horizon $T$ increases. We use the model~\eqref{eq:signal_model}
+with $h=30$, $A=1$, $L=22$, $S=10$, $\tau$-aligned asymmetric Laplace
+noise (Section~\ref{sec:general_AL_intro}), and
+$\mathrm{SNR}\in\{1000,100,1\}$. At each $T\in\{4,\dots,h\}$,
+$(\hat l(T),\hat a(T),\hat s(T))$ minimizes the objective
+\eqref{eq:quantile_objective}; only $\hat l(T)$ is considered below.
 
-\subsection{$\tau$-Aligned Asymmetric Laplace Noise}
-\label{subsec:asymmetric_laplace_trajectories}
+\subsection{Stabilization time}
 
-We consider the signal-plus-noise model~\eqref{eq:signal_model}, 
-with
-$h=30,$
-$A=1,$
-$L=22,$
-$S=10.$
-The noise $e(t)$ follows the $\tau$-aligned asymmetric Laplace distribution introduced in Section~\ref{sec:general_AL_intro}, with density~\eqref{eq:AL_density}.
-The asymmetry parameter is determined by the quantile level according to~\eqref{eq:asymmetry_parameter},
-so that the $\tau$-alignment property~\eqref{eq:tau_alignment} holds.
-In particular, $\tau=1/2$ corresponds to the symmetric Laplace distribution, whereas the other values of $\tau$ considered here produce asymmetric noise.
-The scale parameter $b$ is calibrated separately for each $\tau$ so that the variance of the noise satisfies the fixed signal-to-noise ratio condition~\eqref{eq:SNR_condition}.
-For the $\tau$-aligned asymmetric Laplace distribution, this gives~\eqref{eq:AL_variance},
-and therefore~\eqref{eq:scale_calibration}.
-At each time horizon $T\in\{4,\ldots,30\}$, we estimate the parameters
-$(\hat{l}(T),\hat{a}(T),\hat{s}(T))$ by minimizing the objective function
-\eqref{eq:quantile_objective} over the candidate peak locations and scale
-parameters, with the amplitude $a$ re-estimated for each pair $(l,s)$ as
-the weighted $\tau$-quantile described in Section~\ref{sec:weighted_median_method}.
-The scale parameter $s$ is optimized over the prescribed interval, and the location parameter $l$ is selected by minimizing the resulting objective over the candidate locations.
-Figure~\ref{fig:combined_estimation_paths} shows the resulting estimation trajectories
-$T\mapsto\hat{l}(T),$
-$T\mapsto\hat{a}(T),$
-$T\mapsto\hat{s}(T),$
-for each quantile level $\tau$. The true parameter values
-$(L,A,S)=(22,1,10)$ are indicated by dashed horizontal lines.
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=0.95\textwidth]{fig3_4a_4b_combined.pdf}
-	\caption{Estimation paths $T\mapsto\hat{l}(T)$ (left),
-		$\hat{a}(T)$ (middle), and $\hat{s}(T)$ (right) under
-		$\tau$-aligned asymmetric Laplace noise with signal-to-noise ratio
-		(SNR) 1000. Each row corresponds to a quantile level
-		$\tau\in\{0.25,0.5,0.75,0.95\}$. The true values
-		$(L,A,S)=(22,1,10)$ are indicated by dashed horizontal lines.}
-	\label{fig:combined_estimation_paths}
-\end{figure}
-
-\section{Stability Analysis}
-\label{sec:stability-analysis}
-
-This section investigates the temporal stability of the estimated peak location when the signal-to-noise ratio is reduced. We focus on the $\tau$-aligned asymmetric Laplace noise introduced in Section~\ref{sec:general_AL_intro} and examine how the estimated peak location evolves as new observations become available. In particular, we compare the stability of the estimation paths across different quantile levels and assess the effect of a lower signal-to-noise ratio on the ability to recover the true peak location.
-
-\subsection{Low Signal-to-Noise Performance}
-\label{subsec:low-snr}
-
-To evaluate the robustness of the quantile-based estimator under a lower signal-to-noise ratio, 
-we consider the signal-plus-noise model~\eqref{eq:signal_model},
-with
-$h=35,$
-$A=1,$
-$L=22,$
-$S=10.$
-The noise $e(t)$ follows the $\tau$-aligned asymmetric Laplace distribution introduced in Section~\ref{sec:general_AL_intro}, with density~\eqref{eq:AL_density}.
-For each
-\(
-\tau\in\{0.25,0.5,0.75,0.95\},
-\)
-the scale parameter $b$ is calibrated so that~\eqref{eq:SNR_condition},
-with
-\(
-\mathrm{SNR}=40,
-\)
-according to the definition in \eqref{eq:SNR_definition}.
-Using the variance of the $\tau$-aligned asymmetric Laplace distribution gives~\eqref{eq:scale_calibration}.
-For each quantile level $\tau$, we compute the estimation path
-$T\mapsto\hat{l}(T),$
-$T=4,\ldots,35,$
-where $(\hat{l}(T),\hat{a}(T),\hat{s}(T))$ is obtained by minimizing the empirical quantile loss over the candidate peak locations and scale parameters, with the amplitude re-estimated as the weighted $\tau$-quantile described in Section~\ref{sec:weighted_median_method}.
-To characterize the temporal stability of the estimated peak location, we consider the earliest observation horizon $T_{\mathrm{stab}}$ from which all subsequent estimates remain within a prescribed range of one another. Specifically, for a tolerance $\varepsilon=4$, we define
+When the true location $L$ is known, as in simulations, we define
 \[
-T_{\mathrm{stab}}
+T^{*}
 =
-\min
-\left\{
-T:
-\max_{u\geq T}\hat{l}(u)
--
-\min_{u\geq T}\hat{l}(u)
-\leq \varepsilon
-\right\}.
+\min\{T\in\{4,\dots,h\}:\ \hat l(u)=L \text{ for all } u\in\{T,\dots,h\}\},
 \]
-This stabilization time measures the earliest point from which the remaining estimation path remains confined to a stable range.
-Figure~\ref{fig:lhat_paths_snr40} displays the resulting estimation paths for the four quantile levels. The horizontal dashed line indicates the true peak location $L=22$. The comparison illustrates how the temporal stability of the estimated peak location depends on the quantile level when the signal-to-noise ratio is reduced.
-The corresponding stabilization times are reported in Table~\ref{tab:stability_times_snr40}. Smaller values of $T_{\mathrm{stab}}$ indicate that the estimator reaches a stable regime earlier, whereas larger values indicate that additional observations are required before the estimated peak location becomes stable.
+with $T^{*}=\infty$ if no such $T$ exists. Since $T^{*}$ uses $L$, it is
+a simulation diagnostic and not an operational quantity. The
+operational entry time $T_{\mathrm{entry}}^{(0)}(T)$ of
+Section~\ref{subsec:entry-time} does not use $L$.
 
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=\textwidth]{fig_lhat_paths_snr40_tau.pdf}
-	\caption{Estimation paths $T\mapsto\hat{l}(T)$ under a low signal-to-noise ratio (SNR = 40), for quantile levels $\tau\in\{0.25,0.5,0.75,0.95\}$. The horizontal dashed line indicates the true peak location $L=22$.}
-	\label{fig:lhat_paths_snr40}
-\end{figure}
+\subsection{Large and moderate signal-to-noise ratio}
+
+For $\mathrm{SNR}=1000$ and $\mathrm{SNR}=100$,
+$T\mapsto\hat l(T)$ reaches $L$ and stays there from a finite time
+$T^{*}<L$. For $\tau=0.50$ and $M=200$ independent replicates,
+Table~\ref{tab:tstar} shows $T^{*}<L$ in all replicates at
+$\mathrm{SNR}=1000$ (median $12$) and in $99\%$ of them at
+$\mathrm{SNR}=100$ (median $18$). 
+%In the realization used in
+%Section~\ref{subsec:entry-exit-simulation}, $T^{*}=9$ at
+%$\mathrm{SNR}=1000$ (Figure~\ref{fig:tstar_examples}). 
+{\color{blue}
+In the single realization used in
+Section~\ref{subsec:entry-exit-simulation} (seed $280$, $\tau=0.50$),
+$T^{*}=9$ at $\mathrm{SNR}=1000$.}
+In these regimes the
+point estimate identifies $L$ after a short transient, and $T^{*}$
+plays the role of an entry time. No exit time is needed.
+
+\subsection{Small signal-to-noise ratio}
+
+For $\mathrm{SNR}=1$, $\hat l(T)$ does not stabilize at $L$ before the
+terminal horizon in most replicates. In the same experiment ($\tau=0.50$,
+$M=200$), $T^{*}>L$ in every replicate and $T^{*}$ is finite in only
+$13.5\%$ of them; the finite values lie between $24$ and $30$, that is,
+after $L$. Figure~\ref{fig:tstar_examples} shows two replicates: one with
+finite $T^{*}=24$ (the smallest finite value observed among the
+$200$ replicates) and one with $T^{*}=\infty$. In this regime the path
+alone does not indicate when its current value can be trusted. This
+motivates the entry times, exit times and the data-driven interval
+defined in Section~\ref{subsec:oscillations} onwards, which are studied
+for $\mathrm{SNR}=1$ in Section~\ref{subsec:entry-exit-simulation}.
+In the finite example the estimate equals $L$ at $T=22$ but leaves it at
+$T=23$, so a single hit of $L$ does not indicate stabilization.
 
 \begin{table}[htbp]
-	\caption{Stabilization times $T_{\mathrm{stab}}$ for the estimated peak location under SNR = 40 and different quantile levels.}
-	\label{tab:stability_times_snr40}
-	\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}c|cccc}
+	\centering
+	\caption{Stabilization time $T^{*}$ for $\tau=0.50$, based on
+		$M=200$ replicates. Median $T^{*}$ is computed over replicates
+		with finite $T^{*}$. The last column counts $T^{*}=\infty$ as
+		$T^{*}>L$.}
+	\label{tab:tstar}
+	\begin{tabular}{cccc}
 		\toprule
-		& $\tau=0.25$ & $\tau=0.5$ & $\tau=0.75$ & $\tau=0.95$ \\
-		\midrule\addlinespace[2.5pt]
-		$T_{\mathrm{stab}}$ & 17 & 17 & 11 & 10 \\
+		SNR & median $T^{*}$ & $\mathbb P(T^{*}<\infty)$ & $\mathbb P(T^{*}>L)$ \\
+		\midrule
+		$1000$ & $12$ & $1.000$ & $0.000$ \\
+		$100$  & $18$ & $1.000$ & $0.010$ \\
+		$1$    & $30$ & $0.135$ & $1.000$ \\
 		\bottomrule
-	\end{tabular*}
+	\end{tabular}
 \end{table}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{fig_tstar_examples.pdf}
+	\caption{Trajectories $T\mapsto\hat l(T)$ for $\tau=0.50$. Top: ten
+		replicates at $\mathrm{SNR}=1000$ and $\mathrm{SNR}=100$. Bottom
+		($\mathrm{SNR}=1$): the replicate with the smallest finite
+		$T^{*}$ ($T^{*}=24$), whose path equals $L$ at $T=22$, leaves it at
+		$T=23$ and returns to $L$ for $T\ge 24$, and a replicate with
+		$T^{*}=\infty$. The dashed line is $L=22$ and black dots mark $T^{*}$.}
+	\label{fig:tstar_examples}
+\end{figure}}
 
 \section{Entry and Exit Times of the Peak Region}
 \label{sec:entry-exit}
@@ -812,91 +781,21 @@ T_{\mathrm{entry}}^{(k)}(T).
 \]
 Our objective is to define an operational selection rule that does
 not require knowledge of the true peak location $L$.
-
 {\color{blue}
-\paragraph{Stabilization of the sequential estimator.}
-The relevance of the candidate intervals depends on the behaviour of
-the sequential estimator $\widehat l(T)$. We therefore first examine,
-by simulation, whether $\widehat l(T)$ stabilizes at the true peak
-location $L$ before the terminal horizon. For each pair
-$(\tau,\mathrm{SNR})$, we generate $M = 200$ independent trajectories
-and record:
-(i) the entry time $T_{\mathrm{entry}}^{(0)}(h)$ at the terminal
-horizon;
-(ii) the oscillation of $\widehat l(T)$ over the last ten horizons
-$T \in [20,30]$;
-(iii) the maximal post-entry error
-$\max_{T \ge T_{\mathrm{entry}}^{(0)}(h)} |\widehat l(T) - L|$;
-(iv) the proportion of replicates with $\widehat l(h) = L$;
-(v) the proportion of replicates with zero oscillation over $[20,30]$.
-Table~\ref{tab:stabilization} reports the medians and proportions.
-
-\begin{table}[htbp]
-	\centering
-	\small
-	\caption{Stabilization of the sequential estimator
-		$\widehat l(T)$, based on $M = 200$ independent replications
-		per $(\tau,\mathrm{SNR})$. For each signal-to-noise ratio, the
-		table reports the median entry time at the terminal horizon,
-		the median oscillation over $T \in [20,30]$, the median
-		post-entry error, the proportion of replicates with
-		$\widehat l(h) = L$, and the proportion with zero oscillation
-		over $[20,30]$. Ranges indicate variation across the four
-		quantile levels.}
-	\label{tab:stabilization}
-	\begin{tabular}{c|ccccc}
-		\toprule
-		SNR
-		& $T_{\mathrm{entry}}^{(0)}(h)$
-		& osc.\ over $[20,30]$
-		& post-entry error
-		& prop.\ $\widehat l(h) = L$
-		& prop.\ stable \\
-		\midrule
-		$1000$ & $10$--$12$ & $0$ & $0$ & $1.00$ & $1.00$ \\
-		$100$  & $16$--$18$ & $0$ & $0$ & $1.00$ & $0.89$--$1.00$ \\
-		$1$    & $27$--$28$ & $6$--$11$ & $1.0$--$2.5$ & $0.14$--$0.35$ & $0.00$--$0.03$ \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-Figure~\ref{fig:stabilization_trajectories} displays, for
-$\tau = 0.50$, twenty trajectories of $\widehat l(T)$ at each of the
-three signal-to-noise ratios. At $\mathrm{SNR} = 1000$ and
-$\mathrm{SNR} = 100$, the trajectories converge to $L = 22$ well
-before the terminal horizon and remain there. At $\mathrm{SNR} = 1$,
-the trajectories continue to fluctuate over the entire observation
-window and do not stabilize.
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=\textwidth]{hatl_trajectories_tau050.pdf}
-	\caption{Trajectories $T \mapsto \widehat l(T)$ for
-		$\tau = 0.50$, one panel per signal-to-noise ratio, with
-		$M = 20$ independent replicates per panel. The red dashed
-		line indicates the true peak location $L = 22$. At
-		$\mathrm{SNR} = 1000$ and $100$, the estimator stabilizes at
-		$L$; at $\mathrm{SNR} = 1$, it does not.}
-	\label{fig:stabilization_trajectories}
-\end{figure}
-
-The distinction has a direct consequence for the analysis that
-follows. At $\mathrm{SNR} = 1000$ and $\mathrm{SNR} = 100$, the point
-estimate $\widehat l(T)$ alone identifies the true peak location
-after a short transient, and the entry time
-$T_{\mathrm{entry}}^{(0)}(T)$ is sufficient. The exit time carries no
-additional information in these regimes. At $\mathrm{SNR} = 1$, on
-the other hand, no finite entry time stabilizes the estimator, and
-the exit times and the admissible set $\mathcal K(T)$ become the
-only tools that bound the peak location. The construction of the
-candidate intervals, the selection rules, and the empirical coverage
-study therefore focus on the small-SNR regime, while the high- and
-medium-SNR cases are reported as boundary cases.
-}
+As shown in Section~\ref{sec:parameter_estimation_paths}, for large and
+moderate signal-to-noise ratios $\widehat l(T)$ stabilizes at $L$ from a
+finite time $T^{*}<L$, so that the entry time alone is sufficient. For
+$\mathrm{SNR}=1$, by contrast, $T^{*}>L$ or $T^{*}=\infty$, and the path
+alone does not indicate when its current value can be trusted. The exit
+times and the admissible set $\mathcal K(T)$ introduced below are
+therefore studied mainly for $\mathrm{SNR}=1$. The cases
+$\mathrm{SNR}=1000$ and $\mathrm{SNR}=100$ are reported only as boundary
+cases, in which $\mathcal K(T)=\{0\}$ for all $T\geq 22$ in the
+simulations.
 
 \paragraph{Structure of the candidate intervals.}
-Before defining the selection rule, we record two properties of the
-candidate family. First, the exit times satisfy
+Before defining the selection rule, we examine the structure of the
+candidate family for $\mathrm{SNR}=1$. First, the exit times satisfy
 \begin{equation}
 	T_{\mathrm{exit}}^{(k+1)}(T)
 	<
@@ -907,47 +806,69 @@ candidate family. First, the exit times satisfy
 whenever consecutive candidates exist. This follows from the
 construction, since the nontrivial exit times are the strict-decrease
 points of $t \mapsto \omega_l(t,T)$, ordered from largest to smallest.
-Second, the entry times satisfy
+
+Second, we examine the entry times. In $M=500$ independent replicates
+and for $T\in\{22,26,30\}$, we record all pairs of consecutive
+candidates $(k,k+1)$ for which both entry times are defined. For
+$T=30$, Table~\ref{tab:structure_snr1} reports the number of pairs,
+the number of pairs violating
 \begin{equation}
 	T_{\mathrm{entry}}^{(k+1)}(T)
 	\leq
 	T_{\mathrm{entry}}^{(k)}(T),
-	\qquad k \geq 0,
 	\label{eq:entry-ordering}
 \end{equation}
-for all consecutive candidate pairs observed in the simulation at
-$\mathrm{SNR}=1000$. Thus, in these simulations, both endpoints move
-weakly to the left as $k$ increases. These orderings do not imply that
-the candidate intervals are nested. In particular, the inclusion
-$\mathcal R_{k+1}(T)\subseteq\mathcal R_k(T)$ would require
-$T_{\mathrm{entry}}^{(k+1)}(T)\geq
-T_{\mathrm{entry}}^{(k)}(T)$, in addition to the exit-time ordering
-in~\eqref{eq:exit-ordering}. Moreover, the entry time of candidate
-$k$ does not necessarily coincide with the exit time of candidate
-$k+1$. The exit time is determined from the oscillation
-$\omega_l(t,T)$ with right endpoint $T$, whereas the entry time is
-determined from an oscillation whose right endpoint is
-$T_{\mathrm{exit}}^{(k)}(T)$.
-Figure~\ref{fig:candidate_trajectories_snr1000} displays the
-trajectories $T \mapsto T_{\mathrm{exit}}^{(k)}(T)$ and
-$T \mapsto T_{\mathrm{entry}}^{(k)}(T)$ for $k \in \{0,1,2,3\}$
-at $\mathrm{SNR}=1000$, with one panel per quantile level. These
-plots illustrate the numerical behaviour of the candidate endpoints
-in the considered setting. The operational selection rule below
-does not require the candidate intervals to be nested or their
-consecutive endpoints to coincide.
+the proportion with $T_{\mathrm{entry}}^{(k)}(T)=T_{\mathrm{exit}}^{(k+1)}(T)$,
+and the proportions of pairs with $\mathcal R_{k+1}(T)\subseteq\mathcal R_k(T)$
+(nested) and with $T_{\mathrm{exit}}^{(k+1)}(T)<T_{\mathrm{entry}}^{(k)}(T)$
+(disjoint). The inequality \eqref{eq:entry-ordering} fails in at most
+$0.15\%$ of the pairs at every horizon and quantile level considered,
+so it is a very frequent but not a systematic property. The entry time
+of candidate $k$ coincides with the exit time of candidate $k+1$ in
+$14$--$23\%$ of the pairs, the intervals are nested in $29$--$32\%$ and
+disjoint in $16$--$32\%$, and in the remaining pairs they overlap
+partially. Hence the candidate intervals are in general neither nested
+nor contiguous, and the operational selection rule below requires
+neither property. At $T=30$, among replicates with at least two
+candidates, about $6.5$ to $7.3$ candidates are available on average,
+depending on $\tau$. These proportions are descriptive, since pairs
+from the same replicate are dependent.
+Figure~\ref{fig:candidate_trajectories_snr1} displays, for one
+realization, the trajectories $T\mapsto T_{\mathrm{exit}}^{(k)}(T)$ and
+$T\mapsto T_{\mathrm{entry}}^{(k)}(T)$ for $k\in\{0,1,2,3\}$.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Structure of consecutive candidate intervals at
+		$\mathrm{SNR}=1$ and $T=30$, based on $M=500$ replicates.
+		Proportions are over all consecutive pairs $(k,k+1)$ with both
+		entry times defined. ``Violations'' counts the pairs for which
+		\eqref{eq:entry-ordering} fails.}
+	\label{tab:structure_snr1}
+	\begin{tabular}{cccccc}
+		\toprule
+		$\tau$ & pairs & violations
+		& $T_{\mathrm{entry}}^{(k)}=T_{\mathrm{exit}}^{(k+1)}$
+		& nested & disjoint \\
+		\midrule
+		$0.25$ & 2751 & 1 & $0.136$ & $0.321$ & $0.295$ \\
+		$0.50$ & 2809 & 2 & $0.155$ & $0.312$ & $0.321$ \\
+		$0.75$ & 3031 & 4 & $0.167$ & $0.322$ & $0.257$ \\
+		$0.95$ & 3137 & 4 & $0.145$ & $0.300$ & $0.200$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=\textwidth]{fig_exit_entry_times_SNR1000.pdf}
-	\caption{Candidate exit times $T_{\mathrm{exit}}^{(k)}(T)$
-		(solid curves) and entry times $T_{\mathrm{entry}}^{(k)}(T)$
-		(dashed curves) as functions of the current horizon $T$ at
-		$\mathrm{SNR}=1000$, for the four quantile levels. The horizontal
-		line indicates the true peak location $L=22$, shown for
-		simulation reference only.}
-	\label{fig:candidate_trajectories_snr1000}
-\end{figure}
+	\includegraphics[width=\textwidth]{fig_exit_entry_times_SNR1.pdf}
+	\caption{Candidate exit times $T_{\mathrm{exit}}^{(k)}(T)$ (solid)
+		and entry times $T_{\mathrm{entry}}^{(k)}(T)$ (dashed) as functions
+		of the current horizon $T$ at $\mathrm{SNR}=1$, for one
+		realization and the four quantile levels. The horizontal line
+		indicates $L=22$, shown for simulation reference only.}
+	\label{fig:candidate_trajectories_snr1}
+\end{figure}}
 
 \paragraph{Operational selection of the interval.}
 
