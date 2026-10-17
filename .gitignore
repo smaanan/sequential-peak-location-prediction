@@ -15,3 +15,7 @@
 *.bbl
 *.blg
 mc_raw_rules*.csv
+*.rds
+mc_*.csv
+*_paths_all_tau.csv
+*_operational_both_rules_all_T.csv
