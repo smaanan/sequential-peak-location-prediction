@@ -14,3 +14,4 @@
 *.fdb_latexmk
 *.bbl
 *.blg
+mc_raw_rules*.csv
