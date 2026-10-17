@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.10)  16 OCT 2026 10:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.10)  17 OCT 2026 12:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -627,7 +627,7 @@ Package pdftex.def Info: ../fig_exit_entry_times_SNR1.pdf  used on input line 8
 56.
 (pdftex.def)             Requested size: 483.69687pt x 369.89102pt.
  [15] [16 <../fig_exit_entry_times_SNR1.pdf>]
-Overfull \hbox (2.09135pt too wide) in paragraph at lines 1195--1199
+Overfull \hbox (2.09135pt too wide) in paragraph at lines 968--972
 \OT1/cmr/m/n/12 spond-ing se-lected in-ter-val for each com-bi-na-tion of $\OML
 /cmm/m/it/12 ^^\$ \OT1/cmr/m/n/12 and $[]$. The in-ter-val width is $\OML/cmm/m
 /it/12 w[]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 T[]\OT1/cmr/m/n/12 )$. 
@@ -638,61 +638,61 @@ Overfull \hbox (2.09135pt too wide) in paragraph at lines 1195--1199
 File: ../monte-carlo-coverage-selected.pdf Graphic file (type pdf)
 <use ../monte-carlo-coverage-selected.pdf>
 Package pdftex.def Info: ../monte-carlo-coverage-selected.pdf  used on input li
-ne 1362.
+ne 1135.
 (pdftex.def)             Requested size: 483.69687pt x 386.95937pt.
 <../monte-carlo-interval-selection-rate.pdf, id=343, 722.7pt x 578.16pt>
 File: ../monte-carlo-interval-selection-rate.pdf Graphic file (type pdf)
 <use ../monte-carlo-interval-selection-rate.pdf>
 Package pdftex.def Info: ../monte-carlo-interval-selection-rate.pdf  used on in
-put line 1369.
+put line 1142.
 (pdftex.def)             Requested size: 483.69687pt x 386.95937pt.
 
 
 LaTeX Warning: Reference `sec:stability-analysis' on page 20 undefined on input
- line 1388.
+ line 1161.
 
 [20] [21 <../monte-carlo-coverage-selected.pdf>] [22 <../monte-carlo-interval-s
 election-rate.pdf>]
 <../covid_series_1x3.pdf, id=385, 867.24pt x 289.08pt>
 File: ../covid_series_1x3.pdf Graphic file (type pdf)
 <use ../covid_series_1x3.pdf>
-Package pdftex.def Info: ../covid_series_1x3.pdf  used on input line 1409.
+Package pdftex.def Info: ../covid_series_1x3.pdf  used on input line 1182.
 (pdftex.def)             Requested size: 483.69687pt x 161.23528pt.
 
 
 LaTeX Warning: Reference `sec:stability-analysis' on page 23 undefined on input
- line 1426.
+ line 1199.
 
 
-LaTeX Warning: Reference `tab:china_tau' on page 23 undefined on input line 142
-8.
+LaTeX Warning: Reference `tab:china_tau' on page 23 undefined on input line 120
+1.
 
 [23 <../covid_series_1x3.pdf>]
 
-LaTeX Warning: Reference `tab:china_tau' on page 24 undefined on input line 152
-2.
+LaTeX Warning: Reference `tab:china_tau' on page 24 undefined on input line 129
+5.
 
 
 LaTeX Warning: Reference `sec:stability-analysis' on page 24 undefined on input
- line 1538.
+ line 1311.
 
 
-LaTeX Warning: Reference `tab:france_tau' on page 24 undefined on input line 15
-40.
+LaTeX Warning: Reference `tab:france_tau' on page 24 undefined on input line 13
+13.
 
 [24]
 
 LaTeX Warning: Reference `sec:stability-analysis' on page 25 undefined on input
- line 1629.
+ line 1402.
 
 
 LaTeX Warning: Reference `tab:germany_tau' on page 25 undefined on input line 1
-631.
+404.
 
 [25]
 
 LaTeX Warning: Reference `tab:germany_tau' on page 26 undefined on input line 1
-696.
+469.
 
 [26{/usr/share/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
 (./main.bbl) [27] [28] (./main.aux)
