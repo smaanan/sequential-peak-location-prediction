@@ -2,6 +2,9 @@
 # COVID-19 GERMANY — QUANTILE PEAK-LOCATION ESTIMATION
 #
 # Updated version:
+# - Reads ECDC data from the same input "file" as the France
+#   script (default "6YbQxT6Z") instead of downloading from the
+#   remote URL, while keeping Germany dates unchanged.
 # - Candidate peak locations range over l = 1,...,h with
 #   h = 75 (the analysis horizon), matching Algorithm 1
 #   of the manuscript and the China and France scripts.
@@ -9,7 +12,7 @@
 # - T_exit and threshold_prime have been removed.
 #
 # Data:
-#   ECDC daily COVID-19 cases
+#   ECDC daily COVID-19 cases (read from same file as France script)
 #   January 28 to July 5, 2020
 #
 # Observation horizons:
@@ -53,26 +56,27 @@ h <- max(T_vals)
 min_objectives <- list()
 
 
-# --- Load ECDC Germany COVID-19 Data ---------------------------------------
+# --- Load ECDC Germany COVID-19 Data (from same file as France) ----------
 
+# This uses the same "file" input as the France script (default "6YbQxT6Z").
+# Keep Germany's date window unchanged.
 get_de_cases_ecdc <- function(
+    file = "6YbQxT6Z",
     start_date = "2020-01-28",
     end_date   = "2020-07-05"
 ) {
   
-  url <- paste0(
-    "https://opendata.ecdc.europa.eu/",
-    "covid19/casedistribution/csv"
+  dat <- readr::read_csv(
+    file,
+    col_types = readr::cols(),
+    progress = FALSE
   )
   
-  read_csv(
-    url,
-    col_types = cols()
-  ) %>%
-    filter(
+  dat %>%
+    dplyr::filter(
       countriesAndTerritories == "Germany"
     ) %>%
-    mutate(
+    dplyr::mutate(
       date = as.Date(
         sprintf(
           "%04d-%02d-%02d",
@@ -82,16 +86,16 @@ get_de_cases_ecdc <- function(
         )
       )
     ) %>%
-    filter(
+    dplyr::filter(
       date >= as.Date(start_date),
       date <= as.Date(end_date)
     ) %>%
-    arrange(date) %>%
-    select(
+    dplyr::arrange(date) %>%
+    dplyr::select(
       date,
       daily_cases = cases
     ) %>%
-    mutate(
+    dplyr::mutate(
       daily_cases = ifelse(
         daily_cases < 0,
         NA,

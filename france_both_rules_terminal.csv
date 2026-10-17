@@ -1,9 +1,0 @@
-"tau","rule","T","hat_l","k","T_entry","T_exit","width","contains_L_strict"
-0.25,"narrowest",89,82,3,80,82,2,FALSE
-0.25,"first_k",89,82,2,81,84,3,FALSE
-0.5,"narrowest",89,80,3,73,82,9,TRUE
-0.5,"first_k",89,80,3,73,82,9,TRUE
-0.75,"narrowest",89,81,1,81,86,5,FALSE
-0.75,"first_k",89,81,1,81,86,5,FALSE
-0.95,"narrowest",89,79,3,78,85,7,FALSE
-0.95,"first_k",89,79,3,78,85,7,FALSE
