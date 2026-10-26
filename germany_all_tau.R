@@ -83,7 +83,7 @@ STAGE2_TOLERANCE <- 0
 ############################################################
 
 get_de_cases_ecdc <- function(
-    file = "~/Downloads/6YbQxT6Z",
+    file       = "6YbQxT6Z",
     start_date = "2020-01-28",
     end_date   = "2020-07-05"
 ) {
@@ -129,56 +129,6 @@ get_de_cases_ecdc <- function(
       )
     )
 }
-
-# get_de_cases_ecdc <- function(
-#     start_date = "2020-01-28",
-#     end_date   = "2020-07-05"
-# ) {
-#   
-#   url <- paste0(
-#     "https://opendata.ecdc.europa.eu/",
-#     "covid19/casedistribution/csv"
-#   )
-#   
-#   read_csv(
-#     url,
-#     col_types = cols()
-#   ) %>%
-#     filter(
-#       countriesAndTerritories == "Germany"
-#     ) %>%
-#     mutate(
-#       date = as.Date(
-#         sprintf(
-#           "%04d-%02d-%02d",
-#           year,
-#           month,
-#           day
-#         )
-#       )
-#     ) %>%
-#     filter(
-#       date >= as.Date(start_date),
-#       date <= as.Date(end_date)
-#     ) %>%
-#     arrange(date) %>%
-#     select(
-#       date,
-#       daily_cases = cases
-#     ) %>%
-#     mutate(
-#       daily_cases = ifelse(
-#         daily_cases < 0,
-#         NA,
-#         daily_cases
-#       ),
-#       daily_cases = zoo::na.locf(
-#         daily_cases,
-#         na.rm = FALSE
-#       )
-#     )
-# }
-
 
 de <- get_de_cases_ecdc()
 

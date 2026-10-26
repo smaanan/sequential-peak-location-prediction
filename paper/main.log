@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.10)  17 OCT 2026 12:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.10)  26 OCT 2026 11:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -548,194 +548,127 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 45.
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Underfull \hbox (badness 10000) in paragraph at lines 67--69
+Underfull \hbox (badness 10000) in paragraph at lines 51--54
 
  []
 
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (0.36063pt too wide) in paragraph at lines 94--105
-[]\OT1/cmr/m/n/12 Popular fore-cast-ing ap-proaches such as Au-tore-gres-sive I
-n-te-grated Mov-ing Av-er-age (ARIMA)
+Overfull \hbox (3.88559pt too wide) in paragraph at lines 69--70
+[]\OT1/cmr/m/n/12 Popular fore-cast-ing ap-proaches, such as Au-tore-gres-sive 
+In-te-grated Mov-ing Av-er-age (ARIMA)
  []
-
-
-LaTeX Warning: Reference `sec:stability-analysis' on page 2 undefined on input 
-line 131.
 
 [2
 
-]
-
-LaTeX Warning: Reference `sec:stability-analysis' on page 3 undefined on input 
-line 149.
-
-[3]
+] [3]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 220.
+put line 152.
  [4]
-<../plot_quantile_all.pdf, id=172, 722.7pt x 903.375pt>
+<../plot_quantile_all.pdf, id=179, 722.7pt x 903.375pt>
 File: ../plot_quantile_all.pdf Graphic file (type pdf)
 <use ../plot_quantile_all.pdf>
-Package pdftex.def Info: ../plot_quantile_all.pdf  used on input line 250.
+Package pdftex.def Info: ../plot_quantile_all.pdf  used on input line 182.
 (pdftex.def)             Requested size: 483.69687pt x 604.62404pt.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 262.
+(hyperref)                removing `math shift' on input line 192.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\tau' on input line 262.
+(hyperref)                removing `\tau' on input line 192.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 262.
+(hyperref)                removing `math shift' on input line 192.
 
 [5] [6 <../plot_quantile_all.pdf>] [7]
-<../figure2_asymmetric_laplace_all_tau_T.pdf, id=208, 722.7pt x 903.375pt>
+<../figure2_asymmetric_laplace_all_tau_T.pdf, id=213, 722.7pt x 903.375pt>
 File: ../figure2_asymmetric_laplace_all_tau_T.pdf Graphic file (type pdf)
 <use ../figure2_asymmetric_laplace_all_tau_T.pdf>
 Package pdftex.def Info: ../figure2_asymmetric_laplace_all_tau_T.pdf  used on i
-nput line 445.
+nput line 375.
 (pdftex.def)             Requested size: 483.69687pt x 604.62404pt.
  [8] [9 <../figure2_asymmetric_laplace_all_tau_T.pdf>]
-<../fig_tstar_examples.pdf, id=237, 722.7pt x 578.16pt>
+<../fig_tstar_examples.pdf, id=242, 722.7pt x 578.16pt>
 File: ../fig_tstar_examples.pdf Graphic file (type pdf)
 <use ../fig_tstar_examples.pdf>
-Package pdftex.def Info: ../fig_tstar_examples.pdf  used on input line 523.
+Package pdftex.def Info: ../fig_tstar_examples.pdf  used on input line 457.
 (pdftex.def)             Requested size: 483.69687pt x 386.95937pt.
- [10] [11 <../fig_tstar_examples.pdf>]
-
-LaTeX Warning: Reference `sec:stability-analysis' on page 12 undefined on input
- line 538.
-
-[12]
-Overfull \hbox (3.22115pt too wide) in paragraph at lines 637--651
+ [10] [11 <../fig_tstar_examples.pdf>] [12]
+Overfull \hbox (3.22115pt too wide) in paragraph at lines 572--586
 \OT1/cmr/m/n/12 The con-ven-tion $\OML/cmm/m/it/12 T[]\OT1/cmr/m/n/12 (\OML/cmm
 /m/it/12 T\OT1/cmr/m/n/12 ) = \OML/cmm/m/it/12 T$ \OT1/cmr/m/n/12 pro-vides the
  ini-tial can-di-date exit time, for which $\OML/cmm/m/it/12 ![] [] \OT1/cmr/m/
 n/12 =
  []
 
-[13] [14]
-<../fig_exit_entry_times_SNR1.pdf, id=284, 614.295pt x 469.755pt>
-File: ../fig_exit_entry_times_SNR1.pdf Graphic file (type pdf)
-<use ../fig_exit_entry_times_SNR1.pdf>
-Package pdftex.def Info: ../fig_exit_entry_times_SNR1.pdf  used on input line 8
-56.
-(pdftex.def)             Requested size: 483.69687pt x 369.89102pt.
- [15] [16 <../fig_exit_entry_times_SNR1.pdf>]
-Overfull \hbox (2.09135pt too wide) in paragraph at lines 968--972
-\OT1/cmr/m/n/12 spond-ing se-lected in-ter-val for each com-bi-na-tion of $\OML
-/cmm/m/it/12 ^^\$ \OT1/cmr/m/n/12 and $[]$. The in-ter-val width is $\OML/cmm/m
-/it/12 w[]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 T[]\OT1/cmr/m/n/12 )$. 
- []
-
-[17] [18] [19]
-<../monte-carlo-coverage-selected.pdf, id=342, 722.7pt x 578.16pt>
+[13] [14] [15] [16] [17] [18]
+<../monte-carlo-coverage-selected.pdf, id=336, 722.7pt x 578.16pt>
 File: ../monte-carlo-coverage-selected.pdf Graphic file (type pdf)
 <use ../monte-carlo-coverage-selected.pdf>
 Package pdftex.def Info: ../monte-carlo-coverage-selected.pdf  used on input li
-ne 1135.
+ne 983.
 (pdftex.def)             Requested size: 483.69687pt x 386.95937pt.
-<../monte-carlo-interval-selection-rate.pdf, id=343, 722.7pt x 578.16pt>
+<../monte-carlo-interval-selection-rate.pdf, id=337, 722.7pt x 578.16pt>
 File: ../monte-carlo-interval-selection-rate.pdf Graphic file (type pdf)
 <use ../monte-carlo-interval-selection-rate.pdf>
 Package pdftex.def Info: ../monte-carlo-interval-selection-rate.pdf  used on in
-put line 1142.
+put line 990.
 (pdftex.def)             Requested size: 483.69687pt x 386.95937pt.
-
-
-LaTeX Warning: Reference `sec:stability-analysis' on page 20 undefined on input
- line 1161.
-
-[20] [21 <../monte-carlo-coverage-selected.pdf>] [22 <../monte-carlo-interval-s
-election-rate.pdf>]
-<../covid_series_1x3.pdf, id=385, 867.24pt x 289.08pt>
+ [19] [20 <../monte-carlo-coverage-selected.pdf>]
+[21 <../monte-carlo-interval-selection-rate.pdf>]
+<../covid_series_1x3.pdf, id=381, 867.24pt x 289.08pt>
 File: ../covid_series_1x3.pdf Graphic file (type pdf)
 <use ../covid_series_1x3.pdf>
-Package pdftex.def Info: ../covid_series_1x3.pdf  used on input line 1182.
+Package pdftex.def Info: ../covid_series_1x3.pdf  used on input line 1059.
 (pdftex.def)             Requested size: 483.69687pt x 161.23528pt.
+ [22 <../covid_series_1x3.pdf>]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1183.
 
 
-LaTeX Warning: Reference `sec:stability-analysis' on page 23 undefined on input
- line 1199.
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1183.
 
-
-LaTeX Warning: Reference `tab:china_tau' on page 23 undefined on input line 120
-1.
-
-[23 <../covid_series_1x3.pdf>]
-
-LaTeX Warning: Reference `tab:china_tau' on page 24 undefined on input line 129
-5.
-
-
-LaTeX Warning: Reference `sec:stability-analysis' on page 24 undefined on input
- line 1311.
-
-
-LaTeX Warning: Reference `tab:france_tau' on page 24 undefined on input line 13
-13.
-
-[24]
-
-LaTeX Warning: Reference `sec:stability-analysis' on page 25 undefined on input
- line 1402.
-
-
-LaTeX Warning: Reference `tab:germany_tau' on page 25 undefined on input line 1
-404.
-
-[25]
-
-LaTeX Warning: Reference `tab:germany_tau' on page 26 undefined on input line 1
-469.
-
-[26{/usr/share/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
-(./main.bbl) [27] [28] (./main.aux)
+[23] [24] [25] [26] (./main.bbl [27]) [28] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-03-20>
  ***********
-
-
-LaTeX Warning: There were undefined references.
-
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 4B8DD6F19D97839D74E5D9B1DB2E6A34;5774.
+(rerunfilecheck)             Checksum: 89165E9B7FAE4351EA5EA24BE7E531E0;5933.
  ) 
 Here is how much of TeX's memory you used:
- 13760 strings out of 469296
- 216931 string characters out of 5465560
- 645826 words of memory out of 6000000
- 42293 multiletter control sequences out of 15000+600000
- 641986 words of font info for 94 fonts, out of 8000000 for 9000
+ 13758 strings out of 469296
+ 216654 string characters out of 5465560
+ 652520 words of memory out of 6000000
+ 42287 multiletter control sequences out of 15000+600000
+ 641649 words of font info for 93 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 75i,12n,84p,940b,561s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,84p,968b,563s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texl
 ive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex8.pfb></usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8
-.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><
-/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/sh
-are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/te
-xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texlive/
-texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texlive/t
-exmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on main.pdf (28 pages, 384889 bytes).
+/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy1
+0.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/s
+hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/t
+exlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on main.pdf (28 pages, 346493 bytes).
 PDF statistics:
- 545 PDF objects out of 1000 (max. 8388607)
- 458 compressed objects within 5 object streams
- 113 named destinations out of 1000 (max. 500000)
- 228 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 540 PDF objects out of 1000 (max. 8388607)
+ 460 compressed objects within 5 object streams
+ 119 named destinations out of 1000 (max. 500000)
+ 231 words of extra memory for PDF output out of 10000 (max. 10000000)
 

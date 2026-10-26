@@ -42,30 +42,15 @@
 
 \begin{document}
 \maketitle
+
 \begin{abstract}
-	\noindent
-	Predicting the location of peaks in time series is important when
-	decisions must be made before the peak is fully observed. We model the
-	observations as a Gaussian trend with additive noise and develop a
-	quantile-based procedure for estimating its amplitude, location, and
-	spread. For fixed location and spread, the amplitude estimator is a
-	weighted $\tau$-quantile of a transformed version of the observations.
-	We introduce a $\tau$-aligned asymmetric Laplace noise model whose
-	negative log-likelihood is proportional to the quantile check loss,
-	providing a probabilistic interpretation of the criterion and allowing
-	the effects of the quantile level $\tau$ and the signal-to-noise ratio
-	to be studied in a unified framework. When the estimated peak location
-	does not stabilize early enough to yield an accurate point prediction,
-	we propose a two-stage construction based on the oscillations of the
-	sequential estimates. It produces candidate entry and exit times, and
-	hence candidate peak regions, using only the estimation trajectory and
-	not the true peak location. The observed peak can be used
-	retrospectively to evaluate the candidates. The methodology is
-	illustrated on daily COVID-19 cases in China, France, and Germany.
+	Predicting the location of a peak before it is fully observed is important in many applications. We consider a Gaussian-shaped signal with additive noise and develop a quantile-based method for estimating its amplitude, location, and spread. For fixed location and spread, the amplitude estimator is a weighted $\tau$-quantile of a transformed version of the observations. A $\tau$-aligned asymmetric Laplace noise model provides a probabilistic interpretation of the quantile objective through its likelihood.
+	We study the sequential evolution of the estimated peak location as the observation horizon increases. When the estimate does not stabilize sufficiently early, we propose a two-stage construction of candidate entry--exit intervals based on oscillations in the estimation trajectory. These intervals can be constructed without knowing the true peak location. Monte Carlo simulations evaluate the interval-selection rate and empirical coverage, showing that performance depends on the signal-to-noise ratio. Stabilization is more reliable under the high- and moderate-SNR settings considered, whereas low SNR reduces point-estimation reliability and makes interval coverage more variable. Finally, we illustrate the method using daily COVID-19 cases during the first wave of the pandemic in China, France, and Germany.
 \end{abstract}
 
 \noindent
-\textbf{Keywords:} Peak prediction; quantile regression; asymmetric Laplace noise; peak-region entry and exit times; time series; COVID-19.\\
+\textbf{Keywords:} Peak prediction; quantile regression; asymmetric Laplace noise;
+sequential estimation; entry--exit intervals; signal-to-noise ratio; COVID-19.\\
 
 \noindent
 \textbf{Mathematics subject classification:} 62M10, 62G35, 60G35.
@@ -79,74 +64,21 @@
 \section{Introduction}
 \label{section:1}
 
-Predicting peaks in time series data is important across a wide range of
-applications involving proactive decision-making, risk management,
-resource allocation, and disaster preparedness, such as anticipating
-disease outbreaks in epidemiology or peak demand in energy management.
-Peak prediction is challenging because observations are affected by
-noise, and the underlying signal may exhibit nonlinear or otherwise
-complex behavior. Measurement errors and random fluctuations can make
-the location and amplitude of a peak difficult to identify from partial
-observations, and real-world time series may contain multiple peaks,
-irregular peak shapes, or other temporal structures that are not
-adequately described by simple forecasting models.
+Predicting peaks in time series data is important across a wide range of applications involving proactive decision-making, risk management, resource allocation, and disaster preparedness. Examples include anticipating disease outbreaks in epidemiology and peak demand in energy systems. Peak prediction is challenging because observations are affected by noise, and the underlying signal may be difficult to identify from partial observations. Measurement errors and random fluctuations can make the location and amplitude of a peak difficult to estimate before it is fully observed. Moreover, real-world time series may exhibit multiple peaks, irregular peak shapes, or other temporal structures that are not adequately described by simple forecasting models.
 
-Popular forecasting approaches such as Autoregressive Integrated Moving
-Average (ARIMA) models and Recurrent Neural Networks (RNNs) can be
-effective for describing temporal dependence and forecasting general
-patterns, but they are not specifically designed to estimate the timing
-and magnitude of a future peak. A model that provides a good overall
-forecast may not necessarily provide an accurate estimate of the
-location of a future peak. There has also been comparatively little
-theoretical work devoted specifically to peak prediction in time series;
-one contribution in this direction is the thesis of~\citet{Tuc20},
-which studies the interplay between trend, seasonality, and noise (see
-also~\citet{YuB2019,See17}).
+Popular forecasting approaches, such as Autoregressive Integrated Moving Average (ARIMA) models and Recurrent Neural Networks (RNNs), can be effective for describing temporal dependence and forecasting general patterns, but they are not specifically designed to estimate the timing and magnitude of a future peak. A model that provides a good overall forecast may not necessarily provide an accurate estimate of the location of a peak. There has also been comparatively little theoretical work devoted specifically to peak prediction in time series. One contribution in this direction is the thesis of~\citet{Tuc20}, which studies the interplay between trend, seasonality, and noise; see also~\citep{YuB2019,See17}.
 
-Our approach builds on the framework developed in~\citet{Der25}. We
-consider observations available at an observation horizon $T$ and a
-prescribed future horizon $h>T$. The observations are modeled, as in
-Section~\ref{section:quantile_amplitude}, as a Gaussian trend of
-amplitude $A>0$, peak location $L$, and spread $S>0$, corrupted by
-additive noise. The objective is to estimate $(A,L,S)$ from the
-observations available up to time $T$ and, in particular, to predict the
-location $L$ of the peak before it is fully observed.
+Our approach builds on the framework developed in~\citet{Der25}. We consider observations available up to a current observation horizon \(T\) and a prescribed search horizon \(h>T\). The observations are modeled as a Gaussian-shaped signal with amplitude \(A>0\), peak location \(L\), and spread \(S>0\), corrupted by additive noise. Our objective is to estimate these parameters from the observations available up to time \(T\) and, in particular, to predict the peak location \(L\) before it is fully observed.
 
-Our first contribution is to replace the least-absolute-deviation
-criterion used in the symmetric case by a general quantile regression
-criterion indexed by $\tau\in(0,1)$. As we show in
-Section~\ref{section:quantile_amplitude}, for fixed location and spread,
-the amplitude minimizing this criterion is a weighted $\tau$-quantile of
-a transformed version of the observations; the weighted median of the
-symmetric case is recovered at $\tau=1/2$.
+Our first contribution is to extend the least-absolute-deviation criterion used in the symmetric case to a general quantile regression criterion indexed by \(\tau\in(0,1)\). As shown in Section~\ref{section:quantile_amplitude}, for fixed location and spread, the amplitude minimizing this criterion is a weighted \(\tau\)-quantile of a transformed version of the observations. The weighted-median estimator is recovered as the special case \(\tau=1/2\). We also examine the behavior of the quantile-based objective in the noise-free setting in Section~\ref{sec:noise-free}.
 
-Our second contribution is a probabilistic interpretation of the
-criterion. In Section~\ref{sec:symmetric_laplace_estimation} we
-introduce a $\tau$-aligned asymmetric Laplace noise model whose negative
-log-likelihood is proportional to the quantile check loss. This allows
-the effects of the quantile level $\tau$ and of the signal-to-noise
-ratio to be studied within a unified framework, and it recovers the
-symmetric Laplace model at $\tau=1/2$.
-Sections~\ref{sec:parameter_estimation_paths}
-and~\ref{sec:stability-analysis} examine the resulting estimated
-peak-location trajectories under high and low signal-to-noise ratios.
+Our second contribution is a probabilistic interpretation of the estimation criterion. In Section~\ref{sec:symmetric_laplace_estimation}, we introduce a \(\tau\)-aligned asymmetric Laplace noise model whose negative log-likelihood is proportional to the quantile check loss. This connection provides a unified framework for studying the effects of the quantile level \(\tau\) and the signal-to-noise ratio (SNR) on peak estimation, with the symmetric Laplace model recovered when \(\tau=1/2\). Section~\ref{sec:parameter_estimation_paths} investigates the evolution of the sequential peak-location estimator as the observation horizon increases. In particular, we study its stabilization time, defined as the first horizon from which the estimated location remains constant over all subsequent horizons, subject to a minimum plateau-length condition.
 
-Our third contribution concerns the situation in which the estimated peak location does not stabilize early enough to yield an accurate point prediction. In this work, we make precise the construction of the entry and exit times of the peak region, based on the oscillations of the sequential estimates $T\mapsto\hat l(T)$. The construction determines candidate entry and exit times, and hence candidate peak regions, using only the estimation trajectory; knowledge of the true peak location is not required operationally, and when it is available it is used only retrospectively to evaluate the candidates.
-The methodology is applied to daily COVID-19 case counts during the
-first wave of the pandemic in China~\citep{Bar20}, France, and Germany,
-for several quantile levels (Section~\ref{sec:covid-real-data}).
+Our third contribution addresses situations in which the sequential estimate does not stabilize sufficiently early to provide a reliable point prediction. In Section~\ref{sec:entry-exit}, we develop a data-driven construction of candidate entry and exit times based on the oscillations of the sequential peak-location estimates. These times define candidate intervals for the peak region using only the estimation trajectory, without requiring knowledge of the true peak location \(L\). We then introduce an operational rule for selecting a candidate interval based on whether it contains the current point estimate. The performance of this procedure is assessed through Monte Carlo simulations, including empirical interval-selection rates and coverage probabilities. The true peak location is used only retrospectively to evaluate the selected intervals; the construction itself does not guarantee a prescribed coverage level.
 
-The remainder of the paper is organized as follows. In
-Section~\ref{section:quantile_amplitude}, we introduce the Gaussian peak
-model and the quantile-based estimation procedure, including the
-weighted $\tau$-quantile characterization of the amplitude estimator.
-Section~3 studies the behavior of the quantile-based objective in the
-noise-free setting. Section~\ref{sec:symmetric_laplace_estimation}
-introduces the $\tau$-aligned asymmetric Laplace noise model and
-establishes its connection with the quantile loss.
-Section~\ref{sec:parameter_estimation_paths} investigates the
-trajectories of the estimated peak parameters under high signal-to-noise
-ratio. Section~\ref{sec:stability-analysis} examines the temporal stability of the estimated peak location when the signal-to-noise ratio is reduced. Section~\ref{sec:entry-exit} makes explicit the construction of the candidate entry and exit times based on the oscillations of the sequential peak-location estimates, and defines the associated candidate peak regions. Finally, Section~\ref{sec:covid-real-data} applies the proposed methodology to daily COVID-19 case data from China, France, and Germany.
+Finally, we illustrate the methodology using daily COVID-19 case counts during the first wave of the pandemic in China~\citep{Bar20}, France, and Germany. The real-world application in Section~\ref{sec:covid-real-data} examines the estimated peak trajectories and the behavior of the proposed entry–exit construction across several quantile levels.
+
+The remainder of the paper is organized as follows. Section~\ref{section:quantile_amplitude} introduces the Gaussian peak model and the quantile-based estimation procedure, including the weighted-quantile characterization of the amplitude estimator. Section~\ref{sec:noise-free} examines the quantile-based objective in the noise-free setting. Section~\ref{sec:symmetric_laplace_estimation} introduces the \(\tau\)-aligned asymmetric Laplace noise model and establishes its connection with the quantile loss. Section~\ref{sec:parameter_estimation_paths} studies the stabilization of the sequential peak-location estimator, while Section~\ref{sec:entry-exit} develops the candidate entry–exit intervals and evaluates the operational selection procedure. Section~\ref{sec:covid-real-data} presents the real-world COVID-19 application, including comparisons across quantile levels and tables of estimated peak trajectories.
 
 \section{Quantile-Based Estimation Methodology}
 \label{section:quantile_amplitude}
@@ -220,7 +152,7 @@ We define the following steps to jointly estimate the location \( \hat{l}(T) \),
 \caption{Quantile-based estimation of peak parameters}
 \label{algo:quantile}
 \begin{algorithmic}[1]
-\REQUIRE Time horizon \( T \), upper bound \( h > T \), quantile level \( \tau \in (0,1) \)
+\REQUIRE Time horizon \( T \), upper bound \( h \ge T \), quantile level \( \tau \in (0,1) \)
 \STATE For each candidate \( l \in [1, h] \), find \( s^*(l) = \arg\min_s f_\tau(T, a^*(l,s), l, s) \)
 \STATE Set \( \hat{l}(T) = \arg\min_l f_\tau(T, a^*(l,s^*(l)), l, s^*(l)) \)
 \STATE Set \( \hat{s}(T) = s^*(\hat{l}(T)) \)
@@ -233,8 +165,8 @@ We define the following steps to jointly estimate the location \( \hat{l}(T) \),
 
 This method generalizes the classic Least Absolute Deviations (LAD) estimator, recovered at \( \tau = 0.5 \). By adjusting \( \tau \), we introduce asymmetry into the estimation loss, enabling the model to better adapt to skewed noise distributions. This makes the approach especially valuable in early-warning systems and epidemic peak detection where overestimation and underestimation have asymmetric consequences.
 
-
 \section{Quantile-Based Objective Function under Noise-Free Conditions}
+\label{sec:noise-free}
 
 We first consider the idealized scenario where the signal is not corrupted by noise. The model of interest is given by
 \[
@@ -251,8 +183,6 @@ Since the goal is to predict the location \( L \) of the peak before it becomes 
     \caption{Objective function \( l \mapsto f_\tau(T, a, l, s) \) computed for \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \) and \( T \in \{2, 3, 10, 20, 21\} \), under a noise-free signal. The vertical dashed line indicates the true peak location \( L = 22 \), and the search is restricted to values \( l > T \).}
     \label{fig:quantile_objective_noise_free}
 \end{figure}
-
-\paragraph{Remark.} For each fixed sample size $T$, we computed the value of the minimized objective function at the estimated parameters $(\hat{a}, \hat{l}, \hat{s})$. The results indicate that the lowest objective value is typically achieved for $\tau = 0.95$, suggesting that upper quantiles align particularly well with the noiseless signal structure. The only exception is at $T = 20$, where $\tau = 0.75$ yields a slightly smaller loss. This empirical observation may help guide quantile selection when prior knowledge of signal shape or noise properties is limited.
 
 \section{\texorpdfstring{Quantile-Based Estimation with $\tau$-Aligned Noise}{Quantile-Based Estimation with tau-Aligned Noise}}
 \label{sec:symmetric_laplace_estimation}
@@ -460,60 +390,64 @@ $(\hat l(T),\hat a(T),\hat s(T))$ minimizes the objective
 
 \subsection{Stabilization time}
 
-When the true location $L$ is known, as in simulations, we define
+We define the stabilization time of the path $T\mapsto\hat l(T)$ as
 \[
 T^{*}
 =
-\min\{T\in\{4,\dots,h\}:\ \hat l(u)=L \text{ for all } u\in\{T,\dots,h\}\},
+\min\{T\in\{4,\dots,h\}:\ \hat l(u)=\hat l(T)\ \text{for all }u\in\{T,\dots,h\}\},
 \]
-with $T^{*}=\infty$ if no such $T$ exists. Since $T^{*}$ uses $L$, it is
-a simulation diagnostic and not an operational quantity. The
+the first horizon from which the estimate no longer changes. This definition
+does not use $L$. To exclude a trivial plateau reduced to the last horizon(s),
+we require the plateau to contain at least $m=3$ horizons, $h-T+1\ge m$, and
+set $T^{*}=\infty$ otherwise. In simulations, where $L$ is known, we also
+record whether the plateau value equals $L$, that is, $\hat l(T^{*})=L$. The
 operational entry time $T_{\mathrm{entry}}^{(0)}(T)$ of
-Section~\ref{subsec:entry-time} does not use $L$.
+Section~\ref{subsec:entry-time} is a different quantity, defined from the
+oscillations of the path.
 
 \subsection{Large and moderate signal-to-noise ratio}
 
-For $\mathrm{SNR}=1000$ and $\mathrm{SNR}=100$,
-$T\mapsto\hat l(T)$ reaches $L$ and stays there from a finite time
-$T^{*}<L$. For $\tau=0.50$ and $M=200$ independent replicates,
-Table~\ref{tab:tstar} shows $T^{*}<L$ in all replicates at
-$\mathrm{SNR}=1000$ (median $12$) and in $99\%$ of them at
-$\mathrm{SNR}=100$ (median $18$). In the single realization used in
+For $\mathrm{SNR}=1000$ and $\mathrm{SNR}=100$, the estimated peak location $\hat l(T)$ reaches a plateau whose value equals $L$ in all replicates. The stabilization time satisfies $T^*\leq L$ in all replicates at $\mathrm{SNR}=1000$ and in $99\%$ of replicates at $\mathrm{SNR}=100$. For $\tau=0.50$ and $M=200$ independent replicates, Table~\ref{tab:tstar} reports median stabilization times of $12$ and $18$, respectively.
+In the single realization used in
 Section~\ref{subsec:entry-exit-simulation} (seed $280$, $\tau=0.50$),
-$T^{*}=9$ at $\mathrm{SNR}=1000$.
-In these regimes the point estimate identifies $L$ after a short transient, and $T^{*}$
-plays the role of an entry time. No exit time is needed.
+$T^{*}=9$ at $\mathrm{SNR}=1000$. In these regimes the point estimate
+identifies $L$ after a short transient, and $T^{*}$ plays the role of an entry
+time. No exit time is needed.
 
 \subsection{Small signal-to-noise ratio}
 
-For $\mathrm{SNR}=1$, $\hat l(T)$ does not stabilize at $L$ before the
-terminal horizon in most replicates. In the same experiment ($\tau=0.50$,
-$M=200$), $T^{*}>L$ in every replicate and $T^{*}$ is finite in only
-$13.5\%$ of them; the finite values lie between $24$ and $30$, that is,
-after $L$. Figure~\ref{fig:tstar_examples} shows two replicates: one with
-finite $T^{*}=24$ (the smallest finite value observed among the
-$200$ replicates) and one with $T^{*}=\infty$. In this regime the path
-alone does not indicate when its current value can be trusted. This
-motivates the entry times, exit times and the data-driven interval
-defined in Section~\ref{subsec:oscillations} onwards, which are studied
-for $\mathrm{SNR}=1$ in Section~\ref{subsec:entry-exit-simulation}.
+For $\mathrm{SNR}=1$, the path rarely settles. In the same experiment
+($\tau=0.50$, $M=200$), a plateau of at least $m=3$ horizons exists in only
+$34\%$ of the replicates ($T^{*}<\infty$), with median $T^{*}=27$, and
+$T^{*}>L$ or $T^{*}=\infty$ in $93\%$ of them. The plateau value equals $L$
+in only $4.5\%$ of all replicates (about $13\%$ of those with a plateau).
+Without the minimal length ($m=1$), $T^{*}$ is always finite, with median
+$30=h$, because the last horizon is a trivial plateau; then $\hat l(T^{*})=L$
+in $13.5\%$ of the replicates. Figure~\ref{fig:tstar_examples} shows two
+replicates: one with finite $T^{*}=24$ and one with $T^{*}=\infty$. In
+this regime the path alone does not indicate when its current value can be
+trusted. This motivates the entry times, exit times and the data-driven
+interval defined in Section~\ref{subsec:oscillations} onwards, which are
+studied for $\mathrm{SNR}=1$ in Section~\ref{subsec:entry-exit-simulation}.
 In the finite example the estimate equals $L$ at $T=22$ but leaves it at
 $T=23$, so a single hit of $L$ does not indicate stabilization.
 
 \begin{table}[htbp]
 	\centering
-	\caption{Stabilization time $T^{*}$ for $\tau=0.50$, based on
-		$M=200$ replicates. Median $T^{*}$ is computed over replicates
-		with finite $T^{*}$. The last column counts $T^{*}=\infty$ as
-		$T^{*}>L$.}
+	\caption{Stabilization time $T^{*}$ (plateau of at least $m=3$ horizons)
+		for $\tau=0.50$, based on $M=200$ replicates. Median $T^{*}$ is
+		computed over replicates with finite $T^{*}$; $T^{*}=\infty$ is
+		counted as $T^{*}>L$. The last column is the proportion of all
+		replicates with $\hat l(T^{*})=L$.}
 	\label{tab:tstar}
-	\begin{tabular}{cccc}
+	\begin{tabular}{ccccc}
 		\toprule
-		SNR & median $T^{*}$ & $\mathbb P(T^{*}<\infty)$ & $\mathbb P(T^{*}>L)$ \\
+		SNR & median $T^{*}$ & $\mathbb P(T^{*}<\infty)$
+		& $\mathbb P(T^{*}>L)$ & $\mathbb P(\hat l(T^{*})=L)$ \\
 		\midrule
-		$1000$ & $12$ & $1.000$ & $0.000$ \\
-		$100$  & $18$ & $1.000$ & $0.010$ \\
-		$1$    & $30$ & $0.135$ & $1.000$ \\
+		$1000$ & $12$ & $1.00$ & $0.00$ & $1.00$ \\
+		$100$  & $18$ & $1.00$ & $0.01$ & $1.00$ \\
+		$1$    & $27$ & $0.34$ & $0.93$ & $0.045$ \\
 		\bottomrule
 	\end{tabular}
 \end{table}
@@ -523,19 +457,20 @@ $T=23$, so a single hit of $L$ does not indicate stabilization.
 	\includegraphics[width=\textwidth]{fig_tstar_examples.pdf}
 	\caption{Trajectories $T\mapsto\hat l(T)$ for $\tau=0.50$. Top: ten
 		replicates at $\mathrm{SNR}=1000$ and $\mathrm{SNR}=100$. Bottom
-		($\mathrm{SNR}=1$): the replicate with the smallest finite
-		$T^{*}$ ($T^{*}=24$), whose path equals $L$ at $T=22$, leaves it at
-		$T=23$ and returns to $L$ for $T\ge 24$, and a replicate with
-		$T^{*}=\infty$. The dashed line is $L=22$ and black dots mark $T^{*}$.}
+		($\mathrm{SNR}=1$): a replicate with finite $T^{*}=24$ (the smallest
+		finite value among replicates whose plateau equals $L$), and a replicate
+		with $T^{*}=\infty$ (no plateau of at least three horizons). The dashed
+		line is $L=22$ and black dots mark $T^{*}$.}
 	\label{fig:tstar_examples}
 \end{figure}
 
 \section{Entry and Exit Times of the Peak Region}
 \label{sec:entry-exit}
 
-The sequential estimation procedure introduced in the preceding sections provides, for each observation horizon \(T\), an estimate \(\hat{l}(T)\) of the peak location. Here, \(T\) denotes the current observation horizon, so that the estimator is constructed using only the observations available on \([1,T]\), while the candidate peak location is searched over the fixed horizon \([1,h]\), with \(T<h\) and \(L<h\). Thus, although only the observations \(1,\ldots,T\) are used in the estimation, the estimator may identify a peak location beyond the current observation horizon \(T\). For notational simplicity, we write \(\hat{l}(T)\) instead of \(\hat{l}(T,h)\) when the horizon \(h\) is fixed.
+The sequential estimation procedure introduced in the preceding sections provides, for each observation horizon \(T\), an estimate \(\hat{l}(T)\) of the peak location. Here, \(T\) denotes the current observation horizon, so that the estimator is constructed using only the observations available on \([1,T]\), while the candidate peak location is searched over the fixed horizon \([1,h]\), with \(T \le h\) and \(L<h\). The case \(T=h\) corresponds to the full-sample estimator and is used in the real-data application of Section~\ref{sec:covid-real-data}.
+Thus, although only the observations \(1,\ldots,T\) are used in the estimation, the estimator may identify a peak location beyond the current observation horizon \(T\). For notational simplicity, we write \(\hat{l}(T)\) instead of \(\hat{l}(T,h)\) when the horizon \(h\) is fixed.
 
-The stabilization criterion considered in Section~\ref{sec:stability-analysis} characterizes the point from which the future estimation path remains within a prescribed tolerance. In this section, we introduce a complementary construction based on the oscillations of the estimated peak location. This construction aims at identifying candidate time intervals describing the region in which the estimated peak location becomes stable, through a data-driven time of entry and a time of exit.
+The stabilization time defined in Section~\ref{sec:parameter_estimation_paths} characterizes the first horizon from which the estimated peak location remains constant over all subsequent horizons, subject to the minimum plateau-length condition introduced there. In this section, we introduce a complementary construction based on the oscillations of the estimated peak location. This construction aims at identifying candidate time intervals describing the region in which the estimated peak location becomes stable, through a data-driven time of entry and a time of exit.
 
 The operational construction is based only on the sequential estimation trajectory
 \(
@@ -547,10 +482,10 @@ The true peak location \(L\) is not required to construct the candidate entry an
 \label{subsec:oscillations}
 
 We fix a sufficiently large horizon \(h\) such that the true peak location satisfies
-\(L<h\). For each observation horizon \(T<h\), the sequential estimator \(\hat{l}(T)\) is constructed using only the observations available on \([1,T]\), while the candidate peak location is searched over \([1,h]\).
+\(L<h\). For each observation horizon \(T\leq h\), the sequential estimator \(\hat{l}(T)\) is constructed using only the observations available on \([1,T]\), while the candidate peak location is searched over \([1,h]\).
 To characterize the temporal stability of the estimated peak location using only the information available at the current observation horizon \(T\), we consider the oscillations of the estimation path over intervals contained in the observed time range \([1,T]\). For two times \(t\) and \(T\) satisfying
 \(
-T_0\leq t\leq T<h,
+T_0\leq t\leq T\leq h,
 \)
 we define the oscillation of the estimated peak location over the interval \([t,T]\) by
 \begin{equation}
@@ -583,7 +518,7 @@ The strict decreases of this sequence identify the times at which the oscillatio
 \subsection{Strict-decrease points of the retrospective oscillation}
 \label{subsec:strict-decrease-points}
 
-For a fixed observation horizon \(T<h\), consider the nonincreasing sequence
+For a fixed observation horizon \(T\leq h\), consider the nonincreasing sequence
 $t\longmapsto\omega_l(t,T),$
 with 
 $t\in\{T_0,\ldots,T\}.$
@@ -610,7 +545,7 @@ Thus, for each current observation horizon \(T\), the strict-decrease points cha
 \subsection{Construction of the candidate exit times}
 \label{subsec:candidate-exit-times}
 
-For each current observation horizon \(T<h\), the candidate exit times are defined from the strict-decrease points of the sequence
+For each current observation horizon \(T\leq h\), the candidate exit times are defined from the strict-decrease points of the sequence
 \(
 t\longmapsto\omega_l(t,T).
 \)
@@ -665,7 +600,7 @@ for its successive strict-decrease points. In numerical implementation, a small 
 \subsection{Determination of the entry time}
 \label{subsec:entry-time}
 
-For a given current observation horizon \(T<h\) and a candidate exit time
+For a given current observation horizon \(T\leq h\) and a candidate exit time
 \(T_{\mathrm{exit}}^{(k)}(T)\), we first consider all observation times strictly before the candidate exit time. The set
 \begin{equation}
 	E_k(T)
@@ -774,20 +709,20 @@ T_{\mathrm{entry}}^{(k)}(T).
 \]
 Our objective is to define an operational selection rule that does
 not require knowledge of the true peak location $L$.
-As shown in Section~\ref{sec:parameter_estimation_paths}, for large and
-moderate signal-to-noise ratios $\widehat l(T)$ stabilizes at $L$ from a
-finite time $T^{*}<L$, so that the entry time alone is sufficient. For
-$\mathrm{SNR}=1$, by contrast, $T^{*}>L$ or $T^{*}=\infty$, and the path
-alone does not indicate when its current value can be trusted. The exit
-times and the admissible set $\mathcal K(T)$ introduced below are
-therefore studied mainly for $\mathrm{SNR}=1$. The cases
-$\mathrm{SNR}=1000$ and $\mathrm{SNR}=100$ are reported only as boundary
-cases, in which $\mathcal K(T)=\{0\}$ for all $T\geq 22$ in the
-simulations.
+As shown in Section~\ref{sec:parameter_estimation_paths}, for large
+and moderate signal-to-noise ratios, $\hat l(T)$ reaches a plateau
+whose value equals $L$ in all replicates, with $T^*\le L$ in all
+replicates at $\mathrm{SNR}=1000$ and in $99\%$ of replicates at
+$\mathrm{SNR}=100$. In these regimes, the entry time alone is
+sufficient for the single-realization examples considered below.
+For $\mathrm{SNR}=1$, by contrast, a plateau of at least three
+horizons exists in only about one third of the replicates, and
+$T^*>L$ or $T^*=\infty$ in most of them. The path alone therefore
+does not indicate when its current value can be trusted.
+The exit times and the admissible set \(\mathcal K(T)\) introduced below are therefore studied mainly for \(\mathrm{SNR}=1\). The cases \(\mathrm{SNR}=1000\) and \(\mathrm{SNR}=100\) are also reported as high-SNR benchmark cases.
 
 \paragraph{Structure of the candidate intervals.}
-Before defining the selection rule, we examine the structure of the
-candidate family for $\mathrm{SNR}=1$. First, the exit times satisfy
+For a fixed \(T\), the exit times satisfy
 \begin{equation}
 	T_{\mathrm{exit}}^{(k+1)}(T)
 	<
@@ -795,81 +730,10 @@ candidate family for $\mathrm{SNR}=1$. First, the exit times satisfy
 	\qquad k \geq 0,
 	\label{eq:exit-ordering}
 \end{equation}
-whenever consecutive candidates exist. This follows from the
-construction, since the nontrivial exit times are the strict-decrease
-points of $t \mapsto \omega_l(t,T)$, ordered from largest to smallest.
+whenever consecutive candidates exist, since the nontrivial exit times are the strict-decrease points of \(t \mapsto \omega_l(t,T)\), ordered from largest to smallest. The candidate intervals are not necessarily nested: in simulations at \(\mathrm{SNR}=1\), consecutive candidates are nested in only about \(30\%\) of the cases and are disjoint in about \(16\)--\(32\%\) of them (details in the supplementary material). The selection rule below uses only \eqref{eq:exit-ordering}.
 
-Second, we examine the entry times. In $M=500$ independent replicates
-and for $T\in\{22,26,30\}$, we record all pairs of consecutive
-candidates $(k,k+1)$ for which both entry times are defined. For
-$T=30$, Table~\ref{tab:structure_snr1} reports the number of pairs,
-the number of pairs violating
-\begin{equation}
-	T_{\mathrm{entry}}^{(k+1)}(T)
-	\leq
-	T_{\mathrm{entry}}^{(k)}(T),
-	\label{eq:entry-ordering}
-\end{equation}
-the proportion with $T_{\mathrm{entry}}^{(k)}(T)=T_{\mathrm{exit}}^{(k+1)}(T)$,
-and the proportions of pairs with $\mathcal R_{k+1}(T)\subseteq\mathcal R_k(T)$
-(nested) and with $T_{\mathrm{exit}}^{(k+1)}(T)<T_{\mathrm{entry}}^{(k)}(T)$
-(disjoint). The inequality \eqref{eq:entry-ordering} fails in at most
-$0.15\%$ of the pairs at every horizon and quantile level considered,
-so it is a very frequent but not a systematic property. The entry time
-of candidate $k$ coincides with the exit time of candidate $k+1$ in
-$14$--$23\%$ of the pairs, the intervals are nested in $29$--$32\%$ and
-disjoint in $16$--$32\%$, and in the remaining pairs they overlap
-partially. Hence the candidate intervals are in general neither nested
-nor contiguous, and the operational selection rule below requires
-neither property. At $T=30$, among replicates with at least two
-candidates, about $6.5$ to $7.3$ candidates are available on average,
-depending on $\tau$. These proportions are descriptive, since pairs
-from the same replicate are dependent.
-Figure~\ref{fig:candidate_trajectories_snr1} displays, for one
-realization, the trajectories $T\mapsto T_{\mathrm{exit}}^{(k)}(T)$ and
-$T\mapsto T_{\mathrm{entry}}^{(k)}(T)$ for $k\in\{0,1,2,3\}$.
-
-\begin{table}[htbp]
-	\centering
-	\caption{Structure of consecutive candidate intervals at
-		$\mathrm{SNR}=1$ and $T=30$, based on $M=500$ replicates.
-		Proportions are over all consecutive pairs $(k,k+1)$ with both
-		entry times defined. ``Violations'' counts the pairs for which
-		\eqref{eq:entry-ordering} fails.}
-	\label{tab:structure_snr1}
-	\begin{tabular}{cccccc}
-		\toprule
-		$\tau$ & pairs & violations
-		& $T_{\mathrm{entry}}^{(k)}=T_{\mathrm{exit}}^{(k+1)}$
-		& nested & disjoint \\
-		\midrule
-		$0.25$ & 2751 & 1 & $0.136$ & $0.321$ & $0.295$ \\
-		$0.50$ & 2809 & 2 & $0.155$ & $0.312$ & $0.321$ \\
-		$0.75$ & 3031 & 4 & $0.167$ & $0.322$ & $0.257$ \\
-		$0.95$ & 3137 & 4 & $0.145$ & $0.300$ & $0.200$ \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=\textwidth]{fig_exit_entry_times_SNR1.pdf}
-	\caption{Candidate exit times $T_{\mathrm{exit}}^{(k)}(T)$ (solid)
-		and entry times $T_{\mathrm{entry}}^{(k)}(T)$ (dashed) as functions
-		of the current horizon $T$ at $\mathrm{SNR}=1$, for one
-		realization and the four quantile levels. The horizontal line
-		indicates $L=22$, shown for simulation reference only.}
-	\label{fig:candidate_trajectories_snr1}
-\end{figure}
-
-{\color{blue}
 \paragraph{Operational selection of the interval.}
-
-At a current horizon $T$, the sequential estimator
-$\widehat l(T)$ is available, whereas the true peak location $L$
-is unknown. We therefore select an interval by requiring it to contain
-the current point estimate. Define the set of admissible candidate
-indices by
+At a current horizon \(T\), the sequential estimator \(\widehat l(T)\) is available, whereas the true peak location \(L\) is unknown. We therefore select an interval by requiring it to contain the current point estimate. Define the set of admissible candidate indices by
 \begin{equation}
 	\mathcal K(T)
 	=
@@ -881,17 +745,14 @@ indices by
 	\right\}.
 	\label{eq:admissible-candidates}
 \end{equation}
-If $\mathcal K(T)$ is nonempty, we select the first admissible
-candidate:
+If $\mathcal K(T)$ is nonempty, we select the first admissible candidate:
 \begin{equation}
 	\widehat k(T)
 	=
 	\min\mathcal K(T).
 	\label{eq:selected-candidate}
 \end{equation}
-Since the exit times decrease with $k$, this is the admissible
-candidate with the largest exit time. The rule involves no
-tie-breaking. The resulting data-driven interval is
+Since the exit times decrease with $k$, this is the admissible candidate with the largest exit time. The rule involves no tie-breaking. The resulting data-driven interval is
 \begin{equation}
 	\widehat{\mathcal I}(T)
 	=
@@ -901,27 +762,18 @@ tie-breaking. The resulting data-driven interval is
 	\right].
 	\label{eq:selected-peak-interval}
 \end{equation}
-If $\mathcal K(T)$ is empty, no interval is selected at that horizon,
-and the procedure can continue as additional observations become
-available.
+If $\mathcal K(T)$ is empty, no interval is selected at that horizon, and the procedure can continue as additional observations become available.
 We define the first operational selection horizon by
 \begin{equation}
-	T_{\mathrm{est}}(\tau,\mathrm{SNR})
+	T_{\mathrm{sel}}
 	=
 	\min\left\{
 	T:
 	\mathcal K(T)\neq\varnothing
 	\right\}.
-	\label{eq:T-est}
+	\label{eq:T-sel}
 \end{equation}
-Thus, $T_{\mathrm{est}}$ is the earliest observation horizon at which
-the candidate construction produces an interval consistent with the
-current estimate. It depends only on whether $\mathcal K(T)$ is empty,
-not on the rule used to choose within $\mathcal K(T)$. Both the interval
-and this stopping horizon are computed without using $L$. In contrast,
-a criterion based on whether the selected interval contains the true $L$
-cannot be used operationally and is therefore not used in the selection
-rule.
+Thus, $T_{\mathrm{sel}}$ is the earliest observation horizon at which the candidate construction produces an interval consistent with the current estimate. It depends only on whether $\mathcal K(T)$ is empty, not on the rule used to choose within $\mathcal K(T)$. Both the selected interval and this selection horizon are computed without using $L$. In contrast, a criterion based on whether the selected interval contains the observed peak $L$ cannot be used operationally and is therefore reserved for retrospective evaluation.
 
 \paragraph{Choice of the selection rule.}
 An alternative to \eqref{eq:selected-candidate} is to select the
@@ -932,7 +784,7 @@ $\mathrm{SNR}=100$ after $T=22$. For $\mathrm{SNR}=1$, we compared them on
 $M=1000$ replicates at $T=30$, among selected intervals
 (Table~\ref{tab:rule_comparison}). The narrowest rule gives shorter
 intervals but lower coverage. To account for both, we use the interval
-score $w+\frac{2}{\alpha}\,\mathrm{dist}(L,\widehat{\mathcal I})$, where
+score $w+\frac{2}{\alpha}\,\mathrm{dist}(L,\widehat{\mathcal I})$~\citep{Winkler1972,Gneiting2007}, where
 $w$ is the width and $\mathrm{dist}$ is the distance from $L$ to the
 interval ($0$ if $L$ is inside); lower is better. The first-admissible
 rule has the lower score for all four quantile levels and for
@@ -964,35 +816,32 @@ property of the rules.
 \end{table}
 
 \paragraph{Numerical results.}
-
 Table~\ref{tab:simulation_est_interval} reports the first operational
-selection horizon and the corresponding selected interval for each
-combination of $\tau$ and $\mathrm{SNR}$. The interval width is
-$w_{\widehat k(T_{\mathrm{est}})}(T_{\mathrm{est}})$.
+selection horizon $T_{\mathrm{sel}}$ and the corresponding selected
+interval for each combination of $\tau$ and $\mathrm{SNR}$. The
+interval width is
+$w_{\widehat k(T_{\mathrm{sel}})}(T_{\mathrm{sel}})$.
 
 \begin{table}[htbp]
 	\centering
 	\caption{First operationally selected candidate interval for each
-		quantile level $\tau$ and signal-to-noise ratio. For compactness,
-		write $T^\star = T_{\mathrm{est}}$ and $k^\star = \widehat k(T^\star)$.
-		The interval is the first admissible candidate,
-		$k^\star=\min\mathcal K(T^\star)$, i.e.\ the smallest $k$ whose
-		interval contains $\widehat l(T^\star)$. In this realization,
-		$\mathcal K(T^\star)$ contains a single candidate in every row, so
-		the first-admissible and narrowest rules give the same interval.
-		The last column reports
-		$w_{k^\star}(T^\star) = T_{\mathrm{exit}}^{(k^\star)}(T^\star) -
-		T_{\mathrm{entry}}^{(k^\star)}(T^\star)$.}
+		quantile level $\tau$ and signal-to-noise ratio. The selection horizon
+		is $T_{\mathrm{sel}}$, and the selected candidate index is
+		$\widehat k(T_{\mathrm{sel}})=\min\mathcal K(T_{\mathrm{sel}})$.
+		In this realization, $\mathcal K(T_{\mathrm{sel}})$ contains a single
+		candidate in every row, so the first-admissible and narrowest rules
+		give the same interval. The last column reports the interval width
+		$w_{\widehat k(T_{\mathrm{sel}})}(T_{\mathrm{sel}})$.}
 	\label{tab:simulation_est_interval}
 	\begin{tabular}{cccccccc}
 		\toprule
 		$\tau$ & SNR
-		& $T^\star$
-		& $k^\star$
-		& $\widehat l(T^\star)$
-		& $T_{\mathrm{entry}}^{(k^\star)}(T^\star)$
-		& $T_{\mathrm{exit}}^{(k^\star)}(T^\star)$
-		& $w_{k^\star}(T^\star)$ \\
+		& $T_{\mathrm{sel}}$
+		& $\widehat k(T_{\mathrm{sel}})$
+		& $\widehat l(T_{\mathrm{sel}})$ 
+		& $T_{\mathrm{entry}}^{(\widehat k(T_{\mathrm{sel}}))}(T_{\mathrm{sel}})$ 
+		& $T_{\mathrm{exit}}^{(\widehat k(T_{\mathrm{sel}}))}(T_{\mathrm{sel}})$ 
+		& $w_{\widehat k(T_{\mathrm{sel}})}(T_{\mathrm{sel}})$\\ 
 		\midrule
 		$0.25$ & 1000 & 22 & 0 & 22 & 11 & 22 & 11 \\
 		$0.25$ & 100  & 22 & 0 & 22 & 18 & 22 &  4 \\
@@ -1014,18 +863,18 @@ $w_{\widehat k(T_{\mathrm{est}})}(T_{\mathrm{est}})$.
 \end{table}
 
 For $\mathrm{SNR}=100$ and $\mathrm{SNR}=1000$, the first selected
-interval occurs at $T_{\mathrm{est}}=22$ for all four quantile levels.
+interval occurs at $T_{\mathrm{sel}}=22$ for all four quantile levels.
 For $\mathrm{SNR}=1$, the first selected horizon varies with $\tau$,
 taking the values $6$, $10$, $18$, and $9$ for
 $\tau=0.25$, $0.50$, $0.75$, and $0.95$, respectively. At
-$T_{\mathrm{est}}$ the set $\mathcal K(T_{\mathrm{est}})$ is a singleton
+$T_{\mathrm{sel}}$ the set $\mathcal K(T_{\mathrm{sel}})$ is a singleton
 in all twelve cases, so the choice of selection rule has no effect on
 this table; it matters at later horizons
 (Table~\ref{tab:rule_comparison}). The selected
 intervals are also substantially narrower in these low-SNR examples.
 However, an early and narrow interval need not be close to the true
 peak location: in the present realization, the low-SNR intervals
-selected at $T_{\mathrm{est}}$ do not contain $L=22$. This illustrates
+selected at $T_{\mathrm{sel}}$ do not contain $L=22$. This illustrates
 that the operational criterion guarantees consistency with
 $\widehat l(T)$, not containment of the unknown true peak.
 Accordingly, $\widehat{\mathcal I}(T)$ is a data-driven interval
@@ -1046,7 +895,6 @@ quantile levels and signal-to-noise regimes, rather than to establish
 statistical coverage.
 
 \paragraph{Monte Carlo assessment of empirical coverage.}
-
 We next assess the empirical coverage of the operational intervals using repeated independent simulations. For each combination of $\tau\in\{0.25,0.50,0.75,0.95\}$ and $\mathrm{SNR}\in\{1000,100,1\}$, we generate $M=1000$ independent trajectories under the same peak model, with $A=1$, $L=22$, $S=10$, and observation horizon $h=30$. At each available horizon $T$, the operational selection rule defined in \eqref{eq:admissible-candidates}--\eqref{eq:selected-peak-interval} is applied separately to each trajectory. The true peak location $L$ is used only after selection to assess whether the selected interval contains it, with
 $L\in\widehat{\mathcal I}(T)$ meaning
 $T_{\mathrm{entry}}^{(\widehat k(T))}(T)\le L\le T_{\mathrm{exit}}^{(\widehat k(T))}(T)$.
@@ -1142,7 +990,7 @@ These findings provide a simulation-based assessment of the operational procedur
 	\includegraphics[width=\textwidth]{monte-carlo-interval-selection-rate.pdf}
 	\caption{Empirical interval-selection rate as a function of the observation horizon $T$, based on $M=1000$ independent simulated trajectories for each combination of $\tau$ and SNR. The selection rate is the proportion of replicates for which the operational rule selects an interval, and does not depend on the choice of rule within $\mathcal K(T)$. Shaded bands are $\pm$ one Monte Carlo standard error. Each panel corresponds to one quantile level.}
 	\label{fig:mc_selection_rate}
-\end{figure}}
+\end{figure}
 
 \section{Real-World Application: COVID-19 Case Study}
 \label{sec:covid-real-data}
@@ -1156,26 +1004,55 @@ analyze the sequence $T \mapsto \hat{l}(T)$ for the quantile levels
 $\tau \in \{0.25,0.5,0.75,0.95\}$, using quantile-loss minimization over
 the Gaussian-shaped parametric peak model. Following Algorithm~\ref{algo:quantile}, the candidate peak location ranges over the analysis horizon
 $h = \max(T)$, so that for each country the search set is
-$\{1,\ldots,h\}$. We then assess the temporal stabilization of the
-estimated peak-location path using the retrospective stabilization
-criterion introduced in Section~\ref{sec:stability-analysis}, applied
-separately to each country and quantile level; the resulting
-stabilization time is denoted $T_{\mathrm{stab}}$. For each country we
+$\{1,\ldots,h\}$. 
+We then assess the temporal stabilization of the estimated
+	peak-location path through
+	\[
+	T_{\mathrm{stab}}
+	=
+	\min\Bigl\{T:\ \max_{u\ge T}\hat l(u)-\min_{u\ge T}\hat l(u)\le\varepsilon\Bigr\},
+	\]
+	the earliest horizon from which all later estimates stay within a range
+	$\varepsilon$ (here $\varepsilon=3$, $5$ and $15$ for China, France and
+	Germany). This is computed for each country and quantile level.
+For each country we
 additionally apply the operational two-stage entry--exit construction of
 Section~\ref{sec:entry-exit}, which uses the oscillations of the
 estimated peak-location path to identify a candidate peak-region window
-$(T_{\mathrm{entry}}^{(k)},T_{\mathrm{exit}}^{(k)})$ and whose width is
+$[T_{\mathrm{entry}}^{(k)},T_{\mathrm{exit}}^{(k)}]$ and whose width is
 denoted $w_k = T_{\mathrm{exit}}^{(k)} - T_{\mathrm{entry}}^{(k)}$.
 Because the observed peak location $L$ is known for each of the three
 country-level trajectories used here, the resulting Stage-2 candidates
-can be evaluated retrospectively, and the narrowest candidate satisfying
-the strict containment criterion
+can be evaluated retrospectively.
+As in the rest of the paper, a closed window
+$[T_{\mathrm{entry}}^{(k)},T_{\mathrm{exit}}^{(k)}]$ contains $L$ if
 \(
-T_{\mathrm{entry}}^{(k)} < L < T_{\mathrm{exit}}^{(k)}
+T_{\mathrm{entry}}^{(k)} \le L \le T_{\mathrm{exit}}^{(k)}.
 \)
-is reported for each country and quantile level, when such a candidate exists. This minimum-width
+The candidate of smallest width $w_k$ satisfying this containment
+criterion is reported for each country and quantile level, with ties
+broken by the smaller $k$. Since the time index is discrete, a window
+may contain $L$ at an endpoint.
+This minimum-width
 selection is used only for retrospective evaluation and is not part of
 the operational procedure when $L$ is unknown.
+In addition, we apply the operational selection of
+Section~\ref{subsec:entry-exit-simulation}, which uses only the current
+estimate $\hat l(T)$: at each horizon $T$ we form the admissible set
+$\mathcal K(T)$ of candidates whose interval contains $\hat l(T)$ and
+select $\hat k(T)=\min\mathcal K(T)$. The observed peak $L$ is used only
+to assess the resulting intervals. Throughout, $L$ denotes the observed
+peak day, defined as the day of the maximum daily count ($22$, $78$ and
+$61$ for China, France and Germany), not a true parameter.
+Throughout this section, the Stage-2 candidates are described by the
+tuple $(k,\epsilon'_k,T_{\mathrm{exit}}^{(k)},T_k^*,\epsilon_k,
+T_{\mathrm{entry}}^{(k)},w_k)$ with the notation of
+Section~\ref{sec:entry-exit}: $k$ is the candidate index,
+$\epsilon'_k$ the oscillation level at the candidate exit time,
+$T_{\mathrm{exit}}^{(k)}$ the exit time, $T_k^*$ the last admissible
+horizon in the Stage-2 set $E_k$, $\epsilon_k$ the oscillation level
+attained at $T_k^*$, $T_{\mathrm{entry}}^{(k)}$ the entry time, and
+$w_k=T_{\mathrm{exit}}^{(k)}-T_{\mathrm{entry}}^{(k)}$ the width.
 
 \begin{figure}[htbp]
 	\centering
@@ -1187,78 +1064,26 @@ the operational procedure when $L$ is unknown.
 \subsection{China}
 \label{subsec:china}
 
-We analyze the first wave of the COVID-19 epidemic in China, using the
-first 60 daily new case counts from January 22 to March 22, 2020, obtained
-from the JHU CSSE feed via the \texttt{COVID19} R package
-\citep{Guidotti2020,Guidotti2022}. The estimation is performed for
-observation horizons $T=4,\ldots,35$. For each quantile level
-$\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the sequence
-$T\mapsto\hat{l}(T)$ by minimizing the empirical quantile loss over the
-Gaussian-shaped peak model, with candidate peak locations ranging over
-$l\in\{1,\ldots,h\}$ with $h=35$. Temporal stabilization is assessed
-using the criterion introduced in Section~\ref{sec:stability-analysis},
-with tolerance $\varepsilon=3$. The resulting estimated peak-location
-sequences are reported in Table~\ref{tab:china_tau}.
-
-The corresponding stabilization times are $T_{\mathrm{stab}}=15$, $13$,
-$23$, and $28$ for $\tau=0.25$, $0.5$, $0.75$, and $0.95$,
-respectively. The stabilization criterion characterizes the temporal
-behavior of the estimated peak-location path and is distinct from the
-entry--exit construction introduced in Section~\ref{sec:entry-exit}. For
-the present real-data application, where the observed peak location is
-known retrospectively, we apply the latter construction and, among the
-Stage-2 candidates satisfying
-\(
-T_{\mathrm{entry}}^{(k)}<L<T_{\mathrm{exit}}^{(k)},
-\)
-retain the candidate with the smallest width
-\(
-w_k=T_{\mathrm{exit}}^{(k)}-T_{\mathrm{entry}}^{(k)}.
-\)
-This minimum-width selection is used only for retrospective evaluation
-and is not part of the operational procedure when the peak location is
-unknown. The candidate index $k$ is therefore chosen among the
-peak-containing candidates by this smallest-width criterion.
-
-For China, the observed peak location is $L=22$. The resulting
-retrospective selection for the four quantile levels is reported in
-Table~\ref{tab:china_entry_exit}. For $\tau=0.25$, the selected candidate
-is indexed by $k=1$. It has
-$\epsilon'_1=1$,
-$T_{\mathrm{exit}}^{(1)}=26$,
-$T_1^*=15$,
-$\epsilon_1=3$, and
-$T_{\mathrm{entry}}^{(1)}=15$,
-and therefore has width $w_1=11$. For $\tau=0.5$, the selected candidate
-is indexed by $k=2$. It has
-$\epsilon'_2=2$,
-$T_{\mathrm{exit}}^{(2)}=24$,
-$T_2^*=15$,
-$\epsilon_2=2$, and
-$T_{\mathrm{entry}}^{(2)}=15$,
-and therefore has width $w_2=9$. For $\tau=0.95$, the selected candidate
-is indexed by $k=4$. It has
-$\epsilon'_4=15$,
-$T_{\mathrm{exit}}^{(4)}=26$,
-$T_4^*=21$,
-$\epsilon_4=21$, and
-$T_{\mathrm{entry}}^{(4)}=13$,
-and therefore has width $w_4=13$. For $\tau=0.25$ and $\tau=0.5$, the
-Stage-2 level $\epsilon_k$ is attained at a single observation horizon, so
-that $T_k^*=T_{\mathrm{entry}}^{(k)}$. For $\tau=0.95$, the level is
-attained at nine consecutive observation horizons spanning $T=13$ to
-$T=21$, so that $T_4^*=21$ while $T_{\mathrm{entry}}^{(4)}=13$. For
-$\tau=0.75$, no Stage-2 candidate satisfies the strict containment
-condition
-\(
-T_{\mathrm{entry}}^{(k)}<22<T_{\mathrm{exit}}^{(k)},
-\)
-and consequently no retrospective candidate is selected.
+For China ($L=22$), the selected windows
+(Table~\ref{tab:china_entry_exit}) are $[15,26]$, $[15,24]$, $[22,25]$
+and $[22,27]$ for $\tau=0.25,0.5,0.75,0.95$, with widths between $3$
+and $11$. A window containing $L$ is therefore selected at every
+quantile level, but those for $\tau=0.75$ and $\tau=0.95$ begin at $L$
+and lie to its right, whereas the others contain $L$ in their
+interior. For $\tau=0.5$, the window $[15,24]$ is close to $(14,25)$
+reported in~\citet{Der25} under the least-absolute-deviation criterion
+for the same dataset. These results complement the stabilization
+analysis in Supplementary Table~S1: the stabilization time describes
+the temporal stabilization of the estimated peak-location path,
+whereas the two-stage construction uses its oscillations to identify
+candidate windows for the peak region.
 
 \begin{table}[htbp]
 	\centering
 	\caption{Retrospective selection of the peak-region candidate for
-		COVID-19 in China.}
+		COVID-19 in China.
+		The selected candidate is the narrowest one with
+		$T_{\mathrm{entry}}^{(k)}\le L\le T_{\mathrm{exit}}^{(k)}$.}
 	\label{tab:china_entry_exit}
 	\begin{tabular}{c|cccccccc}
 		\toprule
@@ -1274,91 +1099,28 @@ and consequently no retrospective candidate is selected.
 		\midrule
 		$0.25$ & 1 & 1  & 26 & 15 & 3  & 15 & 11 & 22 \\
 		$0.50$ & 2 & 2  & 24 & 15 & 2  & 15 & 9  & 22 \\
-		$0.75$ & -- & -- & -- & -- & -- & -- & -- & 22 \\
-		$0.95$ & 4 & 15 & 26 & 21 & 21 & 13 & 13 & 22 \\
+		$0.75$ & 1 & 2  & 25 & 22 & 15 & 22 & 3 & 22 \\
+		$0.95$ & 3 & 6 & 27 & 26 & 9 & 22 & 5 & 22 \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-For $\tau=0.5$, the selected window is $(15,24)$. This is close to the
-window $(14,25)$ reported in~\citet{Der25} for the same dataset under
-the least-absolute-deviation criterion, the small difference reflecting
-that the peak-location trajectory is here recomputed for the
-quantile-based procedure.
-
-The results show that the retrospective peak-region candidate depends on
-the quantile level. The selected windows are $(15,26)$ for
-$\tau=0.25$, $(15,24)$ for $\tau=0.5$, and $(13,26)$ for
-$\tau=0.95$. For $\tau=0.75$, the two-stage construction does not
-produce a candidate whose window strictly contains the observed peak
-location $L=22$. These results complement the stabilization analysis in
-Table~\ref{tab:china_tau}: the stabilization time describes the temporal
-stabilization of the estimated peak-location path, whereas the
-two-stage construction uses its oscillations to identify candidate
-windows for the peak region.
-
 \subsection{France}
 \label{subsec:france}
 
-Next, we apply the estimation method to daily COVID-19 cases in France,
-using ECDC data from January 15 to May 31, 2020
-\citepalias{ecdc_covid_france_2020}. The analysis covers observation
-horizons $T=50,\ldots,89$. For each quantile level
-$\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the corresponding estimation
-path $T\mapsto\hat{l}(T)$, with candidate peak locations ranging over
-$l\in\{1,\ldots,h\}$ with $h=\max(T)=89$. Temporal stabilization is
-assessed using the criterion introduced in
-Section~\ref{sec:stability-analysis}, with tolerance $\varepsilon=5$.
-The estimated peak-location sequences are reported in
-Table~\ref{tab:france_tau}.
-
-The corresponding stabilization times are $T_{\mathrm{stab}}=85$, $82$,
-$80$, and $85$ for $\tau=0.25$, $0.5$, $0.75$, and $0.95$,
-respectively. As in the China analysis, we then apply the two-stage
-entry--exit construction of Section~\ref{sec:entry-exit} and select the
-peak-containing candidate with the smallest width, using the same
-minimum-width criterion introduced above.
-
-For France, the observed peak location is $L=78$. The resulting
-retrospective selection for the four quantile levels is reported in
-Table~\ref{tab:france_entry_exit}. For $\tau=0.25$, the selected
-candidate is indexed by $k=5$. It has
-$\epsilon'_5=13$,
-$T_{\mathrm{exit}}^{(5)}=79$,
-$T_5^*=76$,
-$\epsilon_5=13$, and
-$T_{\mathrm{entry}}^{(5)}=72$,
-and therefore has width $w_5=7$. For $\tau=0.5$, the selected candidate
-is indexed by $k=3$. It has
-$\epsilon'_3=4$,
-$T_{\mathrm{exit}}^{(3)}=82$,
-$T_3^*=78$,
-$\epsilon_3=6$, and
-$T_{\mathrm{entry}}^{(3)}=73$,
-and therefore has width $w_3=9$. For $\tau=0.75$, the selected
-candidate is also indexed by $k=3$. It has
-$\epsilon'_3=8$,
-$T_{\mathrm{exit}}^{(3)}=79$,
-$T_3^*=72$,
-$\epsilon_3=11$, and
-$T_{\mathrm{entry}}^{(3)}=70$,
-and therefore has width $w_3=9$. For $\tau=0.95$, the selected
-candidate is indexed by $k=6$. It has
-$\epsilon'_6=11$,
-$T_{\mathrm{exit}}^{(6)}=80$,
-$T_6^*=77$,
-$\epsilon_6=13$, and
-$T_{\mathrm{entry}}^{(6)}=70$,
-and therefore has width $w_6=10$. Unlike the China case, the plateau
-at level $\epsilon_k$ is not a singleton in any of the four selections: the
-sets $Z_k=\{T:\omega_l(T,T_{\mathrm{exit}}^{(k)})=\epsilon_k\}$ contain
-$5$, $6$, $3$, and $8$ observation times, respectively, so that
-$T_k^*>T_{\mathrm{entry}}^{(k)}$ in every case.
+For France ($L=78$), the selected windows
+(Table~\ref{tab:france_entry_exit}) are $[72,79]$, $[71,78]$, $[70,78]$
+and $[78,85]$ for $\tau=0.25,0.5,0.75,0.95$, with widths between $7$
+and $8$. A window containing $L$ is therefore selected at every
+quantile level; only the window for $\tau=0.25$ contains $L$ in its
+interior, whereas the others contain $L$ at an endpoint.
 
 \begin{table}[htbp]
 	\centering
 	\caption{Retrospective selection of the peak-region candidate for
-		COVID-19 in France.}
+		COVID-19 in France.
+		The selected candidate is the narrowest one with
+		$T_{\mathrm{entry}}^{(k)}\le L\le T_{\mathrm{exit}}^{(k)}$.}
 	\label{tab:france_entry_exit}
 	\begin{tabular}{c|cccccccc}
 		\toprule
@@ -1373,73 +1135,30 @@ $T_k^*>T_{\mathrm{entry}}^{(k)}$ in every case.
 		$L$ \\
 		\midrule
 		$0.25$ & 5 & 13 & 79 & 76 & 13 & 72 & 7  & 78 \\
-		$0.50$ & 3 & 4  & 82 & 78 & 6  & 73 & 9  & 78 \\
-		$0.75$ & 3 & 8  & 79 & 72 & 11 & 70 & 9  & 78 \\
-		$0.95$ & 6 & 11 & 80 & 77 & 13 & 70 & 10 & 78 \\
+		$0.50$ & 5 & 10 & 78 & 72 & 11 & 71 & 7 & 78 \\
+		$0.75$ & 4 & 10 & 78 & 72 & 11 & 70 & 8 & 78 \\
+		$0.95$ & 3 & 5 & 85 & 80 & 6 & 78 & 7 & 78 \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-The results show that the retrospective peak-region candidate depends on
-the quantile level. The selected windows are $(72,79)$ for
-$\tau=0.25$, $(73,82)$ for $\tau=0.5$, $(70,79)$ for $\tau=0.75$, and
-$(70,80)$ for $\tau=0.95$. All four windows strictly contain the
-observed peak location $L=78$, so a retrospective candidate is selected
-for every quantile level, and the widths vary between $7$ and $10$
-across the four quantile specifications.
-
 \subsection{Germany}
 \label{subsec:germany}
 
-Finally, we consider COVID-19 daily cases in Germany from January 28 to
-July 5, 2020, obtained from the ECDC open data portal
-\citepalias{ecdc_covid_france_2020}. To align the peak location with day
-$t=61$, we index the data starting on January 28. We analyze observation
-horizons $T=40,\ldots,75$. For each quantile level
-$\tau\in\{0.25,0.5,0.75,0.95\}$, we compute the estimation path
-$T\mapsto\hat{l}(T)$, with candidate peak locations ranging over
-$l\in\{1,\ldots,h\}$ with $h=75$. Temporal stabilization is assessed
-using the criterion introduced in Section~\ref{sec:stability-analysis},
-with tolerance $\varepsilon=15$. The resulting estimation paths are
-reported in Table~\ref{tab:germany_tau}.
-
-The corresponding stabilization times are $T_{\mathrm{stab}}=60$, $59$,
-$56$, and $57$ for $\tau=0.25$, $0.5$, $0.75$, and $0.95$,
-respectively. As in the China and France analyses, we then apply the
-two-stage entry--exit construction of Section~\ref{sec:entry-exit} and
-select the peak-containing candidate with the smallest width, using the
-same minimum-width criterion introduced above.
-
-For Germany, the observed peak location is $L=61$. The resulting
-retrospective selection for the four quantile levels is reported in
-Table~\ref{tab:germany_entry_exit}. For $\tau=0.25$, the selected
-candidate is indexed by $k=7$. It has
-$\epsilon'_7=15$,
-$T_{\mathrm{exit}}^{(7)}=62$,
-$T_7^*=60$,
-$\epsilon_7=15$, and
-$T_{\mathrm{entry}}^{(7)}=60$,
-and therefore has width $w_7=2$. For $\tau=0.95$, the selected
-candidate is indexed by $k=6$. It has
-$\epsilon'_6=9$,
-$T_{\mathrm{exit}}^{(6)}=63$,
-$T_6^*=56$,
-$\epsilon_6=18$, and
-$T_{\mathrm{entry}}^{(6)}=56$,
-and therefore has width $w_6=7$. In both cases, the level $\epsilon_k$ is
-attained at a single observation horizon, so that
-$T_k^*=T_{\mathrm{entry}}^{(k)}$. For $\tau=0.5$ and $\tau=0.75$, no
-Stage-2 candidate satisfies the strict containment condition
-\(
-T_{\mathrm{entry}}^{(k)}<61<T_{\mathrm{exit}}^{(k)},
-\)
-and consequently no retrospective candidate is selected for these two
-quantile levels.
+For Germany ($L=61$), the selected windows
+(Table~\ref{tab:germany_entry_exit}) are $[60,62]$, $[59,61]$,
+$[57,61]$ and $[56,63]$ for $\tau=0.25,0.5,0.75,0.95$, with widths
+between $2$ and $7$. A window containing $L$ is therefore selected at
+every quantile level; for $\tau=0.5$ and $\tau=0.75$ the window ends at
+$L$, whereas the others contain $L$ in their interior. These results
+complement the stabilization analysis in Supplementary Table~S3.
 
 \begin{table}[htbp]
 	\centering
 	\caption{Retrospective selection of the peak-region candidate for
-		COVID-19 in Germany.}
+		COVID-19 in Germany.
+		The selected candidate is the narrowest one with
+		$T_{\mathrm{entry}}^{(k)}\le L\le T_{\mathrm{exit}}^{(k)}$.}
 	\label{tab:germany_entry_exit}
 	\begin{tabular}{c|cccccccc}
 		\toprule
@@ -1454,39 +1173,245 @@ quantile levels.
 		$L$ \\
 		\midrule
 		$0.25$ & 7 & 15 & 62 & 60 & 15 & 60 & 2 & 61 \\
-		$0.50$ & -- & -- & -- & -- & -- & -- & -- & 61 \\
-		$0.75$ & -- & -- & -- & -- & -- & -- & -- & 61 \\
+		$0.50$ & 5 & 10 & 61 & 59 & 11 & 59 & 2 & 61 \\
+		$0.75$ & 5 & 7 & 61 & 58 & 11 & 57 & 4 & 61 \\
 		$0.95$ & 6 & 9  & 63 & 56 & 18 & 56 & 7 & 61 \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-The results show that the retrospective peak-region candidate depends on
-the quantile level. The selected windows are $(60,62)$ for $\tau=0.25$,
-and $(56,63)$ for $\tau=0.95$. For $\tau=0.5$ and $\tau=0.75$, the
-two-stage construction does not produce a candidate whose window
-strictly contains the observed peak location $L=61$. These results
-complement the stabilization analysis in Table~\ref{tab:germany_tau}:
-the stabilization time describes the temporal stabilization of the
-estimated peak-location path, whereas the two-stage construction uses
-its oscillations to identify candidate windows for the peak region.
+\subsection{Admissible candidates $\mathcal K(T)$ on the real data}
+\label{subsec:real-K}
 
-\subsection{Comparison Across Quantile Levels}
+For each country and each $\tau$, we apply at every horizon $T$ the
+current-horizon construction of Section~\ref{subsec:entry-exit-simulation}
+to the path $T\mapsto\hat l(T)$ (Tables~S1--S3 in the supplement).
+At the terminal horizon $T=h$ this construction coincides with the
+two-stage construction used above. As in the rest of the paper, an
+interval $[a,b]$ contains $L$ if $a\le L\le b$; the observed peak day $L$
+is $22$, $78$ and $61$ for China, France and Germany.
 
-To compare the four quantile specifications, we evaluate the minimized quantile-loss objective at the final observation horizon $T_{\max}$ for each country. This provides a descriptive comparison of the empirical objective values obtained under the different quantile levels considered. The quantile level yielding the smallest objective value at $T_{\max}$ is reported for each data set.
-The resulting minima are obtained for
-\begin{itemize}
-	\item China: $\tau=0.25$ at $T=35$,
-	\item France: $\tau=0.95$ at $T=89$,
-	\item Germany: $\tau=0.95$ at $T=75$.
-\end{itemize}
-These results indicate that the empirical quantile-loss criterion favors different quantile specifications across the three epidemic trajectories. In particular, the lower quantile $\tau=0.25$ yields the smallest objective value for China, whereas the upper quantile $\tau=0.95$ yields the smallest objective value for both France and Germany. This comparison is descriptive and is intended to characterize the behavior of the proposed estimator under the four quantile levels considered, rather than to establish that any one of these quantiles represents the true conditional quantile of the epidemic process.
+\paragraph{Size of $\mathcal K(T)$.}
+Table~\ref{tab:real_K_terminal} lists $\mathcal K(h)$ and
+Table~\ref{tab:real_K_props} gives the proportion of horizons at which
+$\mathcal K(T)$ is empty, a singleton, or has at least two elements.
+In contrast with the simulations at $\mathrm{SNR}=1000$ and $100$, where
+$\mathcal K(T)=\{0\}$ after $T=22$, the set $\mathcal K(T)$ here
+typically contains nontrivial candidates ($k\ge1$): its largest size is
+$2$ for China and $2$ to $4$ for France and Germany, and its mean size
+when nonempty is between $1.1$ and $2.5$. It is empty at many horizons
+($31$--$34\%$ for China, $39$--$80\%$ for France and Germany); the
+France and Germany grids start later ($T=50$ and $T=40$), so these
+proportions are not directly comparable across countries. The real
+paths therefore resemble the low-SNR simulations. The rules $\min\mathcal K(T)$
+and $\arg\min_k w_k(T)$ select different candidates at
+$0$--$38\%$ (China), $0$--$38\%$ (France) and $6$--$50\%$ (Germany) of the
+horizons at which an interval is selected.
+
+\begin{table}[htbp]
+	\centering
+	\small
+	\caption{Admissible set $\mathcal K(h)$ at the terminal horizon.}
+	\label{tab:real_K_terminal}
+	\begin{tabular}{lcccc}
+		\toprule
+		& $\tau=0.25$ & $\tau=0.50$ & $\tau=0.75$ & $\tau=0.95$ \\
+		\midrule
+		China ($h=35$)   & $\{1\}$   & $\{2,3\}$ & $\{2,3\}$ & $\{4,5\}$ \\
+		France ($h=89$)  & $\{2,3\}$ & $\{3,4\}$ & $\{1\}$   & $\{3,4,5,6\}$ \\
+		Germany ($h=75$) & $\{3,4\}$ & $\{3\}$   & $\{1,2\}$ & $\{2,3\}$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\small
+	\caption{Proportion of horizons with $\mathcal K(T)$ empty, a
+		singleton, or with at least two elements, and largest size of
+		$\mathcal K(T)$.}
+	\label{tab:real_K_props}
+	\begin{tabular}{lcccccc}
+		\toprule
+		Country & $\tau$ & empty & singleton & $\ge2$ & max $|\mathcal K|$
+		& mean $|\mathcal K|$ if nonempty \\
+		\midrule
+		China & 0.25 & 0.31 & 0.63 & 0.06 & 2 & 1.09 \\
+		& 0.50 & 0.34 & 0.22 & 0.44 & 2 & 1.67 \\
+		& 0.75 & 0.31 & 0.06 & 0.63 & 2 & 1.91 \\
+		& 0.95 & 0.34 & 0.13 & 0.53 & 2 & 1.81 \\
+		\midrule
+		France & 0.25 & 0.68 & 0.10 & 0.23 & 2 & 1.69 \\
+		& 0.50 & 0.80 & 0.03 & 0.18 & 2 & 1.88 \\
+		& 0.75 & 0.75 & 0.15 & 0.10 & 2 & 1.40 \\
+		& 0.95 & 0.80 & 0.08 & 0.13 & 4 & 2.50 \\
+		\midrule
+		Germany & 0.25 & 0.50 & 0.14 & 0.36 & 2 & 1.72 \\
+		& 0.50 & 0.50 & 0.11 & 0.39 & 2 & 1.78 \\
+		& 0.75 & 0.50 & 0.11 & 0.39 & 3 & 1.83 \\
+		& 0.95 & 0.39 & 0.00 & 0.61 & 4 & 2.36 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\paragraph{Position of the candidates relative to $L$.}
+We examine $\mathcal K(T)$ at $T=L-3$, $L+3$ and $L+10$ (the nearest
+available horizons: $19,25,32$ for China, $75,81,88$ for France and
+$58,64,71$ for Germany). For $T<L$, every candidate ends at
+$T_{\mathrm{exit}}^{(k)}(T)\le T<L$, so no interval can contain $L$;
+this is structural, and none does ($0$ of $13$ candidates; $\mathcal K(75)$
+is empty for France). For $T>L$, the number of candidates in
+$\mathcal K(T)$ whose interval contains $L$, pooled over the
+four values of $\tau$, is $3$ of $5$ (China), $1$ of $3$ (France) and
+$6$ of $9$ (Germany) at $T=L+3$, and $5$ of $7$, $6$ of $9$ and $6$ of
+$9$ at $T=L+10$. Candidates that miss $L$ are mostly narrow and lie on one side of $L$,
+near $\hat l(T)$. Table~\ref{tab:real_data_intervals} shows, for each
+country and horizon, the narrowest candidate with $k\ge1$, width at most $10$, and
+$T_{\mathrm{entry}}^{(k)}\le L\le T_{\mathrm{exit}}^{(k)}$ (ties: smaller $k$,
+then smaller $\tau$).
+This choice uses $L$ and is illustrative only. Over all horizons $T>L$, the proportion of candidates covering $L$ has no monotone pattern in $k$: for $k=1,2,3,\ge4$ it is $0.82,0.88,0.52,0.42$ (China), $0.25,0.63,0.63,1.00$ (France) and
+$0.32,0.64,0.61,0.79$ (Germany). These proportions are descriptive,
+since consecutive horizons are dependent.
+
+\begin{table}[htbp]
+	\centering
+	\small
+	\caption{Illustrative candidates: the narrowest $k\ge1$ in
+		$\mathcal K(T)$ with width at most $10$ and
+		$T_{\mathrm{entry}}^{(k)}\le L\le T_{\mathrm{exit}}^{(k)}$, at $T=L+3$
+		and $T=L+10$ ($L=22,78,61$); ties are broken by the smaller $k$,
+		then the smaller $\tau$. The last column gives the number of
+		candidates in $\mathcal K(T)$, pooled over $\tau$, whose interval
+		contains $L$. The selection uses $L$ and is not operational.}
+	\label{tab:real_data_intervals}
+	\begin{tabular}{lccccccc}
+		\toprule
+		Country & $T$ & $\tau$ & $k$ & $\widehat l(T)$
+		& $[T_{\mathrm{entry}}^{(k)},T_{\mathrm{exit}}^{(k)}]$ & Width
+		& Covering $L$ \\
+		\midrule
+		China   & 25 & 0.50 & 2 & 17 & [15, 22] & 7 & 3 of 5 \\
+		China   & 32 & 0.50 & 2 & 17 & [15, 24] & 9 & 5 of 7 \\
+		France  & 81 & 0.25 & 2 & 79 & [72, 79] & 7 & 1 of 3 \\
+		France  & 88 & 0.95 & 3 & 79 & [78, 85] & 7 & 6 of 9 \\
+		Germany & 64 & 0.50 & 1 & 61 & [61, 62] & 1 & 6 of 9 \\
+		Germany & 71 & 0.50 & 3 & 64 & [61, 65] & 4 & 6 of 9 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\paragraph{Operational rule.}
+Table~\ref{tab:real_data_minK} gives the interval selected by
+$\hat k(T)=\min\mathcal K(T)$ at the same horizons. It contains
+$L$ in $4$ of $9$ cases at $T=L+3$ and in $8$ of $12$ at $T=L+10$
+($\mathcal K(T)$ is empty in three further cases). Several of these
+intervals contain $L$ only at an endpoint (for example $[13,22]$,
+$[78,85]$ and $[61,62]$); since the time index is discrete and the
+intervals are closed, this is a genuine containment. The candidates of
+Table~\ref{tab:real_data_intervals} are not what the operational
+rule returns in general: the rule often returns a narrow interval on one
+side of $L$. This agrees with the low-SNR simulations, where coverage
+of the selected interval was moderate and increased with $T$. These
+are single realizations per country, not coverage probabilities.
+
+\begin{table}[htbp]
+	\centering
+	\small
+	\caption{Interval selected by $\hat k(T)=\min\mathcal K(T)$ at
+		$T=L+3$ and $T=L+10$. ``Covers $L$'' means
+		$T_{\mathrm{entry}}\le L\le T_{\mathrm{exit}}$; a dash means that
+		$\mathcal K(T)$ is empty.}
+	\label{tab:real_data_minK}
+	\begin{tabular}{lcccccccc}
+		\toprule
+		Country & $T$ & $\tau$ & $\hat k$ & $\widehat l(T)$
+		& $[T_{\mathrm{entry}},T_{\mathrm{exit}}]$ & Width & Covers $L$ \\
+		\midrule
+		China & 25 & 0.25 & 1 & 15 & [14, 15] & 1 & No \\
+		& 25 & 0.50 & 1 & 17 & [16, 24] & 8 & Yes \\
+		& 25 & 0.75 & 1 & 20 & [13, 22] & 9 & Yes \\
+		& 25 & 0.95 & --- & --- & --- & --- & --- \\
+		& 32 & 0.25 & 1 & 16 & [15, 26] & 11 & Yes \\
+		& 32 & 0.50 & 2 & 17 & [15, 24] & 9 & Yes \\
+		& 32 & 0.75 & 2 & 18 & [13, 22] & 9 & Yes \\
+		& 32 & 0.95 & 4 & 20 & [13, 26] & 13 & Yes \\
+		\midrule
+		France & 81 & 0.25 & 1 & 79 & [79, 80] & 1 & No \\
+		& 81 & 0.50 & --- & --- & --- & --- & --- \\
+		& 81 & 0.75 & 0 & 81 & [80, 81] & 1 & No \\
+		& 81 & 0.95 & --- & --- & --- & --- & --- \\
+		& 88 & 0.25 & 2 & 82 & [81, 84] & 3 & No \\
+		& 88 & 0.50 & 3 & 81 & [73, 82] & 9 & Yes \\
+		& 88 & 0.75 & 1 & 81 & [81, 86] & 5 & No \\
+		& 88 & 0.95 & 3 & 79 & [78, 85] & 7 & Yes \\
+		\midrule
+		Germany & 64 & 0.25 & 1 & 62 & [62, 63] & 1 & No \\
+		& 64 & 0.50 & 1 & 61 & [61, 62] & 1 & Yes \\
+		& 64 & 0.75 & 1 & 60 & [59, 63] & 4 & Yes \\
+		& 64 & 0.95 & 2 & 58 & [56, 59] & 3 & No \\
+		& 71 & 0.25 & 3 & 65 & [64, 67] & 3 & No \\
+		& 71 & 0.50 & 2 & 64 & [61, 66] & 5 & Yes \\
+		& 71 & 0.75 & 1 & 65 & [65, 67] & 2 & No \\
+		& 71 & 0.95 & 2 & 61 & [60, 65] & 5 & Yes \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper develops a quantile-based framework for predicting the
+location of a peak in a Gaussian-shaped time series observed sequentially
+and corrupted by additive noise. For fixed candidate values of the
+peak location and spread, the amplitude estimator is characterized as
+a weighted $\tau$-quantile of a transformed version of the observations.
+The $\tau$-aligned asymmetric Laplace model provides a probabilistic
+interpretation of the quantile objective, linking the estimation
+criterion to a likelihood-based formulation.
+
+We also investigate the evolution of the estimated peak location as
+the observation horizon increases. The stabilization time describes
+when the sequential estimate becomes constant over the remaining
+horizon, subject to a minimum plateau-length condition. The simulations
+show that this criterion is informative when the signal-to-noise ratio
+is high or moderate, but becomes less reliable under substantial noise.
+To address situations in which the point estimate does not stabilize
+early enough, we introduce a two-stage construction of candidate
+entry--exit intervals based on the oscillations of the estimation
+trajectory. The operational selection rule uses the current point
+estimate and does not require knowledge of the true peak location.
+
+The Monte Carlo experiments show that the performance of the selected
+intervals depends strongly on the signal-to-noise ratio. Under the
+high- and moderate-SNR settings considered, the selected intervals
+achieve full empirical coverage in the simulated replicates once the
+peak becomes identifiable. Under low SNR, intervals can be selected
+early without containing the true peak, although empirical coverage
+generally improves as more observations become available. These results
+also illustrate that a high interval-selection rate does not necessarily
+imply high coverage. The application to daily COVID-19 cases in China,
+France, and Germany demonstrates how the proposed construction can be
+applied to real sequential estimation trajectories. The real-data
+results also show that the admissible candidate set may be empty at
+some horizons and that the operationally selected interval need not
+contain the retrospectively observed peak.
+
+Several limitations suggest directions for further research. The
+analysis is based on a Gaussian-shaped peak and a specified
+$\tau$-aligned noise model, so performance under more complex peak
+shapes, multiple peaks, temporal dependence, or model misspecification
+requires further investigation. Moreover, the entry--exit intervals
+are data-driven interval estimates rather than confidence intervals
+with guaranteed nominal coverage. Establishing theoretical coverage
+properties, and developing selection rules that balance interval width,
+coverage, and the possibility that no interval is selected, are
+important topics for future work.
 
 \bibliography{references}
 
 \paragraph*{Data Availability Statement}
 
-The daily COVID-19 case counts analyzed in Section~8 are derived
+The daily COVID-19 case counts analyzed in Section~7 are derived
 from two publicly available sources. The Chinese series is obtained
 from the Johns Hopkins University Center for Systems Science and
 Engineering (JHU CSSE) feed through the \texttt{COVID19} R package,
@@ -1505,9 +1430,9 @@ The authors declare no conflict of interest.
 
 This research did not receive any specific grant from funding
 agencies in the public, commercial, or not-for-profit sectors.
+
 \end{document}
 \appendix
-
 \section{Trajectory Tables}
 \label{app:trajectories}
 
