@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.10)  26 OCT 2026 11:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.10)  29 OCT 2026 10:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -634,7 +634,15 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 1183.
 
-[23] [24] [25] [26] (./main.bbl [27]) [28] (./main.aux)
+[23] [24] [25] [26]
+<../fig_real_entry_exit_3x4.pdf, id=436, 867.24pt x 867.24pt>
+File: ../fig_real_entry_exit_3x4.pdf Graphic file (type pdf)
+<use ../fig_real_entry_exit_3x4.pdf>
+Package pdftex.def Info: ../fig_real_entry_exit_3x4.pdf  used on input line 141
+2.
+(pdftex.def)             Requested size: 483.69687pt x 483.70584pt.
+ [27] [28 <../fig_real_entry_exit_3x4.pdf>] (./main.bbl
+[29]) [30] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-03-20>
@@ -643,13 +651,13 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 89165E9B7FAE4351EA5EA24BE7E531E0;5933.
  ) 
 Here is how much of TeX's memory you used:
- 13758 strings out of 469296
- 216654 string characters out of 5465560
- 652520 words of memory out of 6000000
- 42287 multiletter control sequences out of 15000+600000
+ 13772 strings out of 469296
+ 217065 string characters out of 5465560
+ 655044 words of memory out of 6000000
+ 42297 multiletter control sequences out of 15000+600000
  641649 words of font info for 93 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 75i,12n,84p,968b,563s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,84p,968b,571s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texl
@@ -665,10 +673,10 @@ cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy1
 /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/t
 exlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (28 pages, 346493 bytes).
+Output written on main.pdf (30 pages, 370792 bytes).
 PDF statistics:
- 540 PDF objects out of 1000 (max. 8388607)
- 460 compressed objects within 5 object streams
- 119 named destinations out of 1000 (max. 500000)
- 231 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 562 PDF objects out of 1000 (max. 8388607)
+ 478 compressed objects within 5 object streams
+ 123 named destinations out of 1000 (max. 500000)
+ 236 words of extra memory for PDF output out of 10000 (max. 10000000)
 

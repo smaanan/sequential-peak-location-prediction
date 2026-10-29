@@ -1,5 +1,0 @@
-"tau_level","step","tau_prime","T_exit","T_star","tau","T_entry","w_star","n_Z","L","peak_contained"
-0.25,7,15,62,60,15,60,2,1,61,TRUE
-0.5,5,10,61,59,11,59,2,1,61,TRUE
-0.75,5,7,61,58,11,57,4,2,61,TRUE
-0.95,6,9,63,56,18,56,7,1,61,TRUE

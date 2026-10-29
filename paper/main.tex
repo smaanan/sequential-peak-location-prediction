@@ -1357,6 +1357,72 @@ are single realizations per country, not coverage probabilities.
 	\end{tabular}
 \end{table}
 
+{\color{blue}
+% ------------------------------------------------------------------
+% Suggested insertion: Section 7 (real data), after the paragraph
+% "Operational rule" of the subsection on admissible candidates K(T).
+% Figure produced by real_data_entry_exit_3x4.R
+% ------------------------------------------------------------------
+
+\paragraph{Entry and exit times as functions of $T$.}
+Figure~\ref{fig:real_entry_exit} shows, for each country and each
+$\tau$, the curves $T\mapsto T_{\mathrm{entry}}^{(0)}(T)$ for $T<L$ and
+$T\mapsto T_{\mathrm{entry}}^{(1)}(T)$,
+$T\mapsto T_{\mathrm{exit}}^{(1)}(T)$ for $T\ge L$, whether or not the
+corresponding candidates belong to $\mathcal K(T)$. These curves are
+descriptive: a flat stretch means that the window of the candidate no
+longer moves as $T$ increases, and a jump means that $\hat l$ has
+changed. The curves before and after $L$ refer to different candidates
+($k=0$ and $k=1$).
+
+Before the peak, $T_{\mathrm{entry}}^{(0)}(T)$ stays close to the
+diagonal: it equals $T-1$, so that the window of the $k=0$ candidate
+reduces to $[T-1,T]$, at $68\%$, $63\%$ and $61\%$ of the horizons
+(pooled over $\tau$) for China, France and Germany. The remaining flat
+stretches correspond to horizons at which $\hat l$ is unchanged and do
+not by themselves indicate stabilization: for France and $\tau=0.75$,
+for instance, $\hat l(T)=89=h$ for $T=52,\dots,56$, the upper bound of
+the search set.
+
+After the peak, the countries differ. In China the windows of the $k=1$
+candidate become constant over long stretches: $[15,26]$ from $T=27$
+($\tau=0.25$), $[25,29]$ from $T=30$ ($\tau=0.5$), $[22,25]$ from
+$T=26$ ($\tau=0.75$) and $[28,30]$ from $T=31$ ($\tau=0.95$), up to
+$h=35$. Only the first and the third contain $L$, the latter at its left
+endpoint. In France and Germany, where only $12$ and $15$ horizons
+follow the peak, the entry and exit times keep moving until the end of
+the sample: the $k=1$ windows remain close behind the current horizon
+(the median of $T-T_{\mathrm{exit}}^{(1)}(T)$ over $T\ge L$ is $1$ for
+both countries, against $3$ for China), constant stretches last at most
+$4$ horizons in France and $6$ in Germany, and none of the terminal
+$k=1$ windows contains $L$.
+
+This is consistent with the interpretation of $k=1$ as the most recent
+plateau of $\hat l$, which follows $T$ rather than the peak region. For
+France and Germany, the windows containing $L$ in
+Tables~\ref{tab:france_entry_exit} and~\ref{tab:germany_entry_exit}
+correspond to larger indices ($k=3,\dots,7$), which reach back to the
+peak, whereas in China $k=1$ already contains $L$ for $\tau=0.25$ and
+$\tau=0.75$. The figure therefore shows when the entry and exit times
+stop moving, which happens clearly only for China within the sample, but
+not by itself whether the windows contain $L$.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{fig_real_entry_exit_3x4.pdf}
+	\caption{Entry and exit times of the candidates $k=0$ ($T<L$) and
+		$k=1$ ($T\ge L$) as functions of the horizon $T$, for China (top),
+		France (middle) and Germany (bottom) and
+		$\tau=0.25,0.5,0.75,0.95$ (left to right). Black:
+		$T_{\mathrm{entry}}^{(0)}(T)$ for $T<L$. Green:
+		$T_{\mathrm{entry}}^{(1)}(T)$ (solid) and
+		$T_{\mathrm{exit}}^{(1)}(T)$ (dashed) for $T\ge L$. The vertical
+		and horizontal dashed grey lines mark $T=L$ and the value $L$
+		($22$, $78$ and $61$). The candidates are plotted whether or not
+		they belong to $\mathcal K(T)$.}
+	\label{fig:real_entry_exit}
+\end{figure}}
+
 \section{Conclusion}
 \label{sec:conclusion}
 
