@@ -1358,22 +1358,18 @@ are single realizations per country, not coverage probabilities.
 \end{table}
 
 {\color{blue}
-% ------------------------------------------------------------------
-% Suggested insertion: Section 7 (real data), after the paragraph
-% "Operational rule" of the subsection on admissible candidates K(T).
-% Figure produced by real_data_entry_exit_3x4.R
-% ------------------------------------------------------------------
-
 \paragraph{Entry and exit times as functions of $T$.}
 Figure~\ref{fig:real_entry_exit} shows, for each country and each
-$\tau$, the curves $T\mapsto T_{\mathrm{entry}}^{(0)}(T)$ for $T<L$ and
+$\tau$, the curves $T\mapsto T_{\mathrm{entry}}^{(0)}(T)$ for all $T$ and
 $T\mapsto T_{\mathrm{entry}}^{(1)}(T)$,
 $T\mapsto T_{\mathrm{exit}}^{(1)}(T)$ for $T\ge L$, whether or not the
 corresponding candidates belong to $\mathcal K(T)$. These curves are
 descriptive: a flat stretch means that the window of the candidate no
 longer moves as $T$ increases, and a jump means that $\hat l$ has
-changed. The curves before and after $L$ refer to different candidates
-($k=0$ and $k=1$).
+changed. The first curve refers to the candidate $k=0$ and the other two to
+the candidate $k=1$. Along a plateau of $\hat l$, that is, when
+$\epsilon_0(T)=0$, one has
+$T_{\mathrm{entry}}^{(0)}(T)=T_{\mathrm{exit}}^{(1)}(T)+1$.
 
 Before the peak, $T_{\mathrm{entry}}^{(0)}(T)$ stays close to the
 diagonal: it equals $T-1$, so that the window of the $k=0$ candidate
@@ -1410,11 +1406,11 @@ not by itself whether the windows contain $L$.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\textwidth]{fig_real_entry_exit_3x4.pdf}
-	\caption{Entry and exit times of the candidates $k=0$ ($T<L$) and
-		$k=1$ ($T\ge L$) as functions of the horizon $T$, for China (top),
+	\caption{Entry time of the candidate $k=0$ (all $T$) and entry and
+		exit times of the candidate $k=1$ ($T\ge L$) as functions of the horizon $T$, for China (top),
 		France (middle) and Germany (bottom) and
 		$\tau=0.25,0.5,0.75,0.95$ (left to right). Black:
-		$T_{\mathrm{entry}}^{(0)}(T)$ for $T<L$. Green:
+		$T_{\mathrm{entry}}^{(0)}(T)$. Green:
 		$T_{\mathrm{entry}}^{(1)}(T)$ (solid) and
 		$T_{\mathrm{exit}}^{(1)}(T)$ (dashed) for $T\ge L$. The vertical
 		and horizontal dashed grey lines mark $T=L$ and the value $L$
