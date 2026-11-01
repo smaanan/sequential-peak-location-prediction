@@ -392,10 +392,12 @@ the first horizon from which the estimate no longer changes. This definition
 does not use $L$. To exclude a trivial plateau reduced to the last horizon(s),
 we require the plateau to contain at least $m=3$ horizons, $h-T+1\ge m$, and
 set $T^{*}=\infty$ otherwise. In simulations, where $L$ is known, we also
-record whether the plateau value equals $L$, that is, $\hat l(T^{*})=L$. The
-operational entry time $T_{\mathrm{entry}}^{(0)}(T)$ of
-Section~\ref{subsec:entry-time} is a different quantity, defined from the
-oscillations of the path.
+record whether the plateau value equals $L$, that is, $\hat l(T^{*})=L$.
+In Section~\ref{subsec:threshold-entry} we show that $T^{*}=T_{\mathrm{entry}}(0;h)$
+whenever the final plateau has at least $m$ horizons, and that the operational
+entry time $T_{\mathrm{entry}}^{(0)}(T)$ of Section~\ref{subsec:entry-time} is a
+tolerance-based entry time $T_{\mathrm{entry}}(\epsilon_0(T);T)$ computed from
+the path stopped at $T$.
 
 \subsection{Large and moderate signal-to-noise ratio}
 
@@ -654,80 +656,79 @@ T_{\mathrm{exit}}^{(k)}(T)
 All endpoints are determined entirely from the sequential estimation trajectory available up to the current observation horizon \(T\) and from the corresponding retrospective oscillation construction.
 
 {\color{blue}
-\paragraph{Threshold-based entry and exit times.}
-Recall that
-$\omega_l(t,T)=\max_{t\le u,u'\le T}|\hat l(u)-\hat l(u')|$ is the
-oscillation of the path over $[t,T]$, and that $t\mapsto\omega_l(t,T)$ is
-non-increasing. For thresholds $\varepsilon>\varepsilon'\ge0$ we define
+\subsection{Threshold-based entry and exit times}
+\label{subsec:threshold-entry}
+Recall that $\omega_l(t,T)=\max_{t\le u,u'\le T}|\hat l(u)-\hat l(u')|$ is the
+oscillation of the path over $[t,T]$ and that $t\mapsto\omega_l(t,T)$ is
+non-increasing on $\{T_0,\dots,T\}$.
+For thresholds $\varepsilon\ge\varepsilon'\ge0$ let
 \[
-T_{\mathrm{entry}}(\varepsilon;T)=\min\{t:\ \omega_l(t,T)\le\varepsilon\},
-\qquad
-T_{\mathrm{exit}}(\varepsilon';T)=\min\{t>T_{\mathrm{entry}}(\varepsilon;T):\
-\omega_l(t,T)\le\varepsilon'\}.
+T_{\mathrm{entry}}(\varepsilon;T)=\min\{t:\omega_l(t,T)\le\varepsilon\},\quad
+T_{\mathrm{exit}}(\varepsilon';T)=\min\{t>T_{\mathrm{entry}}(\varepsilon;T):\omega_l(t,T)\le\varepsilon'\}.
 \]
-They are the entry and exit times of~\citet{Der25} with the observation
-window extended up to the horizon $T$.
-At the terminal horizon we write
-$T_{\mathrm{entry}}(\varepsilon)=T_{\mathrm{entry}}(\varepsilon;h)$.
+They are the entry and exit times of \citet{Der25}, except that the
+fixed-length window $[t,t+w]$ used there is replaced by the tail $[t,T]$.
+Because $\omega_l(\cdot,T)$ is non-increasing,
+$T_{\mathrm{exit}}(\varepsilon';T)=\max\{T_{\mathrm{entry}}(\varepsilon';T),\,
+T_{\mathrm{entry}}(\varepsilon;T)+1\}$: it marks the start of the rung at level
+$\varepsilon'$, whereas $T_{\mathrm{exit}}^{(k)}(T)=T_{\mathrm{entry}}(\epsilon'_{k-1};T)-1$
+is the last horizon of rung $k$.
 
-\begin{remark}[Ladder structure of $t\mapsto\omega_l(t,T)$]
-	\label{rem:ladder}
-	Let $T_{\mathrm{exit}}^{(1)}>T_{\mathrm{exit}}^{(2)}>\cdots$ be the points
-	at which $t\mapsto\omega_l(t,T)$ strictly decreases, set
-	$T_{\mathrm{exit}}^{(0)}=T$ and
-	$\epsilon'_k=\omega_l(T_{\mathrm{exit}}^{(k)},T)$, so that
-	$0=\epsilon'_0<\epsilon'_1<\epsilon'_2<\cdots$. Then
-	$\omega_l(t,T)=\epsilon'_k$ for
-	$T_{\mathrm{exit}}^{(k+1)}<t\le T_{\mathrm{exit}}^{(k)}$, and:
+\begin{proposition}[Ladder structure]\label{prop:ladder}
+	Fix $T$. Let $T_{\mathrm{exit}}^{(1)}>\dots>T_{\mathrm{exit}}^{(K)}$ be the
+	strict-decrease points of $t\mapsto\omega_l(t,T)$, set
+	$T_{\mathrm{exit}}^{(0)}=T$, $\epsilon'_k=\omega_l(T_{\mathrm{exit}}^{(k)},T)$,
+	so that $0=\epsilon'_0<\epsilon'_1<\dots<\epsilon'_K$, and use the conventions
+	$\epsilon'_{K+1}=\infty$ and $T_{\mathrm{exit}}^{(K+1)}+1=T_0$. Then:
 	\begin{enumerate}
-		\item[(i)] for $\epsilon'_k\le\varepsilon<\epsilon'_{k+1}$,
-		$T_{\mathrm{entry}}(\varepsilon;T)=T_{\mathrm{exit}}^{(k+1)}(T)+1$.
-		In particular $T_{\mathrm{entry}}(\epsilon'_k;T)=T_{\mathrm{exit}}^{(k+1)}(T)+1$,
-		and $T_{\mathrm{entry}}(0;T)=T_{\mathrm{exit}}^{(1)}(T)+1$ is the start of
-		the final plateau of $\hat l$. (For the last level, the convention
-		$T_{\mathrm{exit}}^{(K+1)}+1:=T_0$, the first available horizon,
-		applies.)
-		\item[(ii)] the entry time of the two-stage construction is the entry
-		time of the path stopped at $T_{\mathrm{exit}}^{(k)}$, with threshold
-		$\epsilon_k$:
-		$T_{\mathrm{entry}}^{(k)}(T)=T_{\mathrm{entry}}\bigl(\epsilon_k;\,T_{\mathrm{exit}}^{(k)}(T)\bigr)$.
-		Consequently $T_{\mathrm{entry}}(\epsilon_k;T)\ge T_{\mathrm{entry}}^{(k)}(T)$,
-		with equality if and only if
-		$\omega_l\bigl(T_{\mathrm{entry}}^{(k)}(T),T\bigr)\le\epsilon_k$.
+		\item[(i)] $\omega_l(t,T)=\epsilon'_k$ for
+		$T_{\mathrm{exit}}^{(k+1)}<t\le T_{\mathrm{exit}}^{(k)}$; hence
+		$T_{\mathrm{entry}}(\varepsilon;T)=T_{\mathrm{exit}}^{(k+1)}(T)+1$ whenever
+		$\epsilon'_k\le\varepsilon<\epsilon'_{k+1}$. In particular
+		$T_{\mathrm{entry}}(0;T)=T_{\mathrm{exit}}^{(1)}(T)+1$ is the start of the
+		final plateau of $\hat l$.
+		\item[(ii)] $T_{\mathrm{exit}}^{(k)}(T)=T_{\mathrm{entry}}(\epsilon'_{k-1};T)-1$
+		for $1\le k\le K$.
+		\item[(iii)] If $E_k(T)\neq\emptyset$, then
+		$T_{\mathrm{entry}}^{(k)}(T)=T_{\mathrm{entry}}\bigl(\epsilon_k(T);T_{\mathrm{exit}}^{(k)}(T)\bigr)$.
+		Consequently $T_{\mathrm{entry}}(\epsilon_k(T);T)\ge T_{\mathrm{entry}}^{(k)}(T)$,
+		with equality iff $\omega_l\bigl(T_{\mathrm{entry}}^{(k)}(T),T\bigr)\le\epsilon_k(T)$.
+		\item[(iv)] For $k=0$: $T_0^{*}=T-1$, $\epsilon_0(T)=|\hat l(T)-\hat l(T-1)|$ and
+		$T_{\mathrm{entry}}^{(0)}(T)=T_{\mathrm{entry}}(\epsilon_0(T);T)$. This equals
+		$T_{\mathrm{exit}}^{(1)}(T)+1$ if $\hat l(T)=\hat l(T-1)$ and
+		$T_{\mathrm{exit}}^{(2)}(T)+1$ otherwise.
 	\end{enumerate}
-\end{remark}
-
-\begin{remark}[Case $k=0$]
-	Since $T_{\mathrm{exit}}^{(0)}(T)=T$ and $\epsilon'_0=0$, one has $T_0^{*}=T-1$,
-	$\epsilon_0(T)=|\hat l(T)-\hat l(T-1)|$ and, by Remark~\ref{rem:ladder}(ii),
-	$T_{\mathrm{entry}}^{(0)}(T)=T_{\mathrm{entry}}(\epsilon_0(T);T)$. Moreover
-	$\epsilon_0(T)=0$ if $\hat l(T)=\hat l(T-1)$, and $\epsilon_0(T)=\epsilon'_1$
-	otherwise; by Remark~\ref{rem:ladder}(i),
-	$T_{\mathrm{entry}}^{(0)}(T)$ equals $T_{\mathrm{exit}}^{(1)}(T)+1$ in the
-	first case and $T_{\mathrm{exit}}^{(2)}(T)+1$ in the second.
-\end{remark}
+\end{proposition}
 
 \begin{proof}
-	(i) By construction, $\omega_l(\cdot,T)$ is a non-increasing step function
-	whose strict decreases occur at the points $T_{\mathrm{exit}}^{(k)}$, so it
-	equals $\epsilon'_k$ on $(T_{\mathrm{exit}}^{(k+1)},T_{\mathrm{exit}}^{(k)}]$.
-	If $\epsilon'_k\le\varepsilon<\epsilon'_{k+1}$, the first $t$ with
+	(i) $\omega_l(\cdot,T)$ is a non-increasing step function whose strict
+	decreases occur at the points $T_{\mathrm{exit}}^{(k)}$, so it equals
+	$\epsilon'_k$ on $(T_{\mathrm{exit}}^{(k+1)},T_{\mathrm{exit}}^{(k)}]$. If
+	$\epsilon'_k\le\varepsilon<\epsilon'_{k+1}$, the first $t$ with
 	$\omega_l(t,T)\le\varepsilon$ is $T_{\mathrm{exit}}^{(k+1)}+1$.
-	(ii) The map $t\mapsto\omega_l(t,T_{\mathrm{exit}}^{(k)})$ is non-increasing
-	and equals $\epsilon_k$ at $t=T_k^{*}$; hence
-	$\min\{t:\omega_l(t,T_{\mathrm{exit}}^{(k)})=\epsilon_k\}
-	=\min\{t:\omega_l(t,T_{\mathrm{exit}}^{(k)})\le\epsilon_k\}$, which is
-	$T_{\mathrm{entry}}^{(k)}$. Finally, $\omega_l(t,T)\ge
-	\omega_l(t,T_{\mathrm{exit}}^{(k)})$ for $t\le T_{\mathrm{exit}}^{(k)}$.
+	(ii) Apply (i) with $\varepsilon=\epsilon'_{k-1}$.
+	(iii) $t\mapsto\omega_l(t,T_{\mathrm{exit}}^{(k)})$ is non-increasing and equals
+	$\epsilon_k$ at $T_k^{*}<T_{\mathrm{exit}}^{(k)}$. Hence
+	$\min\{t:\omega_l(t,T_{\mathrm{exit}}^{(k)})\le\epsilon_k\}$ is attained at a
+	$t\le T_k^{*}$, where $\omega_l\ge\epsilon_k$, so it equals the minimum in
+	\eqref{eq:entry-time}. Moreover $\omega_l(t,T)\ge\omega_l(t,T_{\mathrm{exit}}^{(k)})$
+	for $t\le T_{\mathrm{exit}}^{(k)}$, which gives the inequality and the
+	equality condition.
+	(iv) $E_0(T)=\{t<T\}$, so $T_0^{*}=T-1$ and $\epsilon_0=\omega_l(T-1,T)$;
+	(iii) with $k=0$ gives the identity. If $\hat l(T)=\hat l(T-1)$ then
+	$\epsilon_0=0=\epsilon'_0$ and (i) gives $T_{\mathrm{exit}}^{(1)}+1$.
+	Otherwise $T_{\mathrm{exit}}^{(1)}=T-1$, $\epsilon'_1=\epsilon_0$, and (i) with
+	$k=1$ gives $T_{\mathrm{exit}}^{(2)}+1$.
 \end{proof}
 
-The remark ties together three notions of stabilization: the stabilization
-time $T^{*}$ of Section~\ref{sec:parameter_estimation_paths}, which is
-$T_{\mathrm{entry}}(0;h)$ when the final plateau has at least $m$
-horizons; $T_{\mathrm{stab}}=T_{\mathrm{entry}}(\varepsilon;h)$, used in
-Section~\ref{sec:covid-real-data}; and the exit times of the two-stage
-construction. Every value of $T_{\mathrm{entry}}(\varepsilon;T)$ is an exit
-time of the ladder plus one, so that choosing $\varepsilon$ amounts to
+The proposition ties together three notions of stabilization: the stabilization
+time $T^{*}$ of Section~\ref{sec:parameter_estimation_paths}, which equals
+$T_{\mathrm{entry}}(0;h)$ when the final plateau has at least $m$ horizons; the
+tolerance-based entry time $T_{\mathrm{entry}}(\varepsilon;h)$, $\varepsilon=3,5,15$,
+used in Section~\ref{sec:covid-real-data}; and the exit times of the two-stage
+construction, by (ii). Apart from $\varepsilon\ge\epsilon'_K$, where
+$T_{\mathrm{entry}}(\varepsilon;T)=T_0$, every value of $T_{\mathrm{entry}}(\varepsilon;T)$
+is an exit time of the ladder plus one, so choosing $\varepsilon$ amounts to
 choosing a rung of the ladder.}
 
 \subsection{Construction of a data-driven interval for the peak location}
@@ -1076,13 +1077,11 @@ $h = \max(T)$, so that for each country the search set is
 $\{1,\ldots,h\}$. 
 {\color{blue}
 We then assess the temporal stabilization of the estimated peak-location
-path through the entry time $T_{\mathrm{entry}}(\varepsilon)=
-T_{\mathrm{entry}}(\varepsilon;h)$ of Section~\ref{sec:entry-exit}, with
-$\varepsilon=3$, $5$ and $15$ for China, France and Germany. Since
-$\max_{u\ge t}\hat l(u)-\min_{u\ge t}\hat l(u)=\omega_l(t,h)$, this is
-exactly the stabilization time
-$$T_{\mathrm{stab}}=\min\{T:\max_{u\ge T}\hat l(u)-\min_{u\ge T}\hat l(u)\le\varepsilon\}$$
-used previously, and we write $T_{\mathrm{entry}}(\varepsilon)$ in its place.
+path through the entry time $T_{\mathrm{entry}}(\varepsilon)=T_{\mathrm{entry}}(\varepsilon;h)$
+of Section~\ref{subsec:threshold-entry}, with $\varepsilon=3$, $5$ and $15$
+for China, France and Germany. Since
+$\max_{u\ge t}\hat l(u)-\min_{u\ge t}\hat l(u)=\omega_l(t,h)$, it is the first
+horizon from which all later estimates stay within a range $\varepsilon$.
 This is computed for each country and quantile level.}
 For each country we
 additionally apply the operational two-stage entry--exit construction of
@@ -1431,7 +1430,7 @@ are single realizations per country, not coverage probabilities.
 \label{subsec:real-entry-eps}
 
 The thresholds $\varepsilon=3,5,15$ were chosen by hand. By
-Remark~\ref{rem:ladder}, any $\varepsilon$ selects a rung of the ladder of
+Proposition~\ref{prop:ladder}, any $\varepsilon$ selects a rung of the ladder of
 the path: $T_{\mathrm{entry}}(\varepsilon)$ is an exit time
 $T_{\mathrm{exit}}^{(k+1)}(h)$ plus one. For China and $\varepsilon=3$, the
 values $15,13,23,28$ obtained for $\tau=0.25,0.5,0.75,0.95$ correspond to
@@ -1457,8 +1456,8 @@ is Table~\ref{tab:tentry_eps_oper}.
 	\small
 	\caption{Two-stage window and threshold-based window with
 		$(\varepsilon,\varepsilon')=(\epsilon_k,\epsilon'_k)$ at $T=h$, for
-		the retrospectively selected candidate $k$. The last column is the
-		former $T_{\mathrm{stab}}=T_{\mathrm{entry}}(\varepsilon)$ with
+		the retrospectively selected candidate $k$. The last column is 
+		$T_{\mathrm{entry}}(\varepsilon; h)$ with
 		$\varepsilon=3,5,15$ for China, France and Germany.}
 	\label{tab:tentry_eps_retro}
 	\begin{tabular}{lccccc c}
@@ -1466,7 +1465,7 @@ is Table~\ref{tab:tentry_eps_oper}.
 		Country & $\tau$ & $k$ & $(\epsilon_k,\epsilon'_k)$
 		& $[T_{\mathrm{entry}}^{(k)},T_{\mathrm{exit}}^{(k)}]$
 		& $[T_{\mathrm{entry}}(\epsilon_k;h),T_{\mathrm{exit}}(\epsilon'_k;h)]$
-		& $T_{\mathrm{stab}}$ \\
+		& $T_{\mathrm{entry}}(\varepsilon)$ \\
 		\midrule
 		China ($L=22$)    & 0.25 & 1 & (3, 1)   & [15, 26] & [15, 16] & 15 \\
 		& 0.50 & 2 & (2, 2)   & [15, 24] & [23, 24] & 13 \\
@@ -1486,7 +1485,7 @@ is Table~\ref{tab:tentry_eps_oper}.
 	\end{tabular}
 \end{table}
 
-By Remark~\ref{rem:ladder}(ii), $T_{\mathrm{entry}}(\epsilon_k;h)\ge
+By Proposition~\ref{prop:ladder}(ii), $T_{\mathrm{entry}}(\epsilon_k;h)\ge
 T_{\mathrm{entry}}^{(k)}$ in all cases: the two-stage entry time measures
 the oscillation up to $T_{\mathrm{exit}}^{(k)}$, the threshold-based one up
 to $h$. The two coincide in $6$ of $12$ cases for each selection, whereas
@@ -1509,7 +1508,7 @@ threshold that the path itself suggests. For Germany, $\epsilon_k$
 close to $\varepsilon=3$ at $\tau=0.25,0.5$ ($3,2$) but three to five times
 larger at $\tau=0.75,0.95$ ($15,9$); for France it exceeds $\varepsilon=5$
 ($13,11,11,6$). Accordingly, $T_{\mathrm{entry}}(\epsilon_k;h)$ coincides
-with $T_{\mathrm{stab}}$ in $4$ of $12$ cases and is earlier in three of
+with $T_{\mathrm{entry}}(\varepsilon;h)$, $\varepsilon=3,5,15$, in $4$ of $12$ cases and is earlier in three of
 the four French cases ($79,71,70$ against $85,82,80$ for
 $\tau=0.25,0.5,0.75$). These comparisons are descriptive: they rest on a
 single realization per country, and the retrospective selection uses the
@@ -1526,7 +1525,7 @@ observed peak $L$.
 		Country & $\tau$ & $\hat k$ & $(\epsilon_{\hat k},\epsilon'_{\hat k})$
 		& $[T_{\mathrm{entry}}^{(\hat k)},T_{\mathrm{exit}}^{(\hat k)}]$
 		& $[T_{\mathrm{entry}}(\epsilon_{\hat k};h),T_{\mathrm{exit}}(\epsilon'_{\hat k};h)]$
-		& $T_{\mathrm{stab}}$ \\
+		& $T_{\mathrm{entry}}(\varepsilon)$ \\
 		\midrule
 		China ($L=22$)    & 0.25 & 1 & (3, 1)   & [15, 26] & [15, 16] & 15 \\
 		& 0.50 & 2 & (2, 2)   & [15, 24] & [23, 24] & 13 \\
