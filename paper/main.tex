@@ -1,6 +1,7 @@
 \documentclass[12pt,a4paper]{article}
 \input{preamble.tex}
-\title{\textbf{Peak Prediction Using Quantile Regression and Asymmetric Laplace Noise}}
+%\title{\textbf{Peak Prediction Using Quantile Regression and Asymmetric Laplace Noise}}
+\title{\textbf{Sequential Estimation of a Peak Location by Quantile Regression: Stabilization and Entry–Exit Intervals}}
 %\usepackage{authblk}
 %\usepackage{orcidlink} 
 \author{}
@@ -23,12 +24,19 @@
 
 \begin{abstract}
 	Predicting the location of a peak before it is fully observed is important in many applications. We consider a Gaussian-shaped signal with additive noise and develop a quantile-based method for estimating its amplitude, location, and spread. For fixed location and spread, the amplitude estimator is a weighted $\tau$-quantile of a transformed version of the observations. A $\tau$-aligned asymmetric Laplace noise model provides a probabilistic interpretation of the quantile objective through its likelihood.
-	We study the sequential evolution of the estimated peak location as the observation horizon increases. When the estimate does not stabilize sufficiently early, we propose a two-stage construction of candidate entry--exit intervals based on oscillations in the estimation trajectory. These intervals can be constructed without knowing the true peak location. Monte Carlo simulations evaluate the interval-selection rate and empirical coverage, showing that performance depends on the signal-to-noise ratio. Stabilization is more reliable under the high- and moderate-SNR settings considered, whereas low SNR reduces point-estimation reliability and makes interval coverage more variable. Finally, we illustrate the method using daily COVID-19 cases during the first wave of the pandemic in China, France, and Germany.
+	We study the sequential evolution of the estimated peak location as the observation horizon increases. When the estimate does not stabilize sufficiently early, we propose a two-stage construction of candidate entry--exit intervals based on oscillations in the estimation trajectory. These intervals can be constructed without knowing the true peak location. 
+	We relate this construction to threshold-based entry and exit times
+	through a ladder structure of the oscillation function.
+	Monte Carlo simulations evaluate the interval-selection rate and empirical coverage, showing that performance depends on the signal-to-noise ratio. Stabilization is more reliable under the high- and moderate-SNR settings considered, whereas low SNR reduces point-estimation reliability and makes interval coverage more variable. Finally, we illustrate the method using daily COVID-19 cases during the first wave of the pandemic in China, France, and Germany.
 \end{abstract}
 
+%\noindent
+%\textbf{Keywords:} Peak prediction; quantile regression; asymmetric Laplace noise;
+%sequential estimation; entry--exit intervals; signal-to-noise ratio; COVID-19.\\
+
 \noindent
-\textbf{Keywords:} Peak prediction; quantile regression; asymmetric Laplace noise;
-sequential estimation; entry--exit intervals; signal-to-noise ratio; COVID-19.\\
+\textbf{Keywords:} Peak location estimation; quantile regression; asymmetric Laplace distribution;
+sequential estimation; stabilization time; entry--exit intervals; signal-to-noise ratio; COVID-19.\\
 
 \noindent
 \textbf{Mathematics subject classification:} 62M10, 62G35, 60G35.
@@ -61,11 +69,28 @@ signal-to-noise ratio, and study how $\tau$ and the SNR affect peak
 estimation in a Gaussian-shaped signal.
 Section~\ref{sec:parameter_estimation_paths} investigates the evolution of the sequential peak-location estimator as the observation horizon increases. In particular, we study its stabilization time, defined as the first horizon from which the estimated location remains constant over all subsequent horizons, subject to a minimum plateau-length condition.
 
-Our third contribution addresses situations in which the sequential estimate does not stabilize sufficiently early to provide a reliable point prediction. In Section~\ref{sec:entry-exit}, we develop a data-driven construction of candidate entry and exit times based on the oscillations of the sequential peak-location estimates. These times define candidate intervals for the peak region using only the estimation trajectory, without requiring knowledge of the true peak location \(L\). We then introduce an operational rule for selecting a candidate interval based on whether it contains the current point estimate. The performance of this procedure is assessed through Monte Carlo simulations, including empirical interval-selection rates and coverage probabilities. The true peak location is used only retrospectively to evaluate the selected intervals; the construction itself does not guarantee a prescribed coverage level.
+Our third contribution addresses situations in which the sequential estimate does not stabilize sufficiently early to provide a reliable point prediction. In Section~\ref{sec:entry-exit}, we develop a data-driven construction of candidate entry and exit times based on the oscillations of the sequential peak-location estimates. These times define candidate intervals for the peak region using only the estimation trajectory, without requiring knowledge of the true peak location \(L\).
+We also show that the oscillation function has a ladder structure
+(Proposition~\ref{prop:ladder}), which links these intervals to
+threshold-based entry and exit times and to the stabilization time of
+Section~\ref{sec:parameter_estimation_paths}.
+We then introduce an operational rule for selecting a candidate interval based on whether it contains the current point estimate. The performance of this procedure is assessed through Monte Carlo simulations, including empirical interval-selection rates and coverage probabilities. The true peak location is used only retrospectively to evaluate the selected intervals; the construction itself does not guarantee a prescribed coverage level.
 
-Finally, we illustrate the methodology using daily COVID-19 case counts during the first wave of the pandemic in China~\citep{Bar20}, France, and Germany. The real-world application in Section~\ref{sec:covid-real-data} examines the estimated peak trajectories and the behavior of the proposed entry–exit construction across several quantile levels.
+Finally, we illustrate the methodology using daily COVID-19 case counts during the first wave of the pandemic in China~\citep{Bar20}, France, and Germany.
+The real-world application in Section~\ref{sec:covid-real-data} examines the
+estimated peak trajectories, the behavior of the proposed entry--exit
+construction across several quantile levels, and its comparison with
+threshold-based entry and exit times with data-driven thresholds.
 
-The remainder of the paper is organized as follows. Section~\ref{section:quantile_amplitude} introduces the Gaussian peak model and the quantile-based estimation procedure, including the weighted-quantile characterization of the amplitude estimator. Section~\ref{sec:noise-free} examines the quantile-based objective in the noise-free setting. Section~\ref{sec:symmetric_laplace_estimation} introduces the \(\tau\)-aligned asymmetric Laplace noise model and establishes its connection with the quantile loss. Section~\ref{sec:parameter_estimation_paths} studies the stabilization of the sequential peak-location estimator, while Section~\ref{sec:entry-exit} develops the candidate entry–exit intervals and evaluates the operational selection procedure. Section~\ref{sec:covid-real-data} presents the real-world COVID-19 application, including comparisons across quantile levels and tables of estimated peak trajectories.
+The remainder of the paper is organized as follows. Section~\ref{section:quantile_amplitude} introduces the Gaussian peak model and the quantile-based estimation procedure, including the weighted-quantile characterization of the amplitude estimator. Section~\ref{sec:noise-free} examines the quantile-based objective in the noise-free setting. Section~\ref{sec:symmetric_laplace_estimation} introduces the \(\tau\)-aligned asymmetric Laplace noise model and establishes its connection with the quantile loss. Section~\ref{sec:parameter_estimation_paths} studies the stabilization of the sequential peak-location estimator, while 
+Section~\ref{sec:entry-exit} develops the candidate entry--exit intervals,
+relates them to threshold-based entry and exit times through a ladder
+structure of the oscillations (Proposition~\ref{prop:ladder}), and
+evaluates the operational selection procedure.
+Section~\ref{sec:covid-real-data} presents the real-world COVID-19
+application, including comparisons across quantile levels, tables of
+estimated peak trajectories, and the entry and exit times obtained with
+data-driven thresholds (Section~\ref{subsec:real-entry-eps}).
 
 \section{Quantile-Based Estimation Methodology}
 \label{section:quantile_amplitude}
@@ -179,7 +204,7 @@ To analyze how quantile-aligned noise affects peak estimation, we introduce a un
 \subsection{Asymmetric Laplace Noise Aligned with the $\tau$-Quantile}
 \label{sec:general_AL_intro}
 
-We consider an asymmetric Laplace distribution parametrized by a location parameter
+We consider an asymmetric Laplace distribution parameterized by a location parameter
 $m\in\mathbb{R}$, a scale parameter $\lambda>0$, and an asymmetry parameter
 $k>0$. Its density is given by
 \[
@@ -248,7 +273,7 @@ $\tau$-aligned asymmetric Laplace model.
 \subsection{Simulation under Asymmetric Laplace Noise}
 \label{subsec:asymmetric_laplace_noise}
 
-We now investigate the behavior of the quantile-based peak estimation procedure when the additive noise follows the $\tau$-aligned asymmetric Laplace distribution introduced in Section~\ref{sec:general_AL_intro}. In the parameterization based on the quantile loss, the density of the noise can be written as
+We now investigate the behavior of the quantile-based peak estimation procedure when the additive noise follows the $\tau$-aligned asymmetric Laplace distribution introduced in Section~\ref{sec:general_AL_intro}. In the parametrization based on the quantile loss, the density of the noise can be written as
 \begin{equation}
 	f_{\tau,b}(x)
 	=
@@ -365,7 +390,7 @@ The resulting profiles are displayed in Figure~\ref{fig:asymmetric_laplace_loss_
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\linewidth]{figure2_asymmetric_laplace_all_tau_T.pdf}
-	\caption{Objective function profiles $l\mapsto f_{\tau}(T,a,l,s)$ under \emph{asymmetric Laplace} noise for all combinations of $\tau\in\{0.25,0.5,0.75,0.95\}$ (columns) and $T\in\{4,6,8,9,10\}$ (rows). Each subfigure shows the loss function for a specific $T$ and $\tau$ pair, with the dashed vertical line indicating the true peak location $L=22$.}
+	\caption{Objective function profiles $l\mapsto f_{\tau}(T,a,l,s)$ under \emph{asymmetric Laplace} noise for all combinations of $\tau\in\{0.25,0.5,0.75,0.95\}$ (columns) and $T\in\{4,6,8,9,10\}$ (rows). Each sub-figure shows the loss function for a specific $T$ and $\tau$ pair, with the dashed vertical line indicating the true peak location $L=22$.}
 	\label{fig:asymmetric_laplace_loss_profiles}
 \end{figure}
 
@@ -421,7 +446,7 @@ in $13.5\%$ of the replicates. Figure~\ref{fig:tstar_examples} shows two
 replicates: one with finite $T^{*}=24$ and one with $T^{*}=\infty$. In
 this regime the path alone does not indicate when its current value can be
 trusted. This motivates the entry times, exit times and the data-driven
-interval defined in Section~\ref{subsec:oscillations} onwards, which are
+interval defined in Section~\ref{subsec:oscillations} onward, which are
 studied for $\mathrm{SNR}=1$ in Section~\ref{subsec:entry-exit-simulation}.
 In the finite example the estimate equals $L$ at $T=22$ but leaves it at
 $T=23$, so a single hit of $L$ does not indicate stabilization.
@@ -499,7 +524,7 @@ For a fixed observation horizon \(T\), the function
 $t\longmapsto\omega_l(t,T),$
 with
 $T_0\leq t\leq T,$
-is nonincreasing. Indeed, if \(t_1<t_2\leq T\), then
+is non-increasing. Indeed, if \(t_1<t_2\leq T\), then
 \(
 [t_2,T]\subset[t_1,T],
 \)
@@ -512,7 +537,7 @@ The strict decreases of this sequence identify the times at which the oscillatio
 \subsection{Strict-decrease points of the retrospective oscillation}
 \label{subsec:strict-decrease-points}
 
-For a fixed observation horizon \(T\leq h\), consider the nonincreasing sequence
+For a fixed observation horizon \(T\leq h\), consider the non-increasing sequence
 $t\longmapsto\omega_l(t,T),$
 with 
 $t\in\{T_0,\ldots,T\}.$
@@ -528,7 +553,7 @@ are the strict-decrease points, then
 \(
 t_1>t_2>t_3.
 \)
-The intervals between consecutive strict-decrease points correspond to constant plateaus of the nonincreasing sequence \(t\mapsto\omega_l(t,T)\). More precisely, if \(U>V\) are two consecutive strict-decrease points, then
+The intervals between consecutive strict-decrease points correspond to constant plateaus of the non-increasing sequence \(t\mapsto\omega_l(t,T)\). More precisely, if \(U>V\) are two consecutive strict-decrease points, then
 \[
 \omega_l(t,T)=\omega_l(U,T),
 \qquad
@@ -664,14 +689,19 @@ non-increasing on $\{T_0,\dots,T\}$.
 For thresholds $\varepsilon\ge\varepsilon'\ge0$ let
 \[
 T_{\mathrm{entry}}(\varepsilon;T)=\min\{t:\omega_l(t,T)\le\varepsilon\},\quad
-T_{\mathrm{exit}}(\varepsilon';T)=\min\{t>T_{\mathrm{entry}}(\varepsilon;T):\omega_l(t,T)\le\varepsilon'\}.
+T_{\mathrm{exit}}(\varepsilon';T)=\min\{t\ge T_{\mathrm{entry}}(\varepsilon;T):\omega_l(t,T)\le\varepsilon'\}.
 \]
 They are the entry and exit times of \citet{Der25}, except that the
 fixed-length window $[t,t+w]$ used there is replaced by the tail $[t,T]$.
-Because $\omega_l(\cdot,T)$ is non-increasing,
-$T_{\mathrm{exit}}(\varepsilon';T)=\max\{T_{\mathrm{entry}}(\varepsilon';T),\,
-T_{\mathrm{entry}}(\varepsilon;T)+1\}$: it marks the start of the rung at level
-$\varepsilon'$, whereas $T_{\mathrm{exit}}^{(k)}(T)=T_{\mathrm{entry}}(\epsilon'_{k-1};T)-1$
+Because $\omega_l(\cdot,T)$ is non-increasing and $\varepsilon'\le\varepsilon$,
+\[
+T_{\mathrm{exit}}(\varepsilon';T)=T_{\mathrm{entry}}(\varepsilon';T)\ \ge\
+T_{\mathrm{entry}}(\varepsilon;T):
+\]
+the exit time is the entry time at the smaller threshold. If
+$\varepsilon'=\epsilon'_j$ is a level of the ladder of
+Proposition~\ref{prop:ladder} below, it marks the start of rung $j$,
+whereas $T_{\mathrm{exit}}^{(k)}(T)=T_{\mathrm{entry}}(\epsilon'_{k-1};T)-1$
 is the last horizon of rung $k$.
 
 \begin{proposition}[Ladder structure]\label{prop:ladder}
@@ -960,7 +990,7 @@ To interpret this interval as a confidence interval with nominal
 coverage $1-\alpha$, an appropriate coverage result must be established
 theoretically or assessed through repeated independent simulation
 replicates. The single-realization illustration above is intended to
-demonstrate the operational construction and its behaviour across
+demonstrate the operational construction and its behavior across
 quantile levels and signal-to-noise regimes, rather than to establish
 statistical coverage.
 
@@ -1082,7 +1112,10 @@ of Section~\ref{subsec:threshold-entry}, with $\varepsilon=3$, $5$ and $15$
 for China, France and Germany. Since
 $\max_{u\ge t}\hat l(u)-\min_{u\ge t}\hat l(u)=\omega_l(t,h)$, it is the first
 horizon from which all later estimates stay within a range $\varepsilon$.
-This is computed for each country and quantile level.}
+This is computed for each country and quantile level.
+Section~\ref{subsec:real-entry-eps} compares these tolerance-based times
+with the entry and exit times obtained from the thresholds
+$(\epsilon_k,\epsilon'_k)$ of the two-stage construction.}
 For each country we
 additionally apply the operational two-stage entry--exit construction of
 Section~\ref{sec:entry-exit}, which uses the oscillations of the
@@ -1468,51 +1501,56 @@ is Table~\ref{tab:tentry_eps_oper}.
 		& $T_{\mathrm{entry}}(\varepsilon)$ \\
 		\midrule
 		China ($L=22$)    & 0.25 & 1 & (3, 1)   & [15, 26] & [15, 16] & 15 \\
-		& 0.50 & 2 & (2, 2)   & [15, 24] & [23, 24] & 13 \\
-		& 0.75 & 1 & (15, 2)  & [22, 25] & [23, 24] & 23 \\
-		& 0.95 & 3 & (9, 6)   & [22, 27] & [27, 28] & 28 \\
+		& 0.50 & 2 & (2, 2)   & [15, 24] & [23, 23] & 13 \\
+		& 0.75 & 1 & (15, 2)  & [22, 25] & [23, 23] & 23 \\
+		& 0.95 & 3 & (9, 6)   & [22, 27] & [27, 27] & 28 \\
 		\midrule
-		France ($L=78$)   & 0.25 & 5 & (13, 13) & [72, 79] & [79, 80] & 85 \\
+		France ($L=78$)   & 0.25 & 5 & (13, 13) & [72, 79] & [79, 79] & 85 \\
 		& 0.50 & 5 & (11, 10) & [71, 78] & [71, 73] & 82 \\
 		& 0.75 & 4 & (11, 10) & [70, 78] & [70, 73] & 80 \\
-		& 0.95 & 3 & (6, 5)   & [78, 85] & [85, 86] & 85 \\
+		& 0.95 & 3 & (6, 5)   & [78, 85] & [85, 85] & 85 \\
 		\midrule
-		Germany ($L=61$)  & 0.25 & 7 & (15, 15) & [60, 62] & [60, 61] & 60 \\
-		& 0.50 & 5 & (11, 10) & [59, 61] & [61, 62] & 59 \\
+		Germany ($L=61$)  & 0.25 & 7 & (15, 15) & [60, 62] & [60, 60] & 60 \\
+		& 0.50 & 5 & (11, 10) & [59, 61] & [61, 61] & 59 \\
 		& 0.75 & 5 & (11, 7)  & [57, 61] & [57, 59] & 56 \\
 		& 0.95 & 6 & (18, 9)  & [56, 63] & [56, 60] & 57 \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-By Proposition~\ref{prop:ladder}(ii), $T_{\mathrm{entry}}(\epsilon_k;h)\ge
+By Proposition~\ref{prop:ladder}(iii), $T_{\mathrm{entry}}(\epsilon_k;h)\ge
 T_{\mathrm{entry}}^{(k)}$ in all cases: the two-stage entry time measures
 the oscillation up to $T_{\mathrm{exit}}^{(k)}$, the threshold-based one up
-to $h$. The two coincide in $6$ of $12$ cases for each selection, whereas
-$T_{\mathrm{exit}}(\epsilon'_k;h)=T_{\mathrm{exit}}^{(k)}$ in only $1$ case
-for the retrospective selection (China, $\tau=0.5$) and in $3$ for the
-operational one. The condition $\epsilon_k>\epsilon'_k$ holds in $9$ of $12$
-cases (retrospective) and $8$ of $12$ (operational); when
-$\epsilon_k=\epsilon'_k$, the definition gives
-$T_{\mathrm{exit}}(\epsilon'_k;h)=T_{\mathrm{entry}}(\epsilon_k;h)+1$ and
-the pair reduces to two consecutive horizons.
+to $h$. The two coincide in $6$ of $12$ cases for each selection. For the
+exit times, Proposition~\ref{prop:ladder}(i) gives
+$T_{\mathrm{exit}}(\epsilon'_k;h)=T_{\mathrm{entry}}(\epsilon'_k;h)
+=T_{\mathrm{exit}}^{(k+1)}(h)+1\le T_{\mathrm{exit}}^{(k)}(h)$, with equality
+exactly when rung $k$ of the ladder reduces to a single horizon. This
+happens in $4$ of $12$ cases for the retrospective selection (China
+$\tau=0.95$, France $\tau=0.25,0.95$, Germany $\tau=0.5$) and in $6$ of
+$12$ for the operational one (China $\tau=0.75$, France $\tau=0.5,0.95$,
+Germany $\tau=0.25,0.5,0.75$). The condition $\epsilon_k>\epsilon'_k$ holds
+in $9$ of $12$ cases (retrospective) and $8$ of $12$ (operational); when
+$\epsilon_k=\epsilon'_k$, $T_{\mathrm{exit}}(\epsilon'_k;h)=
+T_{\mathrm{entry}}(\epsilon_k;h)$ and the pair reduces to a single horizon.
 
-The threshold-based windows contain $L$ in only $2$ of $12$ cases for the
-retrospective selection (Germany, $\tau=0.25,0.5$) and in $3$ of $12$ for
-the operational one, always at an endpoint, whereas the two-stage windows
-contain $L$ in $12$ of $12$ (by construction) and $8$ of $12$ cases,
-respectively. The pair $(\epsilon_k,\epsilon'_k)$ therefore does not
-reproduce the two-stage window; it indicates instead the scale of
-threshold that the path itself suggests. For Germany, $\epsilon_k$
-($15,11,11,18$) is of the same order as $\varepsilon=15$; for China it is
-close to $\varepsilon=3$ at $\tau=0.25,0.5$ ($3,2$) but three to five times
-larger at $\tau=0.75,0.95$ ($15,9$); for France it exceeds $\varepsilon=5$
+The threshold-based windows contain $L$ in only $1$ of $12$ cases for the
+retrospective selection (Germany, $\tau=0.5$) and in $3$ of $12$ for the
+operational one (China $\tau=0.75,0.95$, Germany $\tau=0.5$), always at an
+endpoint, whereas the two-stage windows contain $L$ in $12$ of $12$ cases
+(by construction) and $8$ of $12$ cases, respectively. The pair
+$(\epsilon_k,\epsilon'_k)$ therefore does not reproduce the two-stage
+window; it indicates instead the scale of threshold that the path itself
+suggests. For Germany, $\epsilon_k$ ($15,11,11,18$) is of the same order as
+$\varepsilon=15$; for China it is close to $\varepsilon=3$ at
+$\tau=0.25,0.5$ ($3,2$) but three to five times larger at
+$\tau=0.75,0.95$ ($15,9$); for France it exceeds $\varepsilon=5$
 ($13,11,11,6$). Accordingly, $T_{\mathrm{entry}}(\epsilon_k;h)$ coincides
-with $T_{\mathrm{entry}}(\varepsilon;h)$, $\varepsilon=3,5,15$, in $4$ of $12$ cases and is earlier in three of
-the four French cases ($79,71,70$ against $85,82,80$ for
-$\tau=0.25,0.5,0.75$). These comparisons are descriptive: they rest on a
-single realization per country, and the retrospective selection uses the
-observed peak $L$.
+with $T_{\mathrm{entry}}(\varepsilon;h)$, $\varepsilon=3,5,15$, in $4$ of
+$12$ cases and is earlier in three of the four French cases
+($79,71,70$ against $85,82,80$ for $\tau=0.25,0.5,0.75$). These
+comparisons are descriptive: they rest on a single realization per
+country, and the retrospective selection uses the observed peak $L$.
 
 \begin{table}[htbp]
 	\centering
@@ -1528,18 +1566,18 @@ observed peak $L$.
 		& $T_{\mathrm{entry}}(\varepsilon)$ \\
 		\midrule
 		China ($L=22$)    & 0.25 & 1 & (3, 1)   & [15, 26] & [15, 16] & 15 \\
-		& 0.50 & 2 & (2, 2)   & [15, 24] & [23, 24] & 13 \\
+		& 0.50 & 2 & (2, 2)   & [15, 24] & [23, 23] & 13 \\
 		& 0.75 & 2 & (20, 17) & [13, 22] & [13, 22] & 23 \\
 		& 0.95 & 4 & (21, 15) & [13, 26] & [13, 22] & 28 \\
 		\midrule
 		France ($L=78$)   & 0.25 & 2 & (7, 6)   & [81, 84] & [81, 83] & 85 \\
-		& 0.50 & 3 & (6, 4)   & [73, 82] & [82, 83] & 82 \\
-		& 0.75 & 1 & (2, 2)   & [81, 86] & [81, 82] & 80 \\
-		& 0.95 & 3 & (6, 5)   & [78, 85] & [85, 86] & 85 \\
+		& 0.50 & 3 & (6, 4)   & [73, 82] & [82, 82] & 82 \\
+		& 0.75 & 1 & (2, 2)   & [81, 86] & [81, 81] & 80 \\
+		& 0.95 & 3 & (6, 5)   & [78, 85] & [85, 85] & 85 \\
 		\midrule
-		Germany ($L=61$)  & 0.25 & 3 & (7, 7)   & [66, 68] & [68, 69] & 60 \\
+		Germany ($L=61$)  & 0.25 & 3 & (7, 7)   & [66, 68] & [68, 68] & 60 \\
 		& 0.50 & 3 & (10, 3)  & [61, 66] & [61, 66] & 59 \\
-		& 0.75 & 1 & (1, 1)   & [66, 73] & [73, 74] & 56 \\
+		& 0.75 & 1 & (1, 1)   & [66, 73] & [73, 73] & 56 \\
 		& 0.95 & 2 & (6, 5)   & [59, 72] & [66, 67] & 57 \\
 		\bottomrule
 	\end{tabular}
@@ -1569,6 +1607,13 @@ early enough, we introduce a two-stage construction of candidate
 entry--exit intervals based on the oscillations of the estimation
 trajectory. The operational selection rule uses the current point
 estimate and does not require knowledge of the true peak location.
+The oscillation function has a ladder structure
+(Proposition~\ref{prop:ladder}): a tolerance-based entry time is an exit
+time of the two-stage construction plus one, and the stabilization time
+corresponds to the entry time at tolerance zero. On the COVID-19 data,
+taking the levels $(\epsilon_k,\epsilon'_k)$ of the two-stage construction
+as thresholds does not reproduce the two-stage windows, but it indicates
+the scale of tolerance suggested by the estimated path.
 
 The Monte Carlo experiments show that the performance of the selected
 intervals depends strongly on the signal-to-noise ratio. Under the

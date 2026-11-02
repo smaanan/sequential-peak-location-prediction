@@ -97,7 +97,7 @@ t_entry_eps <- function(om, eps) {
 t_exit_epsp <- function(om, eps, epsp) {
   te <- t_entry_eps(om, eps)
   if (is.na(te)) return(NA_real_)
-  ok <- om$t[om$t > te & om$omega <= epsp + TOL]
+  ok <- om$t[om$t >= te & om$omega <= epsp + TOL]
   if (length(ok) > 0L) min(ok) else NA_real_
 }
 

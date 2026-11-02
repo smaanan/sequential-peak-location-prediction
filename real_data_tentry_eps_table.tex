@@ -1,235 +1,27 @@
-% =====================================================================
-% (A) STEP 2 -- Section 7 (real data): definitions.
-%     Replace the sentences defining T_stab in the opening of the
-%     section ("We then assess the temporal stabilization ... for each
-%     country and quantile level.") by the following.
-%     Notation as in Section~\ref{sec:entry-exit}.
-% =====================================================================
+% retrospective selection
+China & 0.25 & 1 & 3 & 1 & [15, 26] & [15, 16] & 15 & 22 \\
+China & 0.50 & 2 & 2 & 2 & [15, 24] & [23, 23] & 13 & 22 \\
+China & 0.75 & 1 & 15 & 2 & [22, 25] & [23, 23] & 23 & 22 \\
+China & 0.95 & 3 & 9 & 6 & [22, 27] & [27, 27] & 28 & 22 \\
+France & 0.25 & 5 & 13 & 13 & [72, 79] & [79, 79] & 85 & 78 \\
+France & 0.50 & 5 & 11 & 10 & [71, 78] & [71, 73] & 82 & 78 \\
+France & 0.75 & 4 & 11 & 10 & [70, 78] & [70, 73] & 80 & 78 \\
+France & 0.95 & 3 & 6 & 5 & [78, 85] & [85, 85] & 85 & 78 \\
+Germany & 0.25 & 7 & 15 & 15 & [60, 62] & [60, 60] & 60 & 61 \\
+Germany & 0.50 & 5 & 11 & 10 & [59, 61] & [61, 61] & 59 & 61 \\
+Germany & 0.75 & 5 & 11 & 7 & [57, 61] & [57, 59] & 56 & 61 \\
+Germany & 0.95 & 6 & 18 & 9 & [56, 63] & [56, 60] & 57 & 61 \\
 
-We then assess the temporal stabilization of the estimated
-peak-location path through its oscillation. For $t\le T$, let
-\[
-\omega_l(t,T)=\max_{t\le u,u'\le T}\bigl|\hat l(u)-\hat l(u')\bigr|
-\]
-denote the oscillation of the path over $[t,T]$; the map
-$t\mapsto\omega_l(t,T)$ is non-increasing. For thresholds
-$\varepsilon>\varepsilon'\ge0$, the entry and exit times are
-\[
-T_{\mathrm{entry}}(\varepsilon;T)=\min\{t:\ \omega_l(t,T)\le\varepsilon\},
-\qquad
-T_{\mathrm{exit}}(\varepsilon';T)=\min\{t>T_{\mathrm{entry}}(\varepsilon;T):\
-\omega_l(t,T)\le\varepsilon'\}.
-\]
-They are the entry and exit times of~\citet{Der25} with the observation
-window extended up to the horizon $T$: $T_{\mathrm{entry}}(\varepsilon;T)$
-is the earliest time from which all later estimates stay within a range
-$\varepsilon$, and $T_{\mathrm{exit}}(\varepsilon';T)$ the earliest time
-from which they stay within the smaller range $\varepsilon'$.
-% CHECK: Der25 must be the first paper (Dermoune, Maanan, Ounaissi, Slaoui).
-At the terminal horizon $T=h$ we write
-$T_{\mathrm{entry}}(\varepsilon)=T_{\mathrm{entry}}(\varepsilon;h)$ and
-$T_{\mathrm{exit}}(\varepsilon')=T_{\mathrm{exit}}(\varepsilon';h)$. Since
-$\max_{u\ge t}\hat l(u)-\min_{u\ge t}\hat l(u)=\omega_l(t,h)$, the
-stabilization time
-\[
-T_{\mathrm{stab}}
-=\min\Bigl\{T:\ \max_{u\ge T}\hat l(u)-\min_{u\ge T}\hat l(u)\le\varepsilon\Bigr\}
-\]
-used previously is exactly $T_{\mathrm{entry}}(\varepsilon)$, and we write
-$T_{\mathrm{entry}}(\varepsilon)$ in its place (here $\varepsilon=3$, $5$
-and $15$ for China, France and Germany). For $\varepsilon=0$,
-$T_{\mathrm{entry}}(0)$ is the start of the final plateau of the path,
-that is, the stabilization time $T^{*}$ of
-Section~\ref{sec:parameter_estimation_paths} without the minimal plateau
-length.
-
-
-% =====================================================================
-% (B) STEP 4 -- remark and subsection with the results.
-%     Suggested position: after the paragraph "Operational rule" of
-%     Section~\ref{subsec:real-K}, as a new subsection.
-% =====================================================================
-
-\subsection{Entry and exit times with data-driven thresholds}
-\label{subsec:real-entry-eps}
-
-\begin{remark}[Ladder structure of $t\mapsto\omega_l(t,T)$]
-	\label{rem:ladder}
-	Let $T_{\mathrm{exit}}^{(1)}>T_{\mathrm{exit}}^{(2)}>\cdots$ be the points
-	at which $t\mapsto\omega_l(t,T)$ strictly decreases, set
-	$T_{\mathrm{exit}}^{(0)}=T$ and
-	$\epsilon'_k=\omega_l(T_{\mathrm{exit}}^{(k)},T)$, so that
-	$0=\epsilon'_0<\epsilon'_1<\epsilon'_2<\cdots$. Then
-	$\omega_l(t,T)=\epsilon'_k$ for
-	$T_{\mathrm{exit}}^{(k+1)}<t\le T_{\mathrm{exit}}^{(k)}$, and:
-	\begin{enumerate}
-		\item[(i)] for $\epsilon'_k\le\varepsilon<\epsilon'_{k+1}$,
-		\[
-		T_{\mathrm{entry}}(\varepsilon;T)=T_{\mathrm{exit}}^{(k+1)}(T)+1 .
-		\]
-		In particular $T_{\mathrm{entry}}(\epsilon'_k;T)=T_{\mathrm{exit}}^{(k+1)}(T)+1$,
-		and $T_{\mathrm{entry}}(0;T)=T_{\mathrm{exit}}^{(1)}(T)+1$ is the start of
-		the final plateau of $\hat l$, that is, $T^{*}$. (For the last level, the
-		convention $T_{\mathrm{exit}}^{(K+1)}+1:=T_0$, the first available
-		horizon, applies.)
-		\item[(ii)] the entry time of the two-stage construction is the entry time
-		of the path stopped at $T_{\mathrm{exit}}^{(k)}$, with threshold
-		$\epsilon_k$:
-		\[
-		T_{\mathrm{entry}}^{(k)}(T)=T_{\mathrm{entry}}\bigl(\epsilon_k;\,T_{\mathrm{exit}}^{(k)}(T)\bigr).
-		\]
-		Consequently $T_{\mathrm{entry}}(\epsilon_k;T)\ge T_{\mathrm{entry}}^{(k)}(T)$,
-		with equality if and only if
-		$\omega_l\bigl(T_{\mathrm{entry}}^{(k)}(T),T\bigr)\le\epsilon_k$.
-	\end{enumerate}
-\end{remark}
-
-\begin{proof}
-	(i) By construction, $\omega_l(\cdot,T)$ is a non-increasing step function
-	whose strict decreases occur at the points $T_{\mathrm{exit}}^{(k)}$, so it
-	equals $\epsilon'_k$ on $(T_{\mathrm{exit}}^{(k+1)},T_{\mathrm{exit}}^{(k)}]$.
-	If $\epsilon'_k\le\varepsilon<\epsilon'_{k+1}$, the first $t$ with
-	$\omega_l(t,T)\le\varepsilon$ is $T_{\mathrm{exit}}^{(k+1)}+1$.
-	(ii) The map $t\mapsto\omega_l(t,T_{\mathrm{exit}}^{(k)})$ is non-increasing
-	and equals $\epsilon_k$ at $t=T_k^{*}$; hence
-	$\min\{t:\omega_l(t,T_{\mathrm{exit}}^{(k)})=\epsilon_k\}
-	=\min\{t:\omega_l(t,T_{\mathrm{exit}}^{(k)})\le\epsilon_k\}$, which is
-	$T_{\mathrm{entry}}^{(k)}$. Finally, $\omega_l(t,T)\ge
-	\omega_l(t,T_{\mathrm{exit}}^{(k)})$ for $t\le T_{\mathrm{exit}}^{(k)}$.
-\end{proof}
-
-The remark ties together the three stabilization notions used in the
-paper: $T^{*}$ of Section~\ref{sec:parameter_estimation_paths},
-$T_{\mathrm{stab}}=T_{\mathrm{entry}}(\varepsilon)$, and the exit times of
-the two-stage construction. In particular, every value of
-$T_{\mathrm{entry}}(\varepsilon)$ is an exit time of the ladder plus one:
-for China and $\varepsilon=3$, the values $15,13,23,28$ obtained for
-$\tau=0.25,0.5,0.75,0.95$ are $T_{\mathrm{exit}}^{(k+1)}+1$ with
-$k+1=3,4,2,3$, respectively. Choosing $\varepsilon$ thus amounts to choosing
-a rung of the ladder. At the terminal horizon, the start of the final
-plateau is $T_{\mathrm{entry}}(0)=T^{*}=27,30,26,31$ for China,
-$86,89,87,88$ for France and $73,74,74,74$ for Germany
-($\tau=0.25,0.5,0.75,0.95$), equal to $T_{\mathrm{exit}}^{(1)}+1$ in every
-case. The identity of~(i) was verified numerically for the $139$ candidates
-$k$ of the twelve paths for which $T_{\mathrm{exit}}^{(k+1)}$ exists, with no
-violation, and that of~(ii) for all $140$ candidates with a defined entry
-time.
-
-\paragraph{Data-driven thresholds.}
-The thresholds $\varepsilon=3,5,15$ were chosen by hand. A data-driven
-alternative is to take, for a candidate $k$ of the two-stage construction
-at $T=h$, $(\varepsilon,\varepsilon')=(\epsilon_k,\epsilon'_k)$, which
-satisfy $\epsilon_k\ge\epsilon'_k$. Tables~\ref{tab:tentry_eps_retro}
-and~\ref{tab:tentry_eps_oper} compare the resulting pair
-$[T_{\mathrm{entry}}(\epsilon_k),T_{\mathrm{exit}}(\epsilon'_k)]$ with the
-two-stage window $[T_{\mathrm{entry}}^{(k)},T_{\mathrm{exit}}^{(k)}]$, for
-the retrospective selection of Tables~\ref{tab:china_entry_exit}
-to~\ref{tab:germany_entry_exit} (the narrowest candidate containing $L$)
-and for the operational rule $\hat k(h)=\min\mathcal K(h)$, respectively.
-
-\begin{table}[htbp]
-	\centering
-	\small
-	\caption{Entry and exit times with the data-driven thresholds
-		$(\varepsilon,\varepsilon')=(\epsilon_k,\epsilon'_k)$ at $T=h$, for
-		the retrospectively selected candidate $k$ (narrowest window
-		containing $L$). The last columns give the former
-		$T_{\mathrm{stab}}=T_{\mathrm{entry}}(\varepsilon)$ with
-		$\varepsilon=3,5,15$ for China, France and Germany, and $L$.}
-	\label{tab:tentry_eps_retro}
-	\begin{tabular}{lcccccccc}
-		\toprule
-		Country & $\tau$ & $k$ & $\epsilon_k$ & $\epsilon'_k$
-		& $[T_{\mathrm{entry}}^{(k)},T_{\mathrm{exit}}^{(k)}]$
-		& $[T_{\mathrm{entry}}(\epsilon_k),T_{\mathrm{exit}}(\epsilon'_k)]$
-		& $T_{\mathrm{stab}}$ & $L$ \\
-		\midrule
-		China   & 0.25 & 1 & 3  & 1  & [15, 26] & [15, 16] & 15 & 22 \\
-		& 0.50 & 2 & 2  & 2  & [15, 24] & [23, 24] & 13 & 22 \\
-		& 0.75 & 1 & 15 & 2  & [22, 25] & [23, 24] & 23 & 22 \\
-		& 0.95 & 3 & 9  & 6  & [22, 27] & [27, 28] & 28 & 22 \\
-		\midrule
-		France  & 0.25 & 5 & 13 & 13 & [72, 79] & [79, 80] & 85 & 78 \\
-		& 0.50 & 5 & 11 & 10 & [71, 78] & [71, 73] & 82 & 78 \\
-		& 0.75 & 4 & 11 & 10 & [70, 78] & [70, 73] & 80 & 78 \\
-		& 0.95 & 3 & 6  & 5  & [78, 85] & [85, 86] & 85 & 78 \\
-		\midrule
-		Germany & 0.25 & 7 & 15 & 15 & [60, 62] & [60, 61] & 60 & 61 \\
-		& 0.50 & 5 & 11 & 10 & [59, 61] & [61, 62] & 59 & 61 \\
-		& 0.75 & 5 & 11 & 7  & [57, 61] & [57, 59] & 56 & 61 \\
-		& 0.95 & 6 & 18 & 9  & [56, 63] & [56, 60] & 57 & 61 \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-\begin{table}[htbp]
-	\centering
-	\small
-	\caption{Same as Table~\ref{tab:tentry_eps_retro} for the operational
-		candidate $\hat k(h)=\min\mathcal K(h)$.}
-	\label{tab:tentry_eps_oper}
-	\begin{tabular}{lcccccccc}
-		\toprule
-		Country & $\tau$ & $\hat k$ & $\epsilon_{\hat k}$ & $\epsilon'_{\hat k}$
-		& $[T_{\mathrm{entry}}^{(\hat k)},T_{\mathrm{exit}}^{(\hat k)}]$
-		& $[T_{\mathrm{entry}}(\epsilon_{\hat k}),T_{\mathrm{exit}}(\epsilon'_{\hat k})]$
-		& $T_{\mathrm{stab}}$ & $L$ \\
-		\midrule
-		China   & 0.25 & 1 & 3  & 1  & [15, 26] & [15, 16] & 15 & 22 \\
-		& 0.50 & 2 & 2  & 2  & [15, 24] & [23, 24] & 13 & 22 \\
-		& 0.75 & 2 & 20 & 17 & [13, 22] & [13, 22] & 23 & 22 \\
-		& 0.95 & 4 & 21 & 15 & [13, 26] & [13, 22] & 28 & 22 \\
-		\midrule
-		France  & 0.25 & 2 & 7  & 6  & [81, 84] & [81, 83] & 85 & 78 \\
-		& 0.50 & 3 & 6  & 4  & [73, 82] & [82, 83] & 82 & 78 \\
-		& 0.75 & 1 & 2  & 2  & [81, 86] & [81, 82] & 80 & 78 \\
-		& 0.95 & 3 & 6  & 5  & [78, 85] & [85, 86] & 85 & 78 \\
-		\midrule
-		Germany & 0.25 & 3 & 7  & 7  & [66, 68] & [68, 69] & 60 & 61 \\
-		& 0.50 & 3 & 10 & 3  & [61, 66] & [61, 66] & 59 & 61 \\
-		& 0.75 & 1 & 1  & 1  & [66, 73] & [73, 74] & 56 & 61 \\
-		& 0.95 & 2 & 6  & 5  & [59, 72] & [66, 67] & 57 & 61 \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-By Remark~\ref{rem:ladder}(ii), $T_{\mathrm{entry}}(\epsilon_k)\ge
-T_{\mathrm{entry}}^{(k)}$ in all cases of both tables: the two-stage entry
-time measures the oscillation up to $T_{\mathrm{exit}}^{(k)}$, whereas
-$T_{\mathrm{entry}}(\epsilon_k)$ measures it up to $h$. The two entry times
-coincide in $6$ of $12$ cases for each selection (retrospective: China
-$\tau=0.25$, France $\tau=0.5,0.75$, Germany $\tau=0.25,0.75,0.95$;
-operational: China $\tau=0.25,0.75,0.95$, France $\tau=0.25,0.75$, Germany
-$\tau=0.5$). The exit times $T_{\mathrm{exit}}(\epsilon'_k)$ and
-$T_{\mathrm{exit}}^{(k)}$ coincide in only $1$ case for the retrospective
-selection (China, $\tau=0.5$) and in $3$ for the operational one (China
-$\tau=0.5,0.75$, Germany $\tau=0.5$). In the two operational cases
-China $\tau=0.75$ and Germany $\tau=0.5$, the two windows coincide
-exactly.
-
-The condition $\epsilon_k>\epsilon'_k$ holds in $9$ of $12$ cases for the
-retrospective selection and in $8$ of $12$ for the operational rule. When
-$\epsilon_k=\epsilon'_k$ (retrospective: China $\tau=0.5$, France
-$\tau=0.25$, Germany $\tau=0.25$; operational: the same China case, France
-$\tau=0.75$, Germany $\tau=0.25$ and $0.75$), the definition of
-$T_{\mathrm{exit}}$ gives $T_{\mathrm{exit}}(\epsilon'_k)=
-T_{\mathrm{entry}}(\epsilon_k)+1$, so that the pair reduces to two
-consecutive horizons.
-
-The windows $[T_{\mathrm{entry}}(\epsilon_k),T_{\mathrm{exit}}(\epsilon'_k)]$
-contain $L$ in only $2$ of $12$ cases for the retrospective selection
-(Germany, $\tau=0.25$ and $0.5$) and in $3$ of $12$ for the operational one
-(China $\tau=0.75,0.95$, Germany $\tau=0.5$), always at an endpoint,
-whereas the two-stage windows contain $L$ in $12$ of $12$ cases
-(by construction) and $8$ of $12$ cases, respectively. The choice
-$(\epsilon_k,\epsilon'_k)$ therefore does not reproduce the peak region
-identified by the two-stage construction; it provides instead a
-data-driven replacement for the fixed thresholds $\varepsilon=3,5,15$.
-The values of $\epsilon_k$ are of the same order as these thresholds for
-China ($3,2,15,9$) and Germany ($15,11,11,18$), but larger for France
-($13,11,11,6$ against $5$); accordingly, $T_{\mathrm{entry}}(\epsilon_k)$
-coincides with the former $T_{\mathrm{stab}}$ in $4$ of $12$ cases
-(retrospective selection) and is earlier in three of the four French
-cases ($79,71,70$ against $85,82,80$ for $\tau=0.25,0.5,0.75$). These comparisons are descriptive: they are
-based on a single realization per country, and the retrospective selection
-uses the observed peak $L$.
+% operational selection k_hat(h) = min K(h)
+China & 0.25 & 1 & 3 & 1 & [15, 26] & [15, 16] & 15 & 22 \\
+China & 0.50 & 2 & 2 & 2 & [15, 24] & [23, 23] & 13 & 22 \\
+China & 0.75 & 2 & 20 & 17 & [13, 22] & [13, 22] & 23 & 22 \\
+China & 0.95 & 4 & 21 & 15 & [13, 26] & [13, 22] & 28 & 22 \\
+France & 0.25 & 2 & 7 & 6 & [81, 84] & [81, 83] & 85 & 78 \\
+France & 0.50 & 3 & 6 & 4 & [73, 82] & [82, 82] & 82 & 78 \\
+France & 0.75 & 1 & 2 & 2 & [81, 86] & [81, 81] & 80 & 78 \\
+France & 0.95 & 3 & 6 & 5 & [78, 85] & [85, 85] & 85 & 78 \\
+Germany & 0.25 & 3 & 7 & 7 & [66, 68] & [68, 68] & 60 & 61 \\
+Germany & 0.50 & 3 & 10 & 3 & [61, 66] & [61, 66] & 59 & 61 \\
+Germany & 0.75 & 1 & 1 & 1 & [66, 73] & [73, 73] & 56 & 61 \\
+Germany & 0.95 & 2 & 6 & 5 & [59, 72] & [66, 67] & 57 & 61 \\
