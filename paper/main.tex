@@ -1,7 +1,7 @@
 \documentclass[12pt,a4paper]{article}
 \input{preamble.tex}
-%\title{\textbf{Peak Prediction Using Quantile Regression and Asymmetric Laplace Noise}}
-\title{\textbf{Sequential Estimation of a Peak Location by Quantile Regression: Stabilization and Entry–Exit Intervals}}
+\title{\textbf{Peak Prediction Using Quantile Regression and Asymmetric Laplace Noise}}
+%\title{\textbf{Sequential Estimation of a Peak Location by Quantile Regression: Stabilization and Entry–Exit Intervals}}
 %\usepackage{authblk}
 %\usepackage{orcidlink} 
 \author{}
@@ -23,16 +23,8 @@
 \maketitle
 
 \begin{abstract}
-	Predicting the location of a peak before it is fully observed is important in many applications. We consider a Gaussian-shaped signal with additive noise and develop a quantile-based method for estimating its amplitude, location, and spread. For fixed location and spread, the amplitude estimator is a weighted $\tau$-quantile of a transformed version of the observations. A $\tau$-aligned asymmetric Laplace noise model provides a probabilistic interpretation of the quantile objective through its likelihood.
-	We study the sequential evolution of the estimated peak location as the observation horizon increases. When the estimate does not stabilize sufficiently early, we propose a two-stage construction of candidate entry--exit intervals based on oscillations in the estimation trajectory. These intervals can be constructed without knowing the true peak location. 
-	We relate this construction to threshold-based entry and exit times
-	through a ladder structure of the oscillation function.
-	Monte Carlo simulations evaluate the interval-selection rate and empirical coverage, showing that performance depends on the signal-to-noise ratio. Stabilization is more reliable under the high- and moderate-SNR settings considered, whereas low SNR reduces point-estimation reliability and makes interval coverage more variable. Finally, we illustrate the method using daily COVID-19 cases during the first wave of the pandemic in China, France, and Germany.
+	Predicting a peak before it is fully observed matters in epidemiology, energy and finance. We estimate the height, timing and width of a noisy bell-shaped peak with a robust quantile-based method, updated as data arrive. In simulations, the estimated peak date settles on the true date by the peak at low noise, but settles at all in only a third of high-noise series. For noisy series we propose data-driven intervals for the peak date, built from how much successive estimates still move. Such intervals can contain the true date only once the peak is reached; in simulations they always do at low noise, but only 61--89\% do at high noise by the final horizon. For first-wave COVID-19 in China, France and Germany, intervals selected without knowing the peak contained it in 8 of 12 cases ten days later. Forecasters can judge when peak-date predictions are trustworthy.
 \end{abstract}
-
-%\noindent
-%\textbf{Keywords:} Peak prediction; quantile regression; asymmetric Laplace noise;
-%sequential estimation; entry--exit intervals; signal-to-noise ratio; COVID-19.\\
 
 \noindent
 \textbf{Keywords:} Peak location estimation; quantile regression; asymmetric Laplace distribution;
@@ -54,7 +46,7 @@ Predicting peaks in time series data is important across a wide range of applica
 
 Popular forecasting approaches, such as Autoregressive Integrated Moving Average (ARIMA) models and Recurrent Neural Networks (RNNs), can be effective for describing temporal dependence and forecasting general patterns, but they are not specifically designed to estimate the timing and magnitude of a future peak. A model that provides a good overall forecast may not necessarily provide an accurate estimate of the location of a peak. There has also been comparatively little theoretical work devoted specifically to peak prediction in time series. One contribution in this direction is the thesis of~\citet{Tuc20}, which studies the interplay between trend, seasonality, and noise; see also~\citep{YuB2019,See17}.
 
-Our approach builds on the framework developed in~\citet{Der25}. We consider observations available up to a current observation horizon \(T\) and a prescribed search horizon \(h>T\). The observations are modeled as a Gaussian-shaped signal with amplitude \(A>0\), peak location \(L\), and spread \(S>0\), corrupted by additive noise. Our objective is to estimate these parameters from the observations available up to time \(T\) and, in particular, to predict the peak location \(L\) before it is fully observed.
+Our approach builds on the framework developed in~\citet{Der25}. We consider observations available up to a current observation horizon \(T\) and a prescribed search horizon \(h\geq T\). The observations are modeled as a Gaussian-shaped signal with amplitude \(A>0\), peak location \(L\), and spread \(S>0\), corrupted by additive noise. Our objective is to estimate these parameters from the observations available up to time \(T\) and, in particular, to predict the peak location \(L\) before it is fully observed.
 
 Our first contribution is to extend the least-absolute-deviation criterion used in the symmetric case to a general quantile regression criterion indexed by \(\tau\in(0,1)\). As shown in Section~\ref{section:quantile_amplitude}, for fixed location and spread, the amplitude minimizing this criterion is a weighted \(\tau\)-quantile of a transformed version of the observations. The weighted-median estimator is recovered as the special case \(\tau=1/2\). We also examine the behavior of the quantile-based objective in the noise-free setting in Section~\ref{sec:noise-free}.
 
@@ -418,11 +410,6 @@ does not use $L$. To exclude a trivial plateau reduced to the last horizon(s),
 we require the plateau to contain at least $m=3$ horizons, $h-T+1\ge m$, and
 set $T^{*}=\infty$ otherwise. In simulations, where $L$ is known, we also
 record whether the plateau value equals $L$, that is, $\hat l(T^{*})=L$.
-In Section~\ref{subsec:threshold-entry} we show that $T^{*}=T_{\mathrm{entry}}(0;h)$
-whenever the final plateau has at least $m$ horizons, and that the operational
-entry time $T_{\mathrm{entry}}^{(0)}(T)$ of Section~\ref{subsec:entry-time} is a
-tolerance-based entry time $T_{\mathrm{entry}}(\epsilon_0(T);T)$ computed from
-the path stopped at $T$.
 
 \subsection{Large and moderate signal-to-noise ratio}
 
@@ -457,12 +444,12 @@ $T=23$, so a single hit of $L$ does not indicate stabilization.
 		for $\tau=0.50$, based on $M=200$ replicates. Median $T^{*}$ is
 		computed over replicates with finite $T^{*}$; $T^{*}=\infty$ is
 		counted as $T^{*}>L$. The last column is the proportion of all
-		replicates with $\hat l(T^{*})=L$.}
+		replicates for which $T^{*}<\infty$ and $\hat l(T^{*})=L$.}
 	\label{tab:tstar}
 	\begin{tabular}{ccccc}
 		\toprule
 		SNR & median $T^{*}$ & $\mathbb P(T^{*}<\infty)$
-		& $\mathbb P(T^{*}>L)$ & $\mathbb P(\hat l(T^{*})=L)$ \\
+		& $\mathbb P(T^{*}>L)$ & $\mathbb P(T^{*}<\infty,\ \hat l(T^{*})=L)$ \\
 		\midrule
 		$1000$ & $12$ & $1.00$ & $0.00$ & $1.00$ \\
 		$100$  & $18$ & $1.00$ & $0.01$ & $1.00$ \\
@@ -680,7 +667,6 @@ T_{\mathrm{exit}}^{(k)}(T)
 \]
 All endpoints are determined entirely from the sequential estimation trajectory available up to the current observation horizon \(T\) and from the corresponding retrospective oscillation construction.
 
-{\color{blue}
 \subsection{Threshold-based entry and exit times}
 \label{subsec:threshold-entry}
 Recall that $\omega_l(t,T)=\max_{t\le u,u'\le T}|\hat l(u)-\hat l(u')|$ is the
@@ -759,7 +745,7 @@ used in Section~\ref{sec:covid-real-data}; and the exit times of the two-stage
 construction, by (ii). Apart from $\varepsilon\ge\epsilon'_K$, where
 $T_{\mathrm{entry}}(\varepsilon;T)=T_0$, every value of $T_{\mathrm{entry}}(\varepsilon;T)$
 is an exit time of the ladder plus one, so choosing $\varepsilon$ amounts to
-choosing a rung of the ladder.}
+choosing a rung of the ladder.
 
 \subsection{Construction of a data-driven interval for the peak location}
 \label{subsec:entry-exit-simulation}
@@ -1104,18 +1090,14 @@ analyze the sequence $T \mapsto \hat{l}(T)$ for the quantile levels
 $\tau \in \{0.25,0.5,0.75,0.95\}$, using quantile-loss minimization over
 the Gaussian-shaped parametric peak model. Following Algorithm~\ref{algo:quantile}, the candidate peak location ranges over the analysis horizon
 $h = \max(T)$, so that for each country the search set is
-$\{1,\ldots,h\}$. 
-{\color{blue}
-We then assess the temporal stabilization of the estimated peak-location
-path through the entry time $T_{\mathrm{entry}}(\varepsilon)=T_{\mathrm{entry}}(\varepsilon;h)$
-of Section~\ref{subsec:threshold-entry}, with $\varepsilon=3$, $5$ and $15$
-for China, France and Germany. Since
+$\{1,\ldots,h\}$.
+We then assess the temporal stability of the estimated peak-location path using the tolerance-based entry time $T_{\mathrm{entry}}(\varepsilon)=T_{\mathrm{entry}}(\varepsilon;h)$ defined in Section~\ref{subsec:threshold-entry}, with $\varepsilon=3$, $5$ and $15$ for China, France and Germany, respectively. Since
 $\max_{u\ge t}\hat l(u)-\min_{u\ge t}\hat l(u)=\omega_l(t,h)$, it is the first
 horizon from which all later estimates stay within a range $\varepsilon$.
 This is computed for each country and quantile level.
 Section~\ref{subsec:real-entry-eps} compares these tolerance-based times
 with the entry and exit times obtained from the thresholds
-$(\epsilon_k,\epsilon'_k)$ of the two-stage construction.}
+$(\epsilon_k,\epsilon'_k)$ of the two-stage construction.
 For each country we
 additionally apply the operational two-stage entry--exit construction of
 Section~\ref{sec:entry-exit}, which uses the oscillations of the
@@ -1173,11 +1155,8 @@ quantile level, but those for $\tau=0.75$ and $\tau=0.95$ begin at $L$
 and lie to its right, whereas the others contain $L$ in their
 interior. For $\tau=0.5$, the window $[15,24]$ is close to $(14,25)$
 reported in~\citet{Der25} under the least-absolute-deviation criterion
-for the same dataset. These results complement the stabilization
-analysis in Supplementary Table~S1: the stabilization time describes
-the temporal stabilization of the estimated peak-location path,
-whereas the two-stage construction uses its oscillations to identify
-candidate windows for the peak region.
+for the same dataset.
+These results complement the tolerance-based entry-time analysis reported in Supplementary Table~S1: the entry time describes the horizon from which all subsequent estimates remain within the prescribed tolerance, whereas the two-stage construction uses the oscillations of the estimated peak-location path to identify candidate windows for the peak region.
 
 \begin{table}[htbp]
 	\centering
@@ -1215,6 +1194,7 @@ and $[78,85]$ for $\tau=0.25,0.5,0.75,0.95$, with widths between $7$
 and $8$. A window containing $L$ is therefore selected at every
 quantile level; only the window for $\tau=0.25$ contains $L$ in its
 interior, whereas the others contain $L$ at an endpoint.
+These results complement the tolerance-based entry-time analysis reported in Supplementary Table~S2.
 
 \begin{table}[htbp]
 	\centering
@@ -1251,8 +1231,8 @@ For Germany ($L=61$), the selected windows
 $[57,61]$ and $[56,63]$ for $\tau=0.25,0.5,0.75,0.95$, with widths
 between $2$ and $7$. A window containing $L$ is therefore selected at
 every quantile level; for $\tau=0.5$ and $\tau=0.75$ the window ends at
-$L$, whereas the others contain $L$ in their interior. These results
-complement the stabilization analysis in Supplementary Table~S3.
+$L$, whereas the others contain $L$ in their interior.
+These results complement the tolerance-based entry-time analysis reported in Supplementary Table~S3.
 
 \begin{table}[htbp]
 	\centering
@@ -1458,7 +1438,6 @@ are single realizations per country, not coverage probabilities.
 	\end{tabular}
 \end{table}
 
-{\color{blue}
 \subsection{Entry and exit times with data-driven thresholds}
 \label{subsec:real-entry-eps}
 
@@ -1581,7 +1560,7 @@ country, and the retrospective selection uses the observed peak $L$.
 		& 0.95 & 2 & (6, 5)   & [59, 72] & [66, 67] & 57 \\
 		\bottomrule
 	\end{tabular}
-\end{table}}
+\end{table}
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -1608,9 +1587,8 @@ entry--exit intervals based on the oscillations of the estimation
 trajectory. The operational selection rule uses the current point
 estimate and does not require knowledge of the true peak location.
 The oscillation function has a ladder structure
-(Proposition~\ref{prop:ladder}): a tolerance-based entry time is an exit
-time of the two-stage construction plus one, and the stabilization time
-corresponds to the entry time at tolerance zero. On the COVID-19 data,
+(Proposition~\ref{prop:ladder}): a tolerance-based entry time is an exit time of the two-stage construction plus one, and, whenever the final plateau contains at least \(m\) horizons, the stabilization time coincides with the entry time at tolerance zero.
+On the COVID-19 data,
 taking the levels $(\epsilon_k,\epsilon'_k)$ of the two-stage construction
 as thresholds does not reproduce the two-stage windows, but it indicates
 the scale of tolerance suggested by the estimated path.
