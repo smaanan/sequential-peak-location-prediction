@@ -16,10 +16,9 @@
 \newtheorem{proposition}{Proposition}
 \onehalfspacing
 
-\title{\textbf{Peak Prediction Using Quantile Regression and Asymmetric Laplace Noise}}
+\title{\textbf{Sequential Peak-Location Prediction by Quantile Regression: Stabilization and Entry–Exit Intervals}}
 \author{}
 \date{}
-%\title{\textbf{Sequential Estimation of a Peak Location by Quantile Regression: Stabilization and Entry–Exit Intervals}}
 
 \begin{document}
 \maketitle
@@ -29,8 +28,12 @@
 \end{abstract}
 
 \noindent
-\textbf{Keywords:} Peak location estimation; quantile regression; asymmetric Laplace distribution;
-sequential estimation; stabilization time; entry--exit intervals; signal-to-noise ratio; COVID-19.\\
+\textbf{Keywords:} Turning points; Uncertainty; Health forecasting; Robustness;
+Asymmetric Laplace distribution; Signal-to-noise ratio; COVID-19.\\
+
+%\noindent
+%\textbf{Keywords:} Turning points; Uncertainty; Health forecasting; Robustness;
+%Simulation; Asymmetric Laplace distribution; Signal-to-noise ratio; COVID-19.\\
 
 \noindent
 \textbf{Mathematics subject classification:} 62M10, 62G35, 60G35.
@@ -44,47 +47,113 @@ sequential estimation; stabilization time; entry--exit intervals; signal-to-nois
 \section{Introduction}
 \label{section:1}
 
-Predicting peaks in time series data is important across a wide range of applications involving proactive decision-making, risk management, resource allocation, and disaster preparedness. Examples include anticipating disease outbreaks in epidemiology and peak demand in energy systems. Peak prediction is challenging because observations are affected by noise, and the underlying signal may be difficult to identify from partial observations. Measurement errors and random fluctuations can make the location and amplitude of a peak difficult to estimate before it is fully observed. Moreover, real-world time series may exhibit multiple peaks, irregular peak shapes, or other temporal structures that are not adequately described by simple forecasting models.
+Predicting peaks in time series data is important across a wide range of
+applications involving proactive decision-making, risk management, resource
+allocation, and disaster preparedness. Examples include anticipating disease
+outbreaks in epidemiology and peak demand in energy systems. Peak prediction is
+challenging because observations are noisy and the underlying signal may be
+hard to identify from partial observations: measurement errors and random
+fluctuations make the location and amplitude of a peak difficult to estimate
+before it is fully observed. Moreover, real-world time series may exhibit
+multiple peaks, irregular peak shapes, or other temporal structures that are
+not adequately described by simple forecasting models.
 
-Popular forecasting approaches, such as Autoregressive Integrated Moving Average (ARIMA) models and Recurrent Neural Networks (RNNs), can be effective for describing temporal dependence and forecasting general patterns, but they are not specifically designed to estimate the timing and magnitude of a future peak. A model that provides a good overall forecast may not necessarily provide an accurate estimate of the location of a peak. There has also been comparatively little theoretical work devoted specifically to peak prediction in time series. One contribution in this direction is the thesis of~\citet{Tuc20}, which studies the interplay between trend, seasonality, and noise; see also~\citep{YuB2019,See17}.
+Popular forecasting approaches, such as Autoregressive Integrated Moving
+Average (ARIMA) models and Recurrent Neural Networks (RNNs), can be effective
+for describing temporal dependence and forecasting general patterns, but they
+are not specifically designed to estimate the timing and magnitude of a future
+peak. A model that provides a good overall forecast may not necessarily provide
+an accurate estimate of the location of a peak. There has also been
+comparatively little theoretical work devoted specifically to peak prediction
+in time series. One contribution in this direction is the thesis
+of~\citet{Tuc20}, which studies the interplay between trend, seasonality, and
+noise; see also~\citep{YuB2019,See17}.
 
-Our approach builds on the framework developed in~\citet{Der25}. We consider observations available up to a current observation horizon \(T\) and a prescribed search horizon \(h\geq T\). The observations are modeled as a Gaussian-shaped signal with amplitude \(A>0\), peak location \(L\), and spread \(S>0\), corrupted by additive noise. Our objective is to estimate these parameters from the observations available up to time \(T\) and, in particular, to predict the peak location \(L\) before it is fully observed.
+We consider observations available up to a current observation horizon \(T\)
+and a prescribed search horizon \(h\geq T\). The observations are modeled as a
+Gaussian-shaped signal with amplitude \(A>0\), peak location \(L\), and spread
+\(S>0\), corrupted by additive noise. Our objective is to estimate these
+parameters from the observations available up to time \(T\) and, in particular,
+to predict the peak location \(L\) before it is fully observed.
 
-Our first contribution is to extend the least-absolute-deviation criterion used in the symmetric case to a general quantile regression criterion indexed by \(\tau\in(0,1)\). As shown in Section~\ref{section:quantile_amplitude}, for fixed location and spread, the amplitude minimizing this criterion is a weighted \(\tau\)-quantile of a transformed version of the observations. The weighted-median estimator is recovered as the special case \(\tau=1/2\). We also examine the behavior of the quantile-based objective in the noise-free setting in Section~\ref{sec:noise-free}.
+Our first contribution is to extend the least-absolute-deviation criterion used
+in the symmetric case to a general quantile regression criterion indexed by
+\(\tau\in(0,1)\). As shown in Section~\ref{section:quantile_amplitude}, for
+fixed location and spread, the amplitude minimizing this criterion is a
+weighted \(\tau\)-quantile of a transformed version of the observations. The
+weighted-median estimator is recovered as the special case \(\tau=1/2\). We also
+examine the behavior of the quantile-based objective in the noise-free setting
+in Section~\ref{sec:noise-free}.
 
-Our second contribution concerns the noise model. It is well known that
-the check loss $\rho_\tau$ is, up to constants, the negative
-log-likelihood of the asymmetric Laplace distribution
-\citep{Koenker1999,Yu2001}. 
-In Section~\ref{sec:symmetric_laplace_estimation}, we use this
-correspondence to define a $\tau$-aligned asymmetric Laplace noise
-model, $\mathbb P(e(t)<0)=\tau$, calibrate its scale to a prescribed
-signal-to-noise ratio, and study how $\tau$ and the SNR affect peak
-estimation in a Gaussian-shaped signal.
-Section~\ref{sec:parameter_estimation_paths} investigates the evolution of the sequential peak-location estimator as the observation horizon increases. In particular, we study its stabilization time, defined as the first horizon from which the estimated location remains constant over all subsequent horizons, subject to a minimum plateau-length condition.
+Our second contribution concerns the noise model and the sequential behavior of
+the estimator. It is well known that the check loss $\rho_\tau$ is, up to
+constants, the negative log-likelihood of the asymmetric Laplace distribution
+\citep{Koenker1999,Yu2001}. In
+Section~\ref{sec:symmetric_laplace_estimation}, we use this correspondence to
+define a $\tau$-aligned asymmetric Laplace noise model, $\mathbb P(e(t)<0)=\tau$,
+calibrate its scale to a prescribed signal-to-noise ratio, and study how $\tau$
+and the SNR affect peak estimation in a Gaussian-shaped signal.
+Section~\ref{sec:parameter_estimation_paths} then investigates the evolution of
+the sequential peak-location estimator as the observation horizon increases. In
+particular, we study its stabilization time, defined as the first horizon from
+which the estimated location remains constant over all subsequent horizons,
+subject to a minimum plateau-length condition.
 
-Our third contribution addresses situations in which the sequential estimate does not stabilize sufficiently early to provide a reliable point prediction. In Section~\ref{sec:entry-exit}, we develop a data-driven construction of candidate entry and exit times based on the oscillations of the sequential peak-location estimates. These times define candidate intervals for the peak region using only the estimation trajectory, without requiring knowledge of the true peak location \(L\).
-We also show that the oscillation function has a ladder structure
-(Proposition~\ref{prop:ladder}), which links these intervals to
+Our third contribution addresses situations in which the sequential estimate
+does not stabilize sufficiently early to provide a reliable point prediction.
+In Section~\ref{sec:entry-exit}, we develop a data-driven construction of
+candidate entry and exit times based on the oscillations of the sequential
+peak-location estimates. These times define candidate intervals for the peak
+region using only the estimation trajectory, without requiring knowledge of the
+true peak location \(L\). We also show that the oscillation function has a
+ladder structure (Proposition~\ref{prop:ladder}), which links these intervals to
 threshold-based entry and exit times and to the stabilization time of
-Section~\ref{sec:parameter_estimation_paths}.
-We then introduce an operational rule for selecting a candidate interval based on whether it contains the current point estimate. The performance of this procedure is assessed through Monte Carlo simulations, including empirical interval-selection rates and coverage probabilities. The true peak location is used only retrospectively to evaluate the selected intervals; the construction itself does not guarantee a prescribed coverage level.
+Section~\ref{sec:parameter_estimation_paths}. We then introduce an operational
+rule for selecting a candidate interval based on whether it contains the current
+point estimate.
 
-Finally, we illustrate the methodology using daily COVID-19 case counts during the first wave of the pandemic in China~\citep{Bar20}, France, and Germany.
+Our fourth contribution is the evaluation of the procedure. Monte Carlo
+simulations assess the stabilization time and the empirical interval-selection
+rates and coverage probabilities. The true peak location is used only
+retrospectively to evaluate the selected intervals; the construction itself does
+not guarantee a prescribed coverage level. Finally, we illustrate the
+methodology using daily COVID-19 case counts during the first wave of the
+pandemic in China~\citep{Bar20}, France, and Germany.
 The real-world application in Section~\ref{sec:covid-real-data} examines the
 estimated peak trajectories, the behavior of the proposed entry--exit
 construction across several quantile levels, and its comparison with
 threshold-based entry and exit times with data-driven thresholds.
 
-The remainder of the paper is organized as follows. Section~\ref{section:quantile_amplitude} introduces the Gaussian peak model and the quantile-based estimation procedure, including the weighted-quantile characterization of the amplitude estimator. Section~\ref{sec:noise-free} examines the quantile-based objective in the noise-free setting. Section~\ref{sec:symmetric_laplace_estimation} introduces the \(\tau\)-aligned asymmetric Laplace noise model and establishes its connection with the quantile loss. Section~\ref{sec:parameter_estimation_paths} studies the stabilization of the sequential peak-location estimator, while 
+\paragraph{Relation to previous work.}
+\citet{Der25} model the peak as a Gaussian-shaped signal with Laplace noise,
+estimate it by least absolute deviations through a weighted median, and define
+entry and exit times from fixed-length windows with user-chosen tolerances,
+illustrated on COVID-19 cases in China, France and Germany. We use the same
+model class and countries but extend the estimator to a general quantile level,
+recovering their estimator at the median; construct entry--exit intervals from
+the oscillations of the estimated path without user-chosen tolerances; and
+evaluate their selection rate and coverage by Monte Carlo experiments. Their
+multiplicative-noise model and confidence intervals for the median of the log
+counts are not considered here.
+
+The remainder of the paper is organized as follows.
+Section~\ref{section:quantile_amplitude} introduces the Gaussian peak model and
+the quantile-based estimation procedure, including the weighted-quantile
+characterization of the amplitude estimator. Section~\ref{sec:noise-free}
+examines the quantile-based objective in the noise-free setting.
+Section~\ref{sec:symmetric_laplace_estimation} introduces the
+\(\tau\)-aligned asymmetric Laplace noise model and establishes its connection
+with the quantile loss. Section~\ref{sec:parameter_estimation_paths} studies the
+stabilization of the sequential peak-location estimator, while
 Section~\ref{sec:entry-exit} develops the candidate entry--exit intervals,
-relates them to threshold-based entry and exit times through a ladder
-structure of the oscillations (Proposition~\ref{prop:ladder}), and
-evaluates the operational selection procedure.
-Section~\ref{sec:covid-real-data} presents the real-world COVID-19
-application, including comparisons across quantile levels, tables of
-estimated peak trajectories, and the entry and exit times obtained with
-data-driven thresholds (Section~\ref{subsec:real-entry-eps}).
+relates them to threshold-based entry and exit times through a ladder structure
+of the oscillations (Proposition~\ref{prop:ladder}), and evaluates the
+operational selection procedure. Section~\ref{sec:covid-real-data} presents the
+real-world COVID-19 application, including comparisons across quantile levels,
+tables of estimated peak trajectories, and the entry and exit times obtained
+with data-driven thresholds (Section~\ref{subsec:real-entry-eps}).
+Section~\ref{sec:conclusion} concludes, and Appendix~\ref{app:trajectories}
+reports the estimated peak-location paths.
 
 \section{Quantile-Based Estimation Methodology}
 \label{section:quantile_amplitude}
@@ -1158,10 +1227,7 @@ and lie to its right, whereas the others contain $L$ in their
 interior. For $\tau=0.5$, the window $[15,24]$ is close to $(14,25)$
 reported in~\citet{Der25} under the least-absolute-deviation criterion
 for the same dataset.
-These results complement the tolerance-based entry-time analysis reported in 
-%Supplementary Table~S1
-Table~\ref{tab:china_tau}
-: the entry time describes the horizon from which all subsequent estimates remain within the prescribed tolerance, whereas the two-stage construction uses the oscillations of the estimated peak-location path to identify candidate windows for the peak region.
+These results complement the tolerance-based entry-time analysis reported in Table~\ref{tab:china_tau}: the entry time describes the horizon from which all subsequent estimates remain within the prescribed tolerance, whereas the two-stage construction uses the oscillations of the estimated peak-location path to identify candidate windows for the peak region.
 
 \begin{table}[htbp]
 	\centering
@@ -1199,9 +1265,7 @@ and $[78,85]$ for $\tau=0.25,0.5,0.75,0.95$, with widths between $7$
 and $8$. A window containing $L$ is therefore selected at every
 quantile level; only the window for $\tau=0.25$ contains $L$ in its
 interior, whereas the others contain $L$ at an endpoint.
-These results complement the tolerance-based entry-time analysis reported in 
-%Supplementary Table~S2
-Table~\ref{tab:france_tau}.
+These results complement the tolerance-based entry-time analysis reported in Table~\ref{tab:france_tau}.
 
 \begin{table}[htbp]
 	\centering
@@ -1239,9 +1303,7 @@ $[57,61]$ and $[56,63]$ for $\tau=0.25,0.5,0.75,0.95$, with widths
 between $2$ and $7$. A window containing $L$ is therefore selected at
 every quantile level; for $\tau=0.5$ and $\tau=0.75$ the window ends at
 $L$, whereas the others contain $L$ in their interior.
-These results complement the tolerance-based entry-time analysis reported in 
-%Supplementary Table~S3
-Table~\ref{tab:germany_tau}.
+These results complement the tolerance-based entry-time analysis reported in Table~\ref{tab:germany_tau}.
 
 \begin{table}[htbp]
 	\centering
@@ -1275,9 +1337,7 @@ Table~\ref{tab:germany_tau}.
 
 For each country and each $\tau$, we apply at every horizon $T$ the
 current-horizon construction of Section~\ref{subsec:entry-exit-simulation}
-to the path $T\mapsto\hat l(T)$ 
-%(Tables~S1--S3 in the supplement)
-(Tables~\ref{tab:china_tau}--\ref{tab:germany_tau} in Appendix~\ref{app:trajectories}).
+to the path $T\mapsto\hat l(T)$ (Tables~\ref{tab:china_tau}--\ref{tab:germany_tau} in Appendix~\ref{app:trajectories}).
 At the terminal horizon $T=h$ this construction coincides with the
 two-stage construction used above. As in the rest of the paper, an
 interval $[a,b]$ contains $L$ if $a\le L\le b$; the observed peak day $L$
@@ -1630,18 +1690,18 @@ properties, and developing selection rules that balance interval width,
 coverage, and the possibility that no interval is selected, are
 important topics for future work.
 
-\paragraph*{Data Availability Statement}
-
-The daily COVID-19 case counts analyzed in Section~7 are derived
-from two publicly available sources. The Chinese series is obtained
-from the Johns Hopkins University Center for Systems Science and
-Engineering (JHU CSSE) feed through the \texttt{COVID19} R package,
-covering the period 22 January to 22 March 2020. The French and
-German series are obtained from the European Centre for Disease
-Prevention and Control (ECDC) open data portal, covering the periods
-15 January to 31 May 2020 and 28 January to 5 July 2020,
-respectively. All data used in this study are publicly available at
-the sources cited above and in the bibliography.
+%\paragraph*{Data Availability Statement}
+%
+%The daily COVID-19 case counts analyzed in Section~7 are derived
+%from two publicly available sources. The Chinese series is obtained
+%from the Johns Hopkins University Center for Systems Science and
+%Engineering (JHU CSSE) feed through the \texttt{COVID19} R package,
+%covering the period 22 January to 22 March 2020. The French and
+%German series are obtained from the European Centre for Disease
+%Prevention and Control (ECDC) open data portal, covering the periods
+%15 January to 31 May 2020 and 28 January to 5 July 2020,
+%respectively. All data used in this study are publicly available at
+%the sources cited above and in the bibliography.
 
 %\paragraph*{Conflict of Interest Statement}
 %
