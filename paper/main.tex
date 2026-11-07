@@ -237,10 +237,16 @@ We define the following steps to jointly estimate the location \( \hat{l}(T) \),
 \ENSURE Estimated parameters \( (\hat{l}(T), \hat{a}(T), \hat{s}(T)) \)
 \end{algorithmic}
 \end{algorithm}
-The location $l$ ranges over the integers $1,\dots,h$.
-The spread $s$ is minimized over $[s_{\min},s_{\max}]=[1,20]$ 
-by a one-dimensional numerical optimizer, with tolerance $10^{-4}$. Ties between
-several minimizing locations are broken by taking the smallest $l$.
+%The location $l$ ranges over the integers $1,\dots,h$.
+%The spread $s$ is minimized over $[s_{\min},s_{\max}]=[1,20]$ 
+%by a one-dimensional numerical optimizer, with tolerance $10^{-4}$. Ties between
+%several minimizing locations are broken by taking the smallest $l$.
+{\color{blue}
+The location $l$ ranges over the integers $1,\dots,h$. The spread $s$ is
+minimized over a prescribed interval $[s_{\min},s_{\max}]$, specified in the
+numerical sections below, by a one-dimensional numerical optimizer with
+tolerance $10^{-4}$. Ties between several minimizing locations are broken by
+taking the smallest $l$.}
 
 \subsection{Remark on Asymmetry and Robustness}
 
@@ -255,6 +261,9 @@ I(t) = A \exp\left( -\frac{(t - L)^2}{S^2} \right), \quad t = 1, \dots, T,
 \]
 where \( A = 15000 \), \( L = 22 \), \( S = 10 \), and \( T \in \{2, 3, 10, 20, 21\} \). The quantile-based estimation procedure is implemented by minimizing the following objective function~\eqref{eq:quantile_objective}.
 The amplitude \( a \) is computed via a weighted \( \tau \)-quantile, as described in Section~\ref{section:quantile_amplitude}.
+{\color{blue}
+In this section and in all simulations below, the spread $s$ is minimized over
+$[s_{\min},s_{\max}]=[1,20]$.}
 
 Since the goal is to predict the location \( L \) of the peak before it becomes observable, we restrict the minimization over candidate peak locations \( l > T \). For each value of \( \tau \in \{0.25, 0.5, 0.75, 0.95\} \), we compute and visualize the objective curve \( l \mapsto f_\tau(T, a(T,l), l, s(T,l)) \) for the selected values of \( T \) (see Figure~\ref{fig:quantile_objective_noise_free}).
 
@@ -1164,8 +1173,15 @@ We now demonstrate the application of our quantile-based peak estimation
 framework to real-world data. We focus on the daily confirmed COVID-19
 cases in China, France, and Germany. Figure~\ref{fig:covid-1x3} displays
 the daily case series for these three countries. 
-The Chinese series is obtained from the Johns Hopkins University Center for Systems Science and Engineering (JHU CSSE) feed via the \texttt{COVID19} R package~\citep{Guidotti2020,Guidotti2022}, while the French and German series are obtained from the European Centre for Disease Prevention and Control (ECDC) open data portal~\citepalias{ecdc_covid_france_2020}. For each country, we
-analyze the sequence $T \mapsto \hat{l}(T)$ for the quantile levels
+The Chinese series is obtained from the Johns Hopkins University Center for Systems Science and Engineering (JHU CSSE) feed via the \texttt{COVID19} R package~\citep{Guidotti2020,Guidotti2022}, while the French and German series are obtained from the European Centre for Disease Prevention and Control (ECDC) open data portal~\citepalias{ecdc_covid_france_2020}. 
+{\color{blue}
+Daily new cases for China are the first differences of the cumulative confirmed
+counts, so day~1 is 23~January 2020; the first 35 days are analyzed. For France
+(from 15~January 2020) and Germany (from 28~January 2020), the first 89 and 75
+days are analyzed, respectively; negative daily corrections in the German series
+are set to missing and replaced by the preceding day's value. The spread is minimized over $[1,20]$ for China and $[1,40]$ for France and Germany. The processed daily series are provided as supplementary files, and the R code that produces the tables and simulations is
+available from the authors upon request.}
+For each country, we analyze the sequence $T \mapsto \hat{l}(T)$ for the quantile levels
 $\tau \in \{0.25,0.5,0.75,0.95\}$, using quantile-loss minimization over
 the Gaussian-shaped parametric peak model. Following Algorithm~\ref{algo:quantile}, the candidate peak location ranges over the analysis horizon
 $h = \max(T)$, so that for each country the search set is
