@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.10)  5 NOV 2026 12:46
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.11.7)  7 NOV 2026 16:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -477,40 +477,41 @@ In-te-grated Mov-ing Av-er-age (ARIMA)
 
 ] [3] [4]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 227.
-<../plot_quantile_all.pdf, id=200, 722.7pt x 903.375pt>
+put line 228.
+ [5]
+<../plot_quantile_all.pdf, id=209, 722.7pt x 903.375pt>
 File: ../plot_quantile_all.pdf Graphic file (type pdf)
 <use ../plot_quantile_all.pdf>
-Package pdftex.def Info: ../plot_quantile_all.pdf  used on input line 257.
+Package pdftex.def Info: ../plot_quantile_all.pdf  used on input line 263.
 (pdftex.def)             Requested size: 483.69687pt x 604.62404pt.
- [5]
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 267.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\tau' on input line 267.
+(hyperref)                removing `math shift' on input line 273.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 267.
+(hyperref)                removing `\tau' on input line 273.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 273.
 
 [6] [7 <../plot_quantile_all.pdf>] [8]
 <../figure2_asymmetric_laplace_all_tau_T.pdf, id=250, 722.7pt x 903.375pt>
 File: ../figure2_asymmetric_laplace_all_tau_T.pdf Graphic file (type pdf)
 <use ../figure2_asymmetric_laplace_all_tau_T.pdf>
 Package pdftex.def Info: ../figure2_asymmetric_laplace_all_tau_T.pdf  used on i
-nput line 455.
+nput line 467.
 (pdftex.def)             Requested size: 483.69687pt x 604.62404pt.
  [9] [10 <../figure2_asymmetric_laplace_all_tau_T.pdf>]
 <../fig_tstar_examples.pdf, id=278, 722.7pt x 578.16pt>
 File: ../fig_tstar_examples.pdf Graphic file (type pdf)
 <use ../fig_tstar_examples.pdf>
-Package pdftex.def Info: ../fig_tstar_examples.pdf  used on input line 534.
+Package pdftex.def Info: ../fig_tstar_examples.pdf  used on input line 548.
 (pdftex.def)             Requested size: 483.69687pt x 386.95937pt.
  [11] [12 <../fig_tstar_examples.pdf>] [13]
-Overfull \hbox (3.22115pt too wide) in paragraph at lines 649--663
+Overfull \hbox (3.22115pt too wide) in paragraph at lines 663--677
 \OT1/cmr/m/n/12 The con-ven-tion $\OML/cmm/m/it/12 T[]\OT1/cmr/m/n/12 (\OML/cmm
 /m/it/12 T\OT1/cmr/m/n/12 ) = \OML/cmm/m/it/12 T$ \OT1/cmr/m/n/12 pro-vides the
  ini-tial can-di-date exit time, for which $\OML/cmm/m/it/12 ![] [] \OT1/cmr/m/
@@ -518,33 +519,33 @@ n/12 =
  []
 
 [14] [15] [16] [17] [18] [19]
-<../monte-carlo-coverage-selected.pdf, id=379, 722.7pt x 578.16pt>
+<../monte-carlo-coverage-selected.pdf, id=378, 722.7pt x 578.16pt>
 File: ../monte-carlo-coverage-selected.pdf Graphic file (type pdf)
 <use ../monte-carlo-coverage-selected.pdf>
 Package pdftex.def Info: ../monte-carlo-coverage-selected.pdf  used on input li
-ne 1140.
+ne 1148.
 (pdftex.def)             Requested size: 483.69687pt x 386.95937pt.
-<../monte-carlo-interval-selection-rate.pdf, id=380, 722.7pt x 578.16pt>
+<../monte-carlo-interval-selection-rate.pdf, id=379, 722.7pt x 578.16pt>
 File: ../monte-carlo-interval-selection-rate.pdf Graphic file (type pdf)
 <use ../monte-carlo-interval-selection-rate.pdf>
 Package pdftex.def Info: ../monte-carlo-interval-selection-rate.pdf  used on in
-put line 1147.
+put line 1155.
 (pdftex.def)             Requested size: 483.69687pt x 386.95937pt.
  [20] [21 <../monte-carlo-coverage-selected.pdf>]
-[22 <../monte-carlo-interval-selection-rate.pdf>]
-<../covid_series_1x3.pdf, id=423, 867.24pt x 289.08pt>
+[22 <../monte-carlo-interval-selection-rate.pdf>] [23]
+<../covid_series_1x3.pdf, id=432, 867.24pt x 289.08pt>
 File: ../covid_series_1x3.pdf Graphic file (type pdf)
 <use ../covid_series_1x3.pdf>
-Package pdftex.def Info: ../covid_series_1x3.pdf  used on input line 1213.
+Package pdftex.def Info: ../covid_series_1x3.pdf  used on input line 1221.
 (pdftex.def)             Requested size: 483.69687pt x 161.23528pt.
- [23] [24 <../covid_series_1x3.pdf>]
+ [24 <../covid_series_1x3.pdf>]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1335.
+(hyperref)                removing `math shift' on input line 1343.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1335.
+(hyperref)                removing `math shift' on input line 1343.
 
 [25] [26] [27] [28] [29] [30] [31] [32] [33] (./main.bbl [34
 
@@ -554,16 +555,16 @@ LaTeX2e <2025-11-01>
 L3 programming layer <2026-03-20>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 980B1D5123C56E7150D893079DE81FA8;6631.
+(rerunfilecheck)             Checksum: D76F106BF7FDE81EABAB39C9C2ACD48C;6654.
  ) 
 Here is how much of TeX's memory you used:
- 11577 strings out of 469296
- 176697 string characters out of 5465560
- 647731 words of memory out of 6000000
+ 11576 strings out of 469296
+ 176686 string characters out of 5465561
+ 647809 words of memory out of 6000000
  40121 multiletter control sequences out of 15000+600000
  641649 words of font info for 93 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 75i,13n,79p,940b,623s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,13n,79p,952b,623s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texl
@@ -580,10 +581,10 @@ cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy1
 are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/te
 xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texlive/
 texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (35 pages, 376480 bytes).
+Output written on main.pdf (35 pages, 379234 bytes).
 PDF statistics:
- 649 PDF objects out of 1000 (max. 8388607)
- 553 compressed objects within 6 object streams
- 137 named destinations out of 1000 (max. 500000)
+ 648 PDF objects out of 1000 (max. 8388607)
+ 552 compressed objects within 6 object streams
+ 136 named destinations out of 1000 (max. 500000)
  255 words of extra memory for PDF output out of 10000 (max. 10000000)
 

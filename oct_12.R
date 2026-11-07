@@ -448,12 +448,10 @@ plot_mc_base <- function(variant.name, rule.name, yvar,
     }
     
     legend("bottomright", legend = snr.labels, col = snr.cols,
-           lty = snr.ltys, pch = snr.pchs, bty = "n", cex = 0.8)
+           lty = snr.ltys, pch = snr.pchs, bty = "o", cex = 0.8)
   }
   
-  mtext(paste0("Variant: ", variant.name, "; rule: ", rule.name,
-               "; M = ", M.rep, "; L = ", L),
-        outer = TRUE, cex = 0.9)
+  # mtext(paste0("Variant: ", variant.name, "; rule: ", rule.name, "; M = ", M.rep, "; L = ", L), outer = TRUE, cex = 0.9)
   
   par(old.par)
   dev.off()

@@ -122,7 +122,7 @@ pandemic in China~\citep{Bar20}, France, and Germany.
 The real-world application in Section~\ref{sec:covid-real-data} examines the
 estimated peak trajectories, the behavior of the proposed entry--exit
 construction across several quantile levels, and its comparison with
-threshold-based entry and exit times with data-driven thresholds.
+threshold-based entry and exit times using fixed tolerance thresholds.
 
 \paragraph{Relation to previous work.}
 \citet{Der25} model the peak as a Gaussian-shaped signal with Laplace noise,
@@ -151,7 +151,7 @@ of the oscillations (Proposition~\ref{prop:ladder}), and evaluates the
 operational selection procedure. Section~\ref{sec:covid-real-data} presents the
 real-world COVID-19 application, including comparisons across quantile levels,
 tables of estimated peak trajectories, and the entry and exit times obtained
-with data-driven thresholds (Section~\ref{subsec:real-entry-eps}).
+using fixed tolerance thresholds (Section~\ref{subsec:real-entry-eps}).
 Section~\ref{sec:conclusion} concludes, and Appendix~\ref{app:trajectories}
 reports the estimated peak-location paths.
 
@@ -216,6 +216,7 @@ Define the reordered weights \( w_\pi(t) = w(\pi(t)) \). Let
 k = \min \left\{ j \in \{1, \dots, T\} : \sum_{t=1}^j w_\pi(t) \geq \tau \sum_{t=1}^T w(t) \right\}.
 \]
 Then the weighted \( \tau \)-quantile satisfies \( q_\tau = x(\pi(k)) \).
+When the cumulative weight reaches the target exactly, the minimizer need not be unique: every point between \(x(\pi(k))\) and \(x(\pi(k+1))\) is a minimizer. The formula above selects the lower endpoint of this interval.
 \end{proposition}
 
 
@@ -228,13 +229,18 @@ We define the following steps to jointly estimate the location \( \hat{l}(T) \),
 \label{algo:quantile}
 \begin{algorithmic}[1]
 \REQUIRE Time horizon \( T \), upper bound \( h \ge T \), quantile level \( \tau \in (0,1) \)
-\STATE For each candidate \( l \in [1, h] \), find \( s^*(l) = \arg\min_s f_\tau(T, a^*(l,s), l, s) \)
+\STATE For each candidate \( l \in \{1,\dots,h\} \), find
+\( s^*(l) = \arg\min_{s\in[s_{\min},s_{\max}]} f_\tau(T, a^*(l,s), l, s) \)
 \STATE Set \( \hat{l}(T) = \arg\min_l f_\tau(T, a^*(l,s^*(l)), l, s^*(l)) \)
 \STATE Set \( \hat{s}(T) = s^*(\hat{l}(T)) \)
 \STATE Set \( \hat{a}(T) = a^*(\hat{l}(T), \hat{s}(T)) \)
 \ENSURE Estimated parameters \( (\hat{l}(T), \hat{a}(T), \hat{s}(T)) \)
 \end{algorithmic}
 \end{algorithm}
+The location $l$ ranges over the integers $1,\dots,h$.
+The spread $s$ is minimized over $[s_{\min},s_{\max}]=[1,20]$ 
+by a one-dimensional numerical optimizer, with tolerance $10^{-4}$. Ties between
+several minimizing locations are broken by taking the smallest $l$.
 
 \subsection{Remark on Asymmetry and Robustness}
 
@@ -371,7 +377,13 @@ The normalization follows from
 =
 \frac{b}{\tau(1-\tau)}.
 \]
-Moreover, by construction,
+The two parametrizations introduced above are equivalent. Comparing the exponential rates in the two density expressions yields
+\[
+k=\sqrt{\frac{\tau}{1-\tau}},
+\qquad
+\lambda=\frac{\sqrt{\tau(1-\tau)}}{b}.
+\]
+Thus, \(k\) determines the quantile level \(\tau\), while \(\lambda\) and \(b\) are related scale parameters. Moreover, by construction,
 the noise satisfies the $\tau$-alignment property~\eqref{eq:tau_alignment}.
 This distribution is directly compatible with the quantile-based estimation criterion. Indeed,
 \[
@@ -476,8 +488,10 @@ T^{*}
 =
 \min\{T\in\{4,\dots,h\}:\ \hat l(u)=\hat l(T)\ \text{for all }u\in\{T,\dots,h\}\},
 \]
-the first horizon from which the estimate no longer changes. This definition
-does not use $L$. To exclude a trivial plateau reduced to the last horizon(s),
+the first horizon from which the estimate no longer changes.
+This definition does not use $L$, but it is defined retrospectively from the
+whole path up to $h$: $T^{*}$ is not a stopping time and cannot be observed at
+horizon $T^{*}$ itself. To exclude a trivial plateau reduced to the last horizon(s),
 we require the plateau to contain at least $m=3$ horizons, $h-T+1\ge m$, and
 set $T^{*}=\infty$ otherwise. In simulations, where $L$ is known, we also
 record whether the plateau value equals $L$, that is, $\hat l(T^{*})=L$.
@@ -981,24 +995,18 @@ $w_{\widehat k(T_{\mathrm{sel}})}(T_{\mathrm{sel}})$.
 
 \begin{table}[htbp]
 	\centering
-	\caption{First operationally selected candidate interval for each
-		quantile level $\tau$ and signal-to-noise ratio. The selection horizon
-		is $T_{\mathrm{sel}}$, and the selected candidate index is
-		$\widehat k(T_{\mathrm{sel}})=\min\mathcal K(T_{\mathrm{sel}})$.
-		In this realization, $\mathcal K(T_{\mathrm{sel}})$ contains a single
-		candidate in every row, so the first-admissible and narrowest rules
-		give the same interval. The last column reports the interval width
-		$w_{\widehat k(T_{\mathrm{sel}})}(T_{\mathrm{sel}})$.}
+	\caption{First operationally selected candidate interval for each quantile level
+		$\tau$ and signal-to-noise ratio. All quantities are evaluated at the selection
+		horizon $T_{\mathrm{sel}}$ for the selected candidate
+		$\widehat k=\min\mathcal K(T_{\mathrm{sel}})$: $\widehat l=\widehat l(T_{\mathrm{sel}})$
+		is the point estimate, $T_{\mathrm{entry}}$ and $T_{\mathrm{exit}}$ are the
+		endpoints of the interval, and $w=T_{\mathrm{exit}}-T_{\mathrm{entry}}$. In
+		this realization $\mathcal K(T_{\mathrm{sel}})$ contains a single candidate in
+		every row, so the first-admissible and narrowest rules give the same interval.}
 	\label{tab:simulation_est_interval}
 	\begin{tabular}{cccccccc}
 		\toprule
-		$\tau$ & SNR
-		& $T_{\mathrm{sel}}$
-		& $\widehat k(T_{\mathrm{sel}})$
-		& $\widehat l(T_{\mathrm{sel}})$ 
-		& $T_{\mathrm{entry}}^{(\widehat k(T_{\mathrm{sel}}))}(T_{\mathrm{sel}})$ 
-		& $T_{\mathrm{exit}}^{(\widehat k(T_{\mathrm{sel}}))}(T_{\mathrm{sel}})$ 
-		& $w_{\widehat k(T_{\mathrm{sel}})}(T_{\mathrm{sel}})$\\ 
+		$\tau$ & SNR & $T_{\mathrm{sel}}$ & $\widehat k$ & $\widehat l$ & $T_{\mathrm{entry}}$ & $T_{\mathrm{exit}}$ & $w$ \\
 		\midrule
 		$0.25$ & 1000 & 22 & 0 & 22 & 11 & 22 & 11 \\
 		$0.25$ & 100  & 22 & 0 & 22 & 18 & 22 &  4 \\
@@ -1114,7 +1122,7 @@ These findings provide a simulation-based assessment of the operational procedur
 	\label{tab:mc_coverage_T30}
 	\begin{tabular}{cccccc}
 		\toprule
-		\(\tau\) & SNR & \(\widehat q_M(30)\) & \(\widehat p^{\,\mathrm{sel}}_M(30)\) & \(\widehat p^{\,\mathrm{all}}_M(30)\) & Mean width \\
+		$\tau$ & SNR & Selection rate & Coverage (selected) & Coverage (all) & Mean width \\
 		\midrule
 		0.25 & 1000 & 1.000 & 1.000 & 1.000 & 18.750 \\
 		0.25 &  100 & 1.000 & 1.000 & 1.000 & 12.708 \\
@@ -1509,13 +1517,10 @@ are single realizations per country, not coverage probabilities.
 	\end{tabular}
 \end{table}
 
-\subsection{Entry and exit times with data-driven thresholds}
+\subsection{Entry and exit times with fixed tolerance thresholds}
 \label{subsec:real-entry-eps}
 
-The thresholds $\varepsilon=3,5,15$ were chosen by hand. By
-Proposition~\ref{prop:ladder}, any $\varepsilon$ selects a rung of the ladder of
-the path: $T_{\mathrm{entry}}(\varepsilon)$ is an exit time
-$T_{\mathrm{exit}}^{(k+1)}(h)$ plus one. For China and $\varepsilon=3$, the
+We consider the fixed tolerance thresholds \(\varepsilon=3,5,15\), chosen manually for China, France and Germany, respectively. By Proposition~\ref{prop:ladder}, any \(\varepsilon\) selects a rung of the ladder of the path: \(T_{\mathrm{entry}}(\varepsilon)\) is an exit time \(T_{\mathrm{exit}}^{(k+1)}(h)\) plus one. For China and $\varepsilon=3$, the
 values $15,13,23,28$ obtained for $\tau=0.25,0.5,0.75,0.95$ correspond to
 $k+1=3,4,2,3$; for $\tau=0.75$, every $\varepsilon\in[2,17)$ gives the same
 value $23$. For $\varepsilon=0$, the start of the final plateau is
@@ -1715,11 +1720,11 @@ important topics for future work.
 %\paragraph*{Supplementary material}
 %The appendix and additional material are provided in a separate Supplementary document.
 
-\paragraph*{Declaration of generative AI}
-During the preparation of this work the authors used Claude (Anthropic) in order
-to improve the language and clarity of the text, and to suggest wording for some passages. 
-After using this tool, the authors reviewed and edited the content as needed and
-take full responsibility for the content of the published article.
+%\paragraph*{Declaration of generative AI}
+%During the preparation of this work the authors used Claude (Anthropic) in order
+%to improve the language and clarity of the text, and to suggest wording for some passages. 
+%After using this tool, the authors reviewed and edited the content as needed and
+%take full responsibility for the content of the published article.
 
 \appendix
 
