@@ -1,0 +1,35 @@
+\documentclass[aspectratio=54,10pt]{beamer}
+\usetheme{EastLansing}
+\usecolortheme{spruce}
+\usefonttheme[onlymath]{serif}
+
+\usepackage{ragged2e,mathtools,tikz,booktabs,tabularx}
+
+\justifying
+
+\title[Title]{Title}
+\subtitle{Subtitle}
+\author[Names]{Names}
+\date[Date]{Date}
+\institute[Institute]{Institute}
+
+\usepackage{tikz}
+
+\titlegraphic{
+	\begin{tikzpicture}[overlay,remember picture]
+		\node at (current page.south) [yshift=1.50cm] {
+			\includegraphics[width=1.8cm]{universite-mohamed-v-rabat-maroc-seeklogo.png}
+			\hspace{0.8cm}
+			\includegraphics[width=1.8cm]{ULille.sans.baseline-Vertical-CMJN-Noir.png}
+			\hspace{0.8cm}
+			\includegraphics[width=1.8cm]{Logo_ESA_Ecole_Supérieure_des_Agricultures.png}
+			\hspace{0.8cm}
+			\includegraphics[width=1.8cm]{Logo de l'université de Poitiers couleurs PNG.png}
+		};
+	\end{tikzpicture}
+}
+
+\begin{document}
+\maketitle
+
+\end{document}
