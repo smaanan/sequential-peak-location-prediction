@@ -229,4 +229,92 @@
 	
 \end{frame}
 
+\begin{frame}{Quantile regression for a Gaussian peak}
+	\begin{columns}[T,onlytextwidth]
+		\begin{column}{0.56\textwidth}
+			\textbf{Model}
+			\[
+			I(t)=A\exp\!\left(-\frac{(t-L)^2}{S^2}\right)+e(t)
+			\]
+			\textbf{Quantile check loss} (level $\tau\in(0,1)$)
+			\[
+			\rho_\tau(u)=u\bigl(\tau-\mathbf 1_{\{u<0\}}\bigr)
+			\]
+			\textbf{Empirical objective}
+			\[
+			f_\tau(T,a,l,s)=\frac{1}{T}\sum_{t=1}^{T}
+			\rho_\tau\!\left(I(t)-a\,e^{-(t-l)^2/s^2}\right)
+			\]
+		\end{column}
+		\begin{column}{0.40\textwidth}
+			\centering
+			\begin{tikzpicture}[scale=0.85]
+				\draw[->] (-2.2,0) -- (2.3,0) node[right] {$u$};
+				\draw[->] (0,-0.15) -- (0,2.0) node[above] {$\rho_\tau(u)$};
+				% symmetric case
+				\draw[thick, gray!60, dashed] (-1.8,0.9) -- (0,0) -- (1.8,0.9);
+				\node[gray!70, font=\scriptsize] at (1.2,0.55) {$\tau=\tfrac12$};
+				% asymmetric case
+				\draw[thick, blue!75!black]
+				(-1.8,1.62) -- (0,0) -- (1.8,0.36);
+				\node[blue!75!black, font=\scriptsize] at (1.3,0.20) {$\tau=0.2$};
+				\node[blue!75!black, font=\scriptsize] at (-1.0,1.05) {$\tau=0.2$};
+				% horizontal helper
+				\draw[dotted, gray] (0,1.8) -- (-1.8,1.8);
+				\draw[dotted, gray] (0,0.9) -- (1.8,0.9);
+			\end{tikzpicture}
+			\\[2pt]
+			{\scriptsize asymmetric $\rho_\tau$ for $\tau\neq\tfrac12$:
+				up-slope $\tau$, down-slope $1-\tau$.}
+		\end{column}
+	\end{columns}
+	
+	\vspace{0.1cm}
+	\begin{itemize}
+		\item For $\tau\to 1$: positive residuals cost more $\Rightarrow$
+		\alert{conservative} peak (no underestimation).
+		\item For $\tau\to 0$: negative residuals cost more $\Rightarrow$
+		\alert{aggressive} peak (no overestimation).
+		\item $\tau=\tfrac12$ recovers LAD / median regression of
+		Dermoune et al.\ (2026).
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{The amplitude is a weighted $\tau$-quantile}
+	\textbf{Key transformation.} For fixed $(l,s)$, set
+	\[
+	x(t)=I(t)\,e^{(t-l)^2/s^2},
+	\qquad
+	w(t)=e^{-(t-l)^2/s^2}.
+	\]
+	Because $\rho_\tau(cu)=c\,\rho_\tau(u)$ for $c>0$,
+	\[
+	f_\tau(T,a,l,s)
+	=\frac{1}{T}\sum_{t} w(t)\,\rho_\tau\bigl(x(t)-a\bigr)
+	+\text{constant}.
+	\]
+	
+	\begin{block}{Proposition (weighted quantile)}
+		For fixed $(l,s)$, the amplitude minimizing $f_\tau$ is the weighted
+		$\tau$-quantile of the transformed observations $x(t)$,
+		with weights $w(t)$:
+		\[
+		q_\tau
+		=
+		\min\!\Bigl\{x(\pi(j)):\ \sum_{i\le j} w(\pi(i))
+		\ge \tau\sum_i w(i)\Bigr\},
+		\]
+		where $\pi$ sorts $x(1),\dots,x(T)$ increasingly.
+	\end{block}
+	
+	\textbf{What this buys us:}
+	\begin{itemize}
+		\item Amplitude $a$ is \alert{eliminated analytically} — no numerical
+		optimization in $a$, no spurious local minima in $a$.
+		\item Only $(l,s)$ must be searched — a 2D profile problem, not 3D.
+		\item \emph{Locality:} weights $w(t)$ decay quickly away from $l$,
+		so only observations near the candidate peak drive the estimate.
+	\end{itemize}
+\end{frame}
+
 \end{document}
