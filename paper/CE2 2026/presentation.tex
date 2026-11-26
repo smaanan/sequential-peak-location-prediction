@@ -229,92 +229,329 @@
 	
 \end{frame}
 
-\begin{frame}{Quantile regression for a Gaussian peak}
-	\begin{columns}[T,onlytextwidth]
-		\begin{column}{0.56\textwidth}
-			\textbf{Model}
-			\[
-			I(t)=A\exp\!\left(-\frac{(t-L)^2}{S^2}\right)+e(t)
-			\]
-			\textbf{Quantile check loss} (level $\tau\in(0,1)$)
-			\[
-			\rho_\tau(u)=u\bigl(\tau-\mathbf 1_{\{u<0\}}\bigr)
-			\]
-			\textbf{Empirical objective}
-			\[
-			f_\tau(T,a,l,s)=\frac{1}{T}\sum_{t=1}^{T}
-			\rho_\tau\!\left(I(t)-a\,e^{-(t-l)^2/s^2}\right)
-			\]
-		\end{column}
-		\begin{column}{0.40\textwidth}
-			\centering
-			\begin{tikzpicture}[scale=0.85]
-				\draw[->] (-2.2,0) -- (2.3,0) node[right] {$u$};
-				\draw[->] (0,-0.15) -- (0,2.0) node[above] {$\rho_\tau(u)$};
-				% symmetric case
-				\draw[thick, gray!60, dashed] (-1.8,0.9) -- (0,0) -- (1.8,0.9);
-				\node[gray!70, font=\scriptsize] at (1.2,0.55) {$\tau=\tfrac12$};
-				% asymmetric case
-				\draw[thick, blue!75!black]
-				(-1.8,1.62) -- (0,0) -- (1.8,0.36);
-				\node[blue!75!black, font=\scriptsize] at (1.3,0.20) {$\tau=0.2$};
-				\node[blue!75!black, font=\scriptsize] at (-1.0,1.05) {$\tau=0.2$};
-				% horizontal helper
-				\draw[dotted, gray] (0,1.8) -- (-1.8,1.8);
-				\draw[dotted, gray] (0,0.9) -- (1.8,0.9);
-			\end{tikzpicture}
-			\\[2pt]
-			{\scriptsize asymmetric $\rho_\tau$ for $\tau\neq\tfrac12$:
-				up-slope $\tau$, down-slope $1-\tau$.}
-		\end{column}
-	\end{columns}
-	
-	\vspace{0.1cm}
-	\begin{itemize}
-		\item For $\tau\to 1$: positive residuals cost more $\Rightarrow$
-		\alert{conservative} peak (no underestimation).
-		\item For $\tau\to 0$: negative residuals cost more $\Rightarrow$
-		\alert{aggressive} peak (no overestimation).
-		\item $\tau=\tfrac12$ recovers LAD / median regression of
-		Dermoune et al.\ (2026).
-	\end{itemize}
+% =====================================================================
+% PART 2 OF THE PRESENTATION -- insert after the Introduction frames,
+% before \end{document}. Same preamble as part 1 (EastLansing, spruce).
+% Figures used (same folder as the .tex file; they come from the paper):
+%   fig_tstar_examples.pdf, covid_series_1x3.pdf
+% Rough timing for a 20-minute talk: ~1.2 min per frame; drop the
+% Proposition frame and/or the backup frames if the slot is shorter.
+% =====================================================================
+
+%================================================
+\section{Estimation method}
+%================================================
+
+\begin{frame}{Quantile estimation of the peak}
+\justifying
+Observations $I(t)=A\,e^{-(t-L)^2/S^2}+e(t)$, $t\le T$. Minimize over $(a,l,s)$
+\[
+\sum_{t=1}^{T}\rho_\tau\!\Bigl(I(t)-a\,e^{-(t-l)^2/s^2}\Bigr).
+\]
+\textbf{For fixed $(l,s)$:} let $w(t)=e^{-(t-l)^2/s^2}$ and $x(t)=I(t)/w(t)$. Since $w>0$,
+\[
+\rho_\tau\bigl(I(t)-a\,w(t)\bigr)=w(t)\,\rho_\tau\bigl(x(t)-a\bigr),
+\]
+so the best amplitude is the \alert{weighted $\tau$-quantile} of $x(t)$ with weights $w(t)$:
+closed form, no iteration.
+\vspace{0.2cm}
+\begin{block}{Algorithm}
+	For each integer $l\in\{1,\dots,h\}$: search $s\in[1,20]$ numerically and compute the
+	profile objective; $\hat l(T)$ is its minimizer (ties: smallest $l$); then $\hat s(T)$, $\hat a(T)$.
+\end{block}
+\small $\tau=\tfrac12$: weighted median (Dermoune et al., 2026).
 \end{frame}
 
-\begin{frame}{The amplitude is a weighted $\tau$-quantile}
-	\textbf{Key transformation.} For fixed $(l,s)$, set
+%================================================
+
+\begin{frame}{A $\tau$-aligned asymmetric Laplace noise model}
+\justifying
+\begin{equation*}
+	f_{\tau,b}(x)=\frac{\tau(1-\tau)}{b}\,\exp\!\Bigl(-\frac{\rho_\tau(x)}{b}\Bigr),
+	\qquad \mathbb P\bigl(e(t)<0\bigr)=\tau .
+\end{equation*}
+\begin{itemize}
+	\item The $\tau$-quantile of the noise is $0$, so the quantile fit targets the signal.
+	\item Negative log-likelihood $=\text{const}+\tfrac1b\sum\rho_\tau(e)$: the
+	quantile estimator is the \alert{maximum likelihood estimator}.
+	\item \textbf{Calibration.} $\mathrm{SNR}=A/\mathrm{sd}(e)$ is kept fixed across $\tau$ by
 	\[
-	x(t)=I(t)\,e^{(t-l)^2/s^2},
-	\qquad
-	w(t)=e^{-(t-l)^2/s^2}.
+	b=\frac{A}{\mathrm{SNR}}\;\frac{\tau(1-\tau)}{\sqrt{\tau^2+(1-\tau)^2}} .
 	\]
-	Because $\rho_\tau(cu)=c\,\rho_\tau(u)$ for $c>0$,
+\end{itemize}
+\vspace{0.1cm}
+\small \emph{Note:} equal standard deviation does not mean equal difficulty: the information about
+the $\tau$-quantile fit also depends on $\tau$.
+\end{frame}
+
+%================================================
+\section{Stabilization of the sequential estimate}
+%================================================
+
+\begin{frame}{Re-estimate as data arrive: the path $T\mapsto\hat l(T)$}
+\justifying
+\begin{columns}[T]
+	\column{0.45\textwidth}
+	\textbf{Stabilization time}
 	\[
-	f_\tau(T,a,l,s)
-	=\frac{1}{T}\sum_{t} w(t)\,\rho_\tau\bigl(x(t)-a\bigr)
-	+\text{constant}.
+	T^{*}=\min\{T:\ \hat l(u)=\hat l(T)\ \ \forall u\in\{T,\dots,h\}\}
 	\]
-	
-	\begin{block}{Proposition (weighted quantile)}
-		For fixed $(l,s)$, the amplitude minimizing $f_\tau$ is the weighted
-		$\tau$-quantile of the transformed observations $x(t)$,
-		with weights $w(t)$:
-		\[
-		q_\tau
-		=
-		\min\!\Bigl\{x(\pi(j)):\ \sum_{i\le j} w(\pi(i))
-		\ge \tau\sum_i w(i)\Bigr\},
-		\]
-		where $\pi$ sorts $x(1),\dots,x(T)$ increasingly.
-	\end{block}
-	
-	\textbf{What this buys us:}
+	with a plateau of at least $m=3$ horizons ($T^*=\infty$ otherwise).
 	\begin{itemize}
-		\item Amplitude $a$ is \alert{eliminated analytically} — no numerical
-		optimization in $a$, no spurious local minima in $a$.
-		\item Only $(l,s)$ must be searched — a 2D profile problem, not 3D.
-		\item \emph{Locality:} weights $w(t)$ decay quickly away from $l$,
-		so only observations near the candidate peak drive the estimate.
+		\item Does not use $L$.
+		\item \alert{Retrospective}: defined on the whole path up to $h$, not a stopping time.
 	\end{itemize}
+	\small Simulation: $A=1$, $L=22$, $S=10$, $h=30$, $\tau=0.5$,
+	$\mathrm{SNR}\in\{1000,100,1\}$, $M=200$.
+	\column{0.53\textwidth}
+	\includegraphics[width=\textwidth]{fig_tstar_examples.pdf}
+\end{columns}
+\end{frame}
+
+%================================================
+
+\begin{frame}{Stabilization: high noise changes the picture}
+\centering
+\begin{tabular}{ccccc}
+	\toprule
+	SNR & median $T^{*}$ & $\mathbb P(T^{*}<\infty)$ & $\mathbb P(T^{*}>L)$ & $\mathbb P(\hat l(T^{*})=L)$ \\
+	\midrule
+	1000 & 12 & 1.00 & 0.00 & 1.00 \\
+	100  & 18 & 1.00 & 0.01 & 1.00 \\
+	1    & 27 & 0.34 & 0.93 & 0.045 \\
+	\bottomrule
+\end{tabular}
+\vspace{0.3cm}
+\begin{itemize}
+	\item \textbf{Low noise:} $\hat l(T)$ settles on $L=22$ \alert{by the time of the peak}.
+	\item \textbf{High noise:} a stable plateau exists in only 34\% of series, and on $L$ in 4.5\%.
+	\item The path alone does not say when its current value can be trusted.
+\end{itemize}
+\end{frame}
+
+%================================================
+\section{Entry--exit intervals}
+%================================================
+
+\begin{frame}{When the path does not settle: look at its oscillations}
+\justifying
+\[
+\omega_l(t,T)=\max_{t\le u,u'\le T}\bigl|\hat l(u)-\hat l(u')\bigr|
+\quad\text{(non-increasing in } t\text{)}
+\]
+\begin{center}
+	\begin{tikzpicture}[scale=0.62]
+		\draw[->] (0,0) -- (11,0) node[right] {$t$};
+		\draw[->] (0,0) -- (0,4.2) node[above] {$\omega_l(t,T)$};
+		\draw[very thick,blue!70!black]
+		(1,3.5) -- (3,3.5) -- (3,2.2) -- (5,2.2) -- (5,1) -- (8,1) -- (8,0) -- (10,0);
+		\foreach \x/\l in {3/{T_{\mathrm{exit}}^{(3)}},5/{T_{\mathrm{exit}}^{(2)}},8/{T_{\mathrm{exit}}^{(1)}},10/{T}}
+		\draw (\x,0.08) -- (\x,-0.08) node[below] {$\l$};
+		\foreach \y/\l in {1/{\epsilon'_1},2.2/{\epsilon'_2},3.5/{\epsilon'_3}}
+		\draw (0.08,\y) -- (-0.08,\y) node[left] {$\l$};
+		\draw[dashed,red!70!black] (0,1.6) -- (10,1.6) node[right] {$\varepsilon$};
+		\draw[dotted,red!70!black] (5.6,0) -- (5.6,1.6);
+		\node[red!70!black,font=\scriptsize,anchor=south west] at (5.7,1.7)
+		{$T_{\mathrm{entry}}(\varepsilon)=T_{\mathrm{exit}}^{(2)}+1$};
+	\end{tikzpicture}
+\end{center}
+\small The strict-decrease points $T_{\mathrm{exit}}^{(1)}>T_{\mathrm{exit}}^{(2)}>\cdots$ are the
+\alert{candidate exit times}; $\epsilon'_k=\omega_l(T_{\mathrm{exit}}^{(k)},T)$ is a ladder of levels.
+\end{frame}
+
+%================================================
+
+\begin{frame}{Two-stage construction of candidate windows}
+\justifying
+At each horizon $T$ and for each candidate $k=0,1,\dots$:
+\begin{enumerate}
+	\item \textbf{Exit} $T_{\mathrm{exit}}^{(k)}(T)$ and level $\epsilon'_k$ (previous slide; $T_{\mathrm{exit}}^{(0)}=T$).
+	\item \textbf{Entry:} $E_k=\{t<T_{\mathrm{exit}}^{(k)}:\ \omega_l(t,T_{\mathrm{exit}}^{(k)})\ge\epsilon'_k\}$,
+	$T_k^{*}=\max E_k$, $\epsilon_k=\omega_l(T_k^{*},T_{\mathrm{exit}}^{(k)})$,
+	\[
+	T_{\mathrm{entry}}^{(k)}(T)=\min\{t:\ \omega_l(t,T_{\mathrm{exit}}^{(k)})=\epsilon_k\}.
+	\]
+\end{enumerate}
+\begin{block}{Candidate peak-region windows}
+	$[\,T_{\mathrm{entry}}^{(k)}(T),\,T_{\mathrm{exit}}^{(k)}(T)\,]$, built from the path only:
+	\alert{the true $L$ is never used}.
+\end{block}
+\end{frame}
+
+%================================================
+
+\begin{frame}{Operational selection, and its limit}
+\justifying
+\begin{itemize}
+	\item \textbf{Admissible set:} $\mathcal K(T)=\{k:\ T_{\mathrm{entry}}^{(k)}\le \hat l(T)\le T_{\mathrm{exit}}^{(k)}\}$.
+	\item \textbf{First-admissible rule:} $\hat k(T)=\min\mathcal K(T)$; if $\mathcal K(T)=\emptyset$, wait for the next observation.
+	\item $L$ is used \emph{only} to evaluate the selected interval.
+\end{itemize}
+\vspace{0.2cm}
+\begin{block}{Structural limit}
+	$T_{\mathrm{exit}}^{(k)}\le T$, so a window can contain $L$ only once $T\ge L$:
+	the intervals are \alert{not} an early warning before the peak; at high SNR the point
+	estimate is already informative earlier.
+\end{block}
+\small No coverage guarantee: coverage is assessed by simulation.
+\end{frame}
+
+%================================================
+
+\begin{frame}{Link with tolerance-based entry and exit times}
+\justifying
+For $\varepsilon\ge\varepsilon'\ge0$:
+$T_{\mathrm{entry}}(\varepsilon;T)=\min\{t:\omega_l(t,T)\le\varepsilon\}$,
+$T_{\mathrm{exit}}(\varepsilon';T)=\min\{t\ge T_{\mathrm{entry}}(\varepsilon;T):\omega_l(t,T)\le\varepsilon'\}$.
+\begin{block}{Proposition (ladder structure)}
+	\begin{enumerate}
+		\item[(i)] $\epsilon'_k\le\varepsilon<\epsilon'_{k+1}\ \Rightarrow\ T_{\mathrm{entry}}(\varepsilon;T)=T_{\mathrm{exit}}^{(k+1)}(T)+1$.
+		\item[(ii)] $T_{\mathrm{entry}}^{(k)}(T)=T_{\mathrm{entry}}\bigl(\epsilon_k;T_{\mathrm{exit}}^{(k)}(T)\bigr)$,
+		hence $T_{\mathrm{entry}}(\epsilon_k;T)\ge T_{\mathrm{entry}}^{(k)}(T)$.
+		\item[(iii)] $T^{*}=T_{\mathrm{entry}}(0;h)$ when the final plateau has $\ge m$ horizons.
+	\end{enumerate}
+\end{block}
+\small A tolerance $\varepsilon$ selects a rung of the ladder; the two-stage construction lets the path choose.
+\end{frame}
+
+%================================================
+\section{Evidence}
+%================================================
+
+\begin{frame}{Simulation: coverage of the selected intervals at $T=30$}
+\justifying
+$M=1000$ replicates, first-admissible rule, $L=22$, $h=30$.
+\begin{itemize}
+	\item $\mathrm{SNR}=1000,100$: no interval can contain $L$ before the peak; from $T=22$
+	($T=23$ for SNR 100) every trajectory yields an interval and \alert{coverage equals 1}.
+\end{itemize}
+\vspace{0.1cm}
+\centering
+\textbf{$\mathrm{SNR}=1$}\\[0.1cm]
+\begin{tabular}{cccc}
+	\toprule
+	$\tau$ & Selection rate & Coverage (selected) & Mean width \\
+	\midrule
+	0.25 & 0.998 & 0.678 & 6.35 \\
+	0.50 & 0.993 & 0.611 & 6.07 \\
+	0.75 & 0.998 & 0.667 & 6.01 \\
+	0.95 & 1.000 & 0.891 & 6.33 \\
+	\bottomrule
+\end{tabular}
+\vspace{0.1cm}
+\small Selecting an interval is easy; covering the peak at high noise is not.
+\end{frame}
+
+%================================================
+
+\begin{frame}{Application: first-wave COVID-19 daily cases}
+\centering
+\includegraphics[width=0.95\textwidth]{covid_series_1x3.pdf}
+
+\vspace{0.1cm}
+\justifying
+\small China (JHU CSSE), France and Germany (ECDC); observed peak days $L=22,\,78,\,61$;
+horizons $h=35,\,89,\,75$; $\tau\in\{0.25,0.5,0.75,0.95\}$.
+\end{frame}
+
+%================================================
+
+\begin{frame}{Real data: windows containing $L$ (retrospective)}
+\centering
+Narrowest candidate $[T_{\mathrm{entry}}^{(k)},T_{\mathrm{exit}}^{(k)}]$ with $T_{\mathrm{entry}}^{(k)}\le L\le T_{\mathrm{exit}}^{(k)}$ at $T=h$.
+\vspace{0.3cm}
+
+\begin{tabular}{cccc}
+	\toprule
+	$\tau$ & China ($L=22$) & France ($L=78$) & Germany ($L=61$) \\
+	\midrule
+	0.25 & [15, 26] & [72, 79] & [60, 62] \\
+	0.50 & [15, 24] & [71, 78] & [59, 61] \\
+	0.75 & [22, 25] & [70, 78] & [57, 61] \\
+	0.95 & [22, 27] & [78, 85] & [56, 63] \\
+	\bottomrule
+\end{tabular}
+\vspace{0.3cm}
+
+\small This selection uses $L$: it shows that a window around the peak exists, not that it can be found without $L$.
+\end{frame}
+
+%================================================
+
+\begin{frame}{Real data: the operational rule}
+\justifying
+First-admissible interval, assessed against the observed peak $L$
+(three countries $\times$ four quantile levels):
+\begin{center}
+	\begin{tabular}{lcc}
+		\toprule
+		Horizon & Interval contains $L$ & $\mathcal K(T)=\emptyset$ \\
+		\midrule
+		$T=L+3$  & 4 of 9   & 3 cases \\
+		$T=L+10$ & 8 of 12  & 0 cases \\
+		\bottomrule
+	\end{tabular}
+\end{center}
+\begin{itemize}
+	\item For $T<L$ no interval can contain $L$ (structural).
+	\item Candidates that miss $L$ are mostly narrow and lie on one side of it, close to $\hat l(T)$.
+	\item Single realization per country: descriptive, not coverage probabilities.
+\end{itemize}
+\end{frame}
+
+%================================================
+\section{Conclusion}
+%================================================
+
+\begin{frame}{Take-aways}
+\justifying
+\begin{itemize}
+	\item \textbf{Quantile peak estimation:} weighted $\tau$-quantile in closed form; likelihood interpretation under $\tau$-aligned asymmetric Laplace noise.
+	\item \textbf{Low noise:} the estimated peak date settles on the true date by the time of the peak.
+	\item \textbf{High noise:} the path rarely settles; path-based entry--exit intervals cover the peak in 61--89\% of simulated series at $T=30$, and \alert{only after the peak}.
+	\item \textbf{Ladder proposition:} ties tolerance-based stabilization rules to the two-stage construction.
+\end{itemize}
+\vspace{0.2cm}
+\begin{block}{Limits and next steps}
+	Additive i.i.d.\ noise, single peak, no predictive benchmark yet. Next: serial dependence,
+	multiplicative/count noise, forecast evaluation on environmental series
+	(pollution, river discharge, electricity demand).
+\end{block}
+\end{frame}
+
+%================================================
+
+\begin{frame}{Thank you}
+\centering
+{\Large Thank you for your attention}\\[0.6cm]
+\small
+\begin{thebibliography}{9}
+	\bibitem{der} A.~Dermoune, S.~Maanan, D.~Ounaissi, Y.~Slaoui (2026).
+	Forecasting the amplitude, the location and the width of the peak of a time series
+	using the weighted median. \emph{J. Applied Statistics}.
+	\bibitem{koe} R.~Koenker (2005). \emph{Quantile Regression}. Cambridge University Press.
+	\bibitem{yu} K.~Yu, R.~Moyeed (2001). Bayesian quantile regression. \emph{Stat.\ Probab.\ Lett.} 54.
+\end{thebibliography}
+\end{frame}
+
+%================================================
+% BACKUP
+%================================================
+
+\appendix
+
+\begin{frame}{Backup: thresholds derived from the two-stage construction}
+\justifying
+Taking $(\varepsilon,\varepsilon')=(\epsilon_k,\epsilon'_k)$ in the tolerance-based times
+(retrospective candidate, $T=h$):
+\begin{itemize}
+	\item $T_{\mathrm{entry}}(\epsilon_k;h)=T_{\mathrm{entry}}^{(k)}$ in 6 of 12 cases, and
+	$T_{\mathrm{exit}}(\epsilon'_k;h)=T_{\mathrm{exit}}^{(k)}$ in 4 of 12.
+	\item The resulting window contains $L$ in only 1 of 12 cases (Germany, $\tau=0.5$), at an endpoint.
+	\item It does not reproduce the two-stage window, but indicates the scale of tolerance
+	suggested by the path ($\epsilon_k$ is of the order of $\varepsilon=15$ for Germany,
+	larger than $\varepsilon=5$ for France).
+\end{itemize}
 \end{frame}
 
 \end{document}
